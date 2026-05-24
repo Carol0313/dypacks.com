@@ -1,0 +1,39 @@
+[
+  {
+    "name": "Premium Matte Black Gift Box",
+    "slug": "premium-matte-black-gift-box",
+    "shortDescription": "Elegant matte black rigid gift box with magnetic closure",
+    "description": "Our Premium Matte Black Gift Box is crafted with high-quality rigid paperboard, featuring a soft-touch matte lamination and a secure magnetic closure. Perfect for luxury retail packaging, corporate gifting, and special occasions.\n\nFeatures:\n- 1200gsm rigid paperboard\n- Soft-touch matte lamination\n- Hidden magnetic closure\n- Customizable with foil stamping or embossing\n- Interior can be lined with velvet or EVA foam",
+    "price": "8.50",
+    "compareAtPrice": "12.00",
+    "categoryId": 1,
+    "images": [
+      "https://your-cdn.com/images/gift-box-black-1.jpg",
+      "https://your-cdn.com/images/gift-box-black-2.jpg"
+    ],
+    "featured": true,
+    "status": "active",
+    "stock": 500,
+    "minOrderQty": 100,
+    "metaTitle": "Premium Matte Black Gift Box | Custom Packaging Wholesale",
+    "metaDescription": "Buy premium matte black gift boxes with magnetic closure. Custom designs available. MOQ 100pcs. Factory direct from Shanghai.",
+    "metaKeywords": "black gift box, magnetic gift box, luxury packaging, custom gift boxes wholesale"
+  },
+  {
+    "name": "Cosmetic Serum Dropper Box",
+    "slug": "cosmetic-serum-dropper-box",
+    "shortDescription": "Custom folding carton for serum bottles with UV coating",
+    "description": "Specially designed folding carton for cosmetic serum dropper bottles. Features premium 350gsm art paper with spot UV coating to highlight your brand logo.\n\nSpecifications:\n- Material: 350gsm white card paper\n- Finish: Matte lamination + spot UV\n- Size: Customizable to fit your bottle\n- Window cutout option available",
+    "price": "0.85",
+    "categoryId": 2,
+    "images": [
+      "https://your-cdn.com/images/cosmetic-box-serum-1.jpg"
+    ],
+    "featured": false,
+    "status": "active",
+    "stock": 2000,
+    "minOrderQty": 500,
+    "metaTitle": "Cosmetic Serum Dropper Box | Custom Cosmetic Packaging",
+    "metaDescription": "Custom cosmetic serum dropper boxes with UV coating. Premium folding cartons for beauty brands. Low MOQ, fast turnaround."
+  }
+]

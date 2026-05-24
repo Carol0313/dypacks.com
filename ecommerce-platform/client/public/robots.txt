@@ -1,0 +1,59 @@
+# robots.txt for DY Packs - Shanghai Douyue Industrial Co., Ltd
+# https://dypacks.com
+
+# Allow all major search engine crawlers
+User-agent: *
+Allow: /
+Allow: /products
+Allow: /product/
+Allow: /blog
+Allow: /blog/
+Allow: /about
+Allow: /contact
+
+# Disallow private/admin/auth areas
+Disallow: /admin
+Disallow: /account
+Disallow: /orders
+Disallow: /addresses
+Disallow: /cart
+Disallow: /checkout
+Disallow: /order-confirmation
+Disallow: /api/
+Disallow: /404
+
+# Disallow query parameters that create duplicate content
+Disallow: /*?page=
+Disallow: /*?search=
+Disallow: /*?sort=
+
+# Crawl-delay for polite crawling
+Crawl-delay: 1
+
+# Google-specific rules (Google ignores Crawl-delay)
+User-agent: Googlebot
+Allow: /
+Disallow: /admin
+Disallow: /account
+Disallow: /orders
+Disallow: /addresses
+Disallow: /cart
+Disallow: /checkout
+Disallow: /order-confirmation
+Disallow: /api/
+
+# Bing-specific rules
+User-agent: Bingbot
+Allow: /
+Disallow: /admin
+Disallow: /account
+Disallow: /orders
+Disallow: /addresses
+Disallow: /cart
+Disallow: /checkout
+Disallow: /order-confirmation
+Disallow: /api/
+Crawl-delay: 2
+
+# Sitemap location
+Sitemap: /api/sitemap.xml

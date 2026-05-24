@@ -1,0 +1,70 @@
+{
+  "query": "SELECT id, name, slug, description FROM categories ORDER BY name, id;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user DQKP9HgbNKidKRK.31ec563c589e --database QfZdd5EbKWQ6VGRf6FL3Sc --execute SELECT id, name, slug, description FROM categories ORDER BY name, id;",
+  "rows": [
+    {
+      "id": "2",
+      "name": "Cosmetic Packaging",
+      "slug": "cosmetic-packaging",
+      "description": "Elegant packaging solutions for beauty and cosmetic products"
+    },
+    {
+      "id": "3",
+      "name": "Food Packaging",
+      "slug": "food-packaging",
+      "description": "Safe and attractive food-grade packaging solutions"
+    },
+    {
+      "id": "1",
+      "name": "Gift Boxes",
+      "slug": "gift-boxes",
+      "description": "Premium custom gift boxes for every occasion"
+    },
+    {
+      "id": "6",
+      "name": "Gift Boxes",
+      "slug": "gift-boxes-test-1770363793641",
+      "description": "Premium gift boxes"
+    },
+    {
+      "id": "7",
+      "name": "Gift Boxes",
+      "slug": "gift-boxes-test-1770364536449",
+      "description": "Premium gift boxes"
+    },
+    {
+      "id": "8",
+      "name": "Gift Boxes",
+      "slug": "gift-boxes-test-1770364903261",
+      "description": "Premium gift boxes"
+    },
+    {
+      "id": "9",
+      "name": "Gift Boxes",
+      "slug": "gift-boxes-test-1770365161838",
+      "description": "Premium gift boxes"
+    },
+    {
+      "id": "10",
+      "name": "Gift Boxes",
+      "slug": "gift-boxes-test-1770365394393",
+      "description": "Premium gift boxes"
+    },
+    {
+      "id": "4",
+      "name": "Jewelry Boxes",
+      "slug": "jewelry-boxes",
+      "description": "Luxurious boxes crafted for precious jewelry and accessories"
+    },
+    {
+      "id": "5",
+      "name": "Luxury Packaging",
+      "slug": "luxury-packaging",
+      "description": "High-end packaging for premium brands and luxury products"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tslug\tdescription\n2\tCosmetic Packaging\tcosmetic-packaging\tElegant packaging solutions for beauty and cosmetic products\n3\tFood Packaging\tfood-packaging\tSafe and attractive food-grade packaging solutions\n1\tGift Boxes\tgift-boxes\tPremium custom gift boxes for every occasion\n6\tGift Boxes\tgift-boxes-test-1770363793641\tPremium gift boxes\n7\tGift Boxes\tgift-boxes-test-1770364536449\tPremium gift boxes\n8\tGift Boxes\tgift-boxes-test-1770364903261\tPremium gift boxes\n9\tGift Boxes\tgift-boxes-test-1770365161838\tPremium gift boxes\n10\tGift Boxes\tgift-boxes-test-1770365394393\tPremium gift boxes\n4\tJewelry Boxes\tjewelry-boxes\tLuxurious boxes crafted for precious jewelry and accessories\n5\tLuxury Packaging\tluxury-packaging\tHigh-end packaging for premium brands and luxury products\n",
+  "stderr": "",
+  "execution_time_ms": 355
+}

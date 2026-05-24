@@ -1,0 +1,20 @@
+{
+  "query": "SELECT * FROM categories ORDER BY sortOrder;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user DQKP9HgbNKidKRK.31ec563c589e --database QfZdd5EbKWQ6VGRf6FL3Sc --execute SELECT * FROM categories ORDER BY sortOrder;",
+  "rows": [
+    {
+      "id": "1",
+      "name": "Gift Boxes",
+      "slug": "gift-boxes-test-1770361613003",
+      "description": "Premium gift boxes",
+      "image": "NULL",
+      "sortOrder": "1",
+      "createdAt": "2026-02-06 07:06:53",
+      "updatedAt": "2026-02-06 07:06:53"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tslug\tdescription\timage\tsortOrder\tcreatedAt\tupdatedAt\n1\tGift Boxes\tgift-boxes-test-1770361613003\tPremium gift boxes\tNULL\t1\t2026-02-06 07:06:53\t2026-02-06 07:06:53\n",
+  "stderr": "",
+  "execution_time_ms": 451
+}

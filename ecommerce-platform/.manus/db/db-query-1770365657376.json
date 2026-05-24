@@ -1,0 +1,60 @@
+{
+  "query": "SELECT id, name, slug FROM categories ORDER BY id;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user DQKP9HgbNKidKRK.31ec563c589e --database QfZdd5EbKWQ6VGRf6FL3Sc --execute SELECT id, name, slug FROM categories ORDER BY id;",
+  "rows": [
+    {
+      "id": "1",
+      "name": "Gift Boxes",
+      "slug": "gift-boxes"
+    },
+    {
+      "id": "2",
+      "name": "Cosmetic Packaging",
+      "slug": "cosmetic-packaging"
+    },
+    {
+      "id": "3",
+      "name": "Food Packaging",
+      "slug": "food-packaging"
+    },
+    {
+      "id": "4",
+      "name": "Jewelry Boxes",
+      "slug": "jewelry-boxes"
+    },
+    {
+      "id": "5",
+      "name": "Luxury Packaging",
+      "slug": "luxury-packaging"
+    },
+    {
+      "id": "6",
+      "name": "Gift Boxes",
+      "slug": "gift-boxes-test-1770363793641"
+    },
+    {
+      "id": "7",
+      "name": "Gift Boxes",
+      "slug": "gift-boxes-test-1770364536449"
+    },
+    {
+      "id": "8",
+      "name": "Gift Boxes",
+      "slug": "gift-boxes-test-1770364903261"
+    },
+    {
+      "id": "9",
+      "name": "Gift Boxes",
+      "slug": "gift-boxes-test-1770365161838"
+    },
+    {
+      "id": "10",
+      "name": "Gift Boxes",
+      "slug": "gift-boxes-test-1770365394393"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tslug\n1\tGift Boxes\tgift-boxes\n2\tCosmetic Packaging\tcosmetic-packaging\n3\tFood Packaging\tfood-packaging\n4\tJewelry Boxes\tjewelry-boxes\n5\tLuxury Packaging\tluxury-packaging\n6\tGift Boxes\tgift-boxes-test-1770363793641\n7\tGift Boxes\tgift-boxes-test-1770364536449\n8\tGift Boxes\tgift-boxes-test-1770364903261\n9\tGift Boxes\tgift-boxes-test-1770365161838\n10\tGift Boxes\tgift-boxes-test-1770365394393\n",
+  "stderr": "",
+  "execution_time_ms": 390
+}

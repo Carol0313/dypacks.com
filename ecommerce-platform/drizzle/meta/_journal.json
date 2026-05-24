@@ -1,0 +1,34 @@
+{
+  "version": "7",
+  "dialect": "mysql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1770360352143,
+      "tag": "0000_dazzling_nova",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1770360858473,
+      "tag": "0001_military_loki",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1770363610196,
+      "tag": "0002_yielding_shocker",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1770366292473,
+      "tag": "0003_wakeful_madripoor",
+      "breakpoints": true
+    }
+  ]
+}
