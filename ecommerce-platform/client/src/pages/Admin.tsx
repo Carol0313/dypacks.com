@@ -199,6 +199,7 @@ export default function Admin() {
   const ordersQuery = trpc.order.listAll.useQuery({});
   const usersQuery = trpc.adminUser.list.useQuery();
   const blogsQuery = trpc.blog.listAll.useQuery({});
+  const inquiriesQuery = trpc.inquiry.listAll.useQuery({});
 
   const deleteProductMutation = trpc.product.delete.useMutation({
     onSuccess: () => { utils.product.list.invalidate(); toast.success("Product deleted"); },
@@ -214,6 +215,9 @@ export default function Admin() {
   });
   const deleteBlogMutation = trpc.blog.delete.useMutation({
     onSuccess: () => { utils.blog.listAll.invalidate(); toast.success("Post deleted"); },
+  });
+  const updateInquiryMutation = trpc.inquiry.updateInquiryStatus.useMutation({
+    onSuccess: () => { utils.inquiry.listAll.invalidate(); toast.success("Inquiry updated"); },
   });
 
   if (!isAuthenticated || user?.role !== "admin") {
@@ -273,6 +277,7 @@ export default function Admin() {
             <TabsTrigger value="categories">Categories</TabsTrigger>
             <TabsTrigger value="orders">Orders</TabsTrigger>
             <TabsTrigger value="users">Users</TabsTrigger>
+            <TabsTrigger value="inquiries">Inquiries</TabsTrigger>
             <TabsTrigger value="blog">Blog</TabsTrigger>
           </TabsList>
 
@@ -444,6 +449,66 @@ export default function Admin() {
                 </TableBody>
               </Table>
             </Card>
+          </TabsContent>
+
+          {/* Inquiries Tab */}
+          <TabsContent value="inquiries">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-semibold">Inquiry Submissions</h2>
+            </div>
+            {inquiriesQuery.isLoading ? (
+              <p className="text-muted-foreground">Loading...</p>
+            ) : inquiriesQuery.data?.items.length === 0 ? (
+              <p className="text-muted-foreground">No inquiries yet.</p>
+            ) : (
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Inquiry #</TableHead>
+                      <TableHead>Name</TableHead>
+                      <TableHead>Email</TableHead>
+                      <TableHead>Product</TableHead>
+                      <TableHead>Source</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead>Date</TableHead>
+                      <TableHead>Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {inquiriesQuery.data?.items.map((inq: any) => {
+                      const items = inq.items ? JSON.parse(inq.items) : [];
+                      const firstItem = items[0] || {};
+                      return (
+                        <TableRow key={inq.id}>
+                          <TableCell className="font-mono text-xs">{inq.inquiryNumber}</TableCell>
+                          <TableCell>{inq.contactName}</TableCell>
+                          <TableCell><a href={`mailto:${inq.email}`} className="text-gold-dark hover:underline">{inq.email}</a></TableCell>
+                          <TableCell className="text-xs">{firstItem.productName || "—"}</TableCell>
+                          <TableCell><span className="text-xs px-2 py-0.5 rounded-full bg-muted">{inq.source || "website"}</span></TableCell>
+                          <TableCell>
+                            <Select value={inq.status} onValueChange={(v) => updateInquiryMutation.mutate({ id: inq.id, status: v as any })}>
+                              <SelectTrigger className="w-28 h-8 text-xs">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="pending">Pending</SelectItem>
+                                <SelectItem value="replied">Replied</SelectItem>
+                                <SelectItem value="closed">Closed</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </TableCell>
+                          <TableCell className="text-xs text-muted-foreground">{new Date(inq.createdAt).toLocaleDateString()}</TableCell>
+                          <TableCell>
+                            <a href={`mailto:${inq.email}?subject=Re: ${inq.inquiryNumber}`} className="text-xs text-gold-dark hover:underline">Reply</a>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
+                  </TableBody>
+                </Table>
+              </div>
+            )}
           </TabsContent>
 
           {/* Blog Tab */}

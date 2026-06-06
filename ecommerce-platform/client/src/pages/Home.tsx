@@ -96,6 +96,7 @@ export default function Home() {
                         <img
                           src={cat.image}
                           alt={cat.name}
+                          loading="lazy"
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                         />
                       ) : (
@@ -163,6 +164,7 @@ export default function Home() {
                         <img
                           src={mainImage}
                           alt={product.name}
+                          loading="lazy"
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                         />
                       </div>
@@ -209,21 +211,25 @@ export default function Home() {
               <img
                 src={SHOWCASE_IMAGE_1}
                 alt={t("home.customPackaging")}
+                loading="lazy"
                 className="rounded-lg shadow-md w-full h-48 object-cover"
               />
               <img
                 src={SHOWCASE_IMAGE_2}
                 alt={t("home.customPackaging")}
+                loading="lazy"
                 className="rounded-lg shadow-md w-full h-48 object-cover mt-8"
               />
               <img
                 src={SHOWCASE_IMAGE_3}
                 alt={t("home.customPackaging")}
+                loading="lazy"
                 className="rounded-lg shadow-md w-full h-48 object-cover"
               />
               <img
                 src={SHOWCASE_IMAGE_4}
                 alt={t("home.customPackaging")}
+                loading="lazy"
                 className="rounded-lg shadow-md w-full h-48 object-cover mt-8"
               />
             </div>

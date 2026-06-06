@@ -217,6 +217,27 @@
     "default": "Varsayılan",
     "phoneLabel": "Telefon:"
   },
+  "contactForm": {
+    "sendMessage": "Bize Mesaj Gönderin",
+    "name": "Ad",
+    "namePlaceholder": "Adınız",
+    "email": "E-posta",
+    "emailPlaceholder": "siz@eposta.com",
+    "phone": "Telefon",
+    "phonePlaceholder": "+90 555 123 4567",
+    "country": "Ülke",
+    "countryPlaceholder": "Ülkeniz",
+    "message": "Mesaj",
+    "messagePlaceholder": "Projeniz, gereksinimleriniz veya sorularınız hakkında bize bilgi verin...",
+    "sendMessageBtn": "Mesaj Gönder",
+    "sending": "Gönderiliyor...",
+    "failedSubmit": "Mesaj gönderilemedi. Lütfen tekrar deneyin.",
+    "fillRequired": "Lütfen adınızı ve e-posta adresinizi girin.",
+    "thankYou": "Teşekkürler!",
+    "teamWillContact": "Ekibimiz 24 saat içinde sizinle iletişime geçecek.",
+    "sendAnother": "Başka Mesaj Gönder",
+    "inquiringAbout": "Hakkında soruşturma:"
+  },
   "contact": {
     "faq1Question": "Minimum sipariş miktarı nedir?",
     "faq1Answer": "Minimum sipariş miktarı ürün türüne göre değişir. Standart ürünler 100 adetten başlar, özel tasarımlar genellikle 500+ adet gerektirir. Özel gereksinimler için bize ulaşın.",

@@ -12,6 +12,7 @@ import { useState, useEffect } from "react";
 import { Minus, Plus, ArrowLeft, Package, Truck, Shield, FileText, Mail, Ruler, Palette } from "lucide-react";
 import ProductReviews from "@/components/ProductReviews";
 import ImageLightbox from "@/components/ImageLightbox";
+import ContactForm from "@/components/ContactForm";
 import { Link } from "wouter";
 import { toast } from "sonner";
 import { ProductSchema, BreadcrumbSchema } from "@/components/SchemaMarkup";
@@ -372,6 +373,16 @@ export default function ProductDetail() {
 
         {/* Customer Reviews */}
         <ProductReviews productId={product.id} />
+
+        {/* Contact Form Section */}
+        <div className="mt-12 pt-8 border-t">
+          <h2 className="text-xl font-bold text-foreground mb-4" style={{ fontFamily: "var(--font-heading)" }}>
+            {t("productDetail.requestQuote")}
+          </h2>
+          <div className="max-w-2xl">
+            <ContactForm product={product.name} source="product_page" />
+          </div>
+        </div>
 
         {/* Pricing Note */}
         <div className="mt-8 p-4 bg-gold/5 border border-gold/20 rounded-lg">

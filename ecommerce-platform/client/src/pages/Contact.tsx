@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Mail, MapPin, Clock, MessageSquare } from "lucide-react";
 import { FAQSchema, BreadcrumbSchema } from "@/components/SchemaMarkup";
 import { useTranslation } from "react-i18next";
+import ContactForm from "@/components/ContactForm";
 
 export default function Contact() {
   const { t } = useTranslation();
@@ -89,19 +90,12 @@ export default function Contact() {
             </div>
           </div>
 
-          {/* FAQ / Info Cards */}
-          <div className="space-y-4">
+          {/* Contact Form */}
+          <div>
             <h2 className="text-2xl font-bold text-foreground mb-6" style={{ fontFamily: "var(--font-heading)" }}>
-              {t("contact.frequentlyAsked")}
+              {t("contact.sendMessage")}
             </h2>
-            {faqItems.map((faq, i) => (
-              <Card key={i} className="border-border/50">
-                <CardContent className="p-5">
-                  <h3 className="text-sm font-semibold text-foreground mb-2">{faq.question}</h3>
-                  <p className="text-sm text-muted-foreground">{faq.answer}</p>
-                </CardContent>
-              </Card>
-            ))}
+            <ContactForm source="contact_page" />
           </div>
         </div>
       </div>

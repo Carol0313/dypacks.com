@@ -217,6 +217,27 @@
     "default": "Default",
     "phoneLabel": "Phone:"
   },
+  "contactForm": {
+    "sendMessage": "Send Us a Message",
+    "name": "Name",
+    "namePlaceholder": "Your name",
+    "email": "Email",
+    "emailPlaceholder": "your@email.com",
+    "phone": "Phone",
+    "phonePlaceholder": "+1 234 567 8900",
+    "country": "Country",
+    "countryPlaceholder": "Your country",
+    "message": "Message",
+    "messagePlaceholder": "Tell us about your project, requirements, or questions...",
+    "sendMessageBtn": "Send Message",
+    "sending": "Sending...",
+    "failedSubmit": "Failed to send message. Please try again.",
+    "fillRequired": "Please fill in your name and email.",
+    "thankYou": "Thank You!",
+    "teamWillContact": "Our team will contact you within 24 hours.",
+    "sendAnother": "Send Another Message",
+    "inquiringAbout": "Inquiring about:"
+  },
   "contact": {
     "faq1Question": "What is the minimum order quantity?",
     "faq1Answer": "MOQ varies by product type. Standard items start from 100 pcs, while custom designs typically require 500+ pcs. Contact us for specific requirements.",

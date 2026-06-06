@@ -176,7 +176,7 @@ export type InsertInquiryItem = typeof inquiryItems.$inferInsert;
 export const inquirySubmissions = mysqlTable("inquiry_submissions", {
   id: int("id").autoincrement().primaryKey(),
   inquiryNumber: varchar("inquiryNumber", { length: 32 }).notNull().unique(),
-  userId: int("userId").notNull(),
+  userId: int("userId"),
   companyName: varchar("companyName", { length: 256 }),
   contactName: varchar("contactName", { length: 128 }).notNull(),
   email: varchar("email", { length: 320 }).notNull(),
@@ -184,6 +184,7 @@ export const inquirySubmissions = mysqlTable("inquiry_submissions", {
   country: varchar("country", { length: 64 }),
   message: text("message"),
   items: text("items").notNull(),
+  source: varchar("source", { length: 64 }).default("website"),
   status: mysqlEnum("status", ["pending", "replied", "closed"]).default("pending").notNull(),
   createdAt: timestamp("createdAt").default(sql`CURRENT_TIMESTAMP`).notNull(),
   updatedAt: timestamp("updatedAt").default(sql`CURRENT_TIMESTAMP`).onUpdateNow().notNull(),

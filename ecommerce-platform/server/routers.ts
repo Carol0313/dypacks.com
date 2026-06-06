@@ -514,6 +514,49 @@ const inquiryRouter = router({
   mySubmissions: protectedProcedure.query(async ({ ctx }) => {
     return db.getUserInquiries(ctx.user.id);
   }),
+  // Anonymous inquiry from chatbot
+  submitAnonymous: publicProcedure.input(z.object({
+    contactName: z.string().min(1),
+    email: z.string().email(),
+    phone: z.string().optional(),
+    country: z.string().optional(),
+    product: z.string().optional(),
+    quantity: z.string().optional(),
+    details: z.string().optional(),
+    source: z.string().optional().default("carol_chatbot"),
+  })).mutation(async ({ input }) => {
+    const { nanoid } = await import("nanoid");
+    const inquiryNumber = `INQ${Date.now().toString(36).toUpperCase()}${nanoid(4).toUpperCase()}`;
+    const items = JSON.stringify([{
+      productName: input.product || "Not specified",
+      quantity: input.quantity || "Not specified",
+      note: input.details,
+    }]);
+    const id = await db.submitInquiry({
+      inquiryNumber,
+      userId: undefined as any,
+      companyName: undefined,
+      contactName: input.contactName,
+      email: input.email,
+      phone: input.phone,
+      country: input.country,
+      message: input.details,
+      items,
+      source: input.source,
+    });
+    // Send email notification
+    await db.sendInquiryEmail({
+      inquiryNumber,
+      contactName: input.contactName,
+      email: input.email,
+      phone: input.phone,
+      product: input.product,
+      quantity: input.quantity,
+      details: input.details,
+      source: input.source,
+    });
+    return { id, inquiryNumber };
+  }),
   // Admin
   listAll: adminProcedure.input(z.object({
     status: z.string().optional(),

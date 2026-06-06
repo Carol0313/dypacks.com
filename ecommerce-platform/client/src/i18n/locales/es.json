@@ -217,6 +217,27 @@
     "default": "Predeterminada",
     "phoneLabel": "Teléfono:"
   },
+  "contactForm": {
+    "sendMessage": "Envíenos un Mensaje",
+    "name": "Nombre",
+    "namePlaceholder": "Su nombre",
+    "email": "Correo Electrónico",
+    "emailPlaceholder": "su@correo.com",
+    "phone": "Teléfono",
+    "phonePlaceholder": "+1 234 567 8900",
+    "country": "País",
+    "countryPlaceholder": "Su país",
+    "message": "Mensaje",
+    "messagePlaceholder": "Cuéntenos sobre su proyecto, requisitos o preguntas...",
+    "sendMessageBtn": "Enviar Mensaje",
+    "sending": "Enviando...",
+    "failedSubmit": "Error al enviar el mensaje. Por favor intente de nuevo.",
+    "fillRequired": "Por favor complete su nombre y correo electrónico.",
+    "thankYou": "¡Gracias!",
+    "teamWillContact": "Nuestro equipo se comunicará con usted dentro de 24 horas.",
+    "sendAnother": "Enviar Otro Mensaje",
+    "inquiringAbout": "Consulta sobre:"
+  },
   "contact": {
     "faq1Question": "¿Cuál es la cantidad mínima de pedido?",
     "faq1Answer": "La cantidad mínima varía según el tipo de producto. Los artículos estándar comienzan desde 100 piezas, mientras que los diseños personalizados típicamente requieren 500+ piezas. Contáctenos para requisitos específicos.",

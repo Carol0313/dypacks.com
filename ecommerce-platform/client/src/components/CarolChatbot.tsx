@@ -15,6 +15,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { trpc } from "@/lib/trpc";
 
 type MessageRole = "user" | "carol";
 
@@ -35,6 +36,14 @@ interface ChatOption {
 export default function CarolChatbot() {
   const { t } = useTranslation();
   const CAROL_EMAIL = t("carol.email");
+  const submitInquiry = trpc.inquiry.submitAnonymous.useMutation({
+    onSuccess: () => {
+      console.log("[Carol] Inquiry submitted successfully");
+    },
+    onError: (err) => {
+      console.error("[Carol] Failed to submit inquiry:", err);
+    },
+  });
 
   const WELCOME_MESSAGE: ChatMessage = {
     role: "carol",
@@ -163,6 +172,15 @@ export default function CarolChatbot() {
             ],
           });
           (window as any).__carolMailto = mailtoLink;
+          // Save inquiry to database
+          submitInquiry.mutate({
+            contactName: updated.product ? `${updated.product} inquiry` : "Website Visitor",
+            email: updated.contact || "",
+            product: updated.product,
+            quantity: updated.quantity,
+            details: updated.details || value,
+            source: "carol_chatbot",
+          });
         }, 400);
         return updated;
       });
@@ -253,6 +271,9 @@ export default function CarolChatbot() {
                       {message.role === "carol" ? (
                         <div className="prose prose-sm dark:prose-invert max-w-none">
                           {message.content.split("**").map((part, i) => i % 2 === 1 ? <strong key={i}>{part}</strong> : <span key={i}>{part.split("\n").map((line, j) => <span key={j}>{line}{j < part.split("\n").length - 1 && <br />}</span>)}</span>)}
+                          <div className="mt-1.5 pt-1.5 border-t border-border/40 text-[11px] text-muted-foreground">
+                            {t("carol.emailLabel")} <a href={`mailto:${CAROL_EMAIL}`} className="text-gold-dark hover:underline">{CAROL_EMAIL}</a>
+                          </div>
                         </div>
                       ) : <p className="whitespace-pre-wrap">{message.content}</p>}
                     </div>

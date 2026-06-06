@@ -545,3 +545,70 @@ export async function updateInquiryStatus(id: number, status: "pending" | "repli
   if (!db) throw new Error("DB not available");
   await db.update(inquirySubmissions).set({ status }).where(eq(inquirySubmissions.id, id));
 }
+
+// ─── Email Notifications ─────────────────────────────────
+
+export async function sendInquiryEmail(data: {
+  inquiryNumber: string;
+  contactName: string;
+  email: string;
+  phone?: string;
+  product?: string;
+  quantity?: string;
+  details?: string;
+  source?: string;
+}) {
+  try {
+    const nodemailer = await import("nodemailer");
+    const smtpHost = process.env.SMTP_HOST;
+    const smtpPort = process.env.SMTP_PORT ? parseInt(process.env.SMTP_PORT) : 587;
+    const smtpUser = process.env.SMTP_USER;
+    const smtpPass = process.env.SMTP_PASS;
+    const notifyEmail = process.env.NOTIFY_EMAIL || "carolni@dypacks.com";
+
+    if (!smtpHost || !smtpUser || !smtpPass) {
+      console.warn("[Email] SMTP not configured, skipping email notification");
+      return;
+    }
+
+    const transporter = nodemailer.createTransport({
+      host: smtpHost,
+      port: smtpPort,
+      secure: smtpPort === 465,
+      auth: { user: smtpUser, pass: smtpPass },
+    });
+
+    const subject = `New Inquiry ${data.inquiryNumber} from ${data.contactName}`;
+    const body = `
+Hello,
+
+You have received a new inquiry via ${data.source || "website"}.
+
+Inquiry Number: ${data.inquiryNumber}
+Name: ${data.contactName}
+Email: ${data.email}
+Phone: ${data.phone || "N/A"}
+Product: ${data.product || "N/A"}
+Quantity: ${data.quantity || "N/A"}
+Details: ${data.details || "N/A"}
+
+Please reply to ${data.email} to follow up.
+
+---
+DY Packs Inquiry System
+https://dypacks.com/admin
+    `.trim();
+
+    await transporter.sendMail({
+      from: `"DY Packs Inquiry" <${smtpUser}>`,
+      to: notifyEmail,
+      replyTo: data.email,
+      subject,
+      text: body,
+    });
+
+    console.log(`[Email] Inquiry notification sent to ${notifyEmail}`);
+  } catch (err) {
+    console.error("[Email] Failed to send inquiry email:", err);
+  }
+}
