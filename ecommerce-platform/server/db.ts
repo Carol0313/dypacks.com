@@ -551,6 +551,7 @@ export async function updateInquiryStatus(id: number, status: "pending" | "repli
 export async function sendInquiryEmail(data: {
   inquiryNumber: string;
   contactName: string;
+  companyName?: string;
   email: string;
   phone?: string;
   product?: string;
@@ -564,7 +565,7 @@ export async function sendInquiryEmail(data: {
     const smtpPort = process.env.SMTP_PORT ? parseInt(process.env.SMTP_PORT) : 587;
     const smtpUser = process.env.SMTP_USER;
     const smtpPass = process.env.SMTP_PASS;
-    const notifyEmail = process.env.NOTIFY_EMAIL || "carolni@dypacks.com";
+    const notifyEmail = process.env.NOTIFY_EMAIL || "582382055@qq.com";
 
     if (!smtpHost || !smtpUser || !smtpPass) {
       console.warn("[Email] SMTP not configured, skipping email notification");
@@ -586,6 +587,7 @@ You have received a new inquiry via ${data.source || "website"}.
 
 Inquiry Number: ${data.inquiryNumber}
 Name: ${data.contactName}
+Company: ${data.companyName || "N/A"}
 Email: ${data.email}
 Phone: ${data.phone || "N/A"}
 Product: ${data.product || "N/A"}

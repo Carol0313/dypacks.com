@@ -514,12 +514,13 @@ const inquiryRouter = router({
   mySubmissions: protectedProcedure.query(async ({ ctx }) => {
     return db.getUserInquiries(ctx.user.id);
   }),
-  // Anonymous inquiry from chatbot
+  // Anonymous inquiry from chatbot or external landing pages
   submitAnonymous: publicProcedure.input(z.object({
     contactName: z.string().min(1),
     email: z.string().email(),
     phone: z.string().optional(),
     country: z.string().optional(),
+    companyName: z.string().optional(),
     product: z.string().optional(),
     quantity: z.string().optional(),
     details: z.string().optional(),
@@ -535,7 +536,7 @@ const inquiryRouter = router({
     const id = await db.submitInquiry({
       inquiryNumber,
       userId: undefined as any,
-      companyName: undefined,
+      companyName: input.companyName,
       contactName: input.contactName,
       email: input.email,
       phone: input.phone,
@@ -548,6 +549,7 @@ const inquiryRouter = router({
     await db.sendInquiryEmail({
       inquiryNumber,
       contactName: input.contactName,
+      companyName: input.companyName,
       email: input.email,
       phone: input.phone,
       product: input.product,

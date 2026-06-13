@@ -1,4 +1,7 @@
 import { useState, useMemo } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "@/const";
@@ -7,6 +10,14 @@ import { Separator } from "@/components/ui/separator";
 import { Star, MessageSquare, User } from "lucide-react";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 
 function StarRating({ rating, size = "sm" }: { rating: number; size?: "sm" | "md" | "lg" }) {
   const sizeClass = size === "lg" ? "h-6 w-6" : size === "md" ? "h-5 w-5" : "h-4 w-4";
@@ -53,10 +64,20 @@ export default function ProductReviews({ productId }: { productId: number }) {
   const { t } = useTranslation();
   const { isAuthenticated, user } = useAuth();
   const [showForm, setShowForm] = useState(false);
-  const [rating, setRating] = useState(0);
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
   const [page] = useState(1);
+
+  const formSchema = z.object({
+    rating: z.number().min(1, t("reviews.pleaseSelectRating")),
+    title: z.string().max(100).optional(),
+    content: z.string().max(2000).optional(),
+  });
+
+  type FormValues = z.infer<typeof formSchema>;
+
+  const form = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues: { rating: 0, title: "", content: "" },
+  });
 
   const utils = trpc.useUtils();
 
@@ -75,9 +96,7 @@ export default function ProductReviews({ productId }: { productId: number }) {
     onSuccess: () => {
       toast.success(t("reviews.thankYouReview"));
       setShowForm(false);
-      setRating(0);
-      setTitle("");
-      setContent("");
+      form.reset({ rating: 0, title: "", content: "" });
       utils.review.listByProduct.invalidate({ productId });
       utils.review.ratingStats.invalidate({ productId });
     },
@@ -86,10 +105,13 @@ export default function ProductReviews({ productId }: { productId: number }) {
     },
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (rating === 0) { toast.error(t("reviews.pleaseSelectRating")); return; }
-    createMutation.mutate({ productId, rating, title, content });
+  const onSubmit = (values: FormValues) => {
+    createMutation.mutate({
+      productId,
+      rating: values.rating,
+      title: values.title || "",
+      content: values.content || "",
+    });
   };
 
   const avgRating = stats?.averageRating ?? 0;
@@ -142,28 +164,67 @@ export default function ProductReviews({ productId }: { productId: number }) {
       )}
 
       {showForm && (
-        <form onSubmit={handleSubmit} className="mb-8 p-6 border rounded-lg bg-card space-y-4">
-          <h3 className="text-lg font-semibold">{t("reviews.writeYourReview")}</h3>
-          <div>
-            <label className="text-sm font-medium mb-2 block">{t("reviews.yourRating")}</label>
-            <StarInput value={rating} onChange={setRating} />
-          </div>
-          <div>
-            <label className="text-sm font-medium mb-1 block">{t("reviews.reviewTitle")}</label>
-            <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} placeholder={t("reviews.titlePlaceholder")} className="w-full h-10 px-3 rounded-md border border-border bg-background text-sm" />
-          </div>
-          <div>
-            <label className="text-sm font-medium mb-1 block">{t("reviews.yourReview")}</label>
-            <textarea value={content} onChange={(e) => setContent(e.target.value)} placeholder={t("reviews.reviewPlaceholder")} rows={4} className="w-full px-3 py-2 rounded-md border border-border bg-background text-sm resize-none" />
-            <p className="text-xs text-muted-foreground mt-1 text-right">{content.length}{t("reviews.characters")}</p>
-          </div>
-          <div className="flex gap-3">
-            <Button type="button" variant="outline" onClick={() => setShowForm(false)}>{t("common.cancel")}</Button>
-            <Button type="submit" disabled={createMutation.isPending}>
-              {createMutation.isPending ? t("reviews.submitting") : t("reviews.submitReview")}
-            </Button>
-          </div>
-        </form>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="mb-8 p-6 border rounded-lg bg-card space-y-4">
+            <h3 className="text-lg font-semibold">{t("reviews.writeYourReview")}</h3>
+            <FormField
+              control={form.control}
+              name="rating"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t("reviews.yourRating")}</FormLabel>
+                  <FormControl>
+                    <StarInput value={field.value} onChange={(v) => field.onChange(v)} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="title"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t("reviews.reviewTitle")}</FormLabel>
+                  <FormControl>
+                    <input
+                      type="text"
+                      placeholder={t("reviews.titlePlaceholder")}
+                      className="w-full h-10 px-3 rounded-md border border-border bg-background text-sm"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="content"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t("reviews.yourReview")}</FormLabel>
+                  <FormControl>
+                    <textarea
+                      placeholder={t("reviews.reviewPlaceholder")}
+                      rows={4}
+                      className="w-full px-3 py-2 rounded-md border border-border bg-background text-sm resize-none"
+                      {...field}
+                    />
+                  </FormControl>
+                  <p className="text-xs text-muted-foreground mt-1 text-right">{(field.value || "").length}{t("reviews.characters")}</p>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <div className="flex gap-3">
+              <Button type="button" variant="outline" onClick={() => setShowForm(false)}>{t("common.cancel")}</Button>
+              <Button type="submit" disabled={createMutation.isPending}>
+                {createMutation.isPending ? t("reviews.submitting") : t("reviews.submitReview")}
+              </Button>
+            </div>
+          </form>
+        </Form>
       )}
 
       <Separator className="mb-6" />

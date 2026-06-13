@@ -1,19 +1,20 @@
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { trpc } from "@/lib/trpc";
+import { Button } from "'components/ui/button"' (see below for file content);
+import { Card, CardContent } from "'components/ui/card"' (see below for file content);
+import { trpc } from "'lib/trpc"' (see below for file content);
 import {
   PLACEHOLDER_IMAGE,
   SHOWCASE_IMAGE_1,
   SHOWCASE_IMAGE_2,
   SHOWCASE_IMAGE_3,
   SHOWCASE_IMAGE_4,
-} from "@/lib/constants";
+} from "'lib/constants"' (see below for file content);
 import { Link } from "wouter";
 import { Package, Shield, Truck, Star, ChevronRight } from "lucide-react";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import { OrganizationSchema, WebSiteSchema } from "@/components/SchemaMarkup";
-import HeroCarousel from "@/components/HeroCarousel";
+import Navbar from "'components/Navbar"' (see below for file content);
+import Footer from "'components/Footer"' (see below for file content);
+import { OrganizationSchema, WebSiteSchema } from "'components/SchemaMarkup"' (see below for file content);
+import HeroCarousel from "'components/HeroCarousel"' (see below for file content);
+import ContactForm from "'components/ContactForm"' (see below for file content);
 import { useTranslation } from "react-i18next";
 
 export default function Home() {
@@ -265,21 +266,31 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CTA Banner */}
+      {/* CTA Banner with Inquiry Form */}
       <section className="bg-charcoal-dark py-16">
-        <div className="container text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4" style={{ fontFamily: "var(--font-heading)" }}>
-            {t("home.readyToCreate")} <span className="text-gold">{t("home.customPackaging")}</span>?
-          </h2>
-          <p className="text-white/60 max-w-lg mx-auto mb-8">
-            {t("home.freeQuoteDescription")}
-          </p>
-          <div className="flex justify-center gap-3">
-            <Link href="/contact">
-              <Button size="lg" className="bg-gold text-charcoal-dark hover:bg-gold-dark font-semibold px-8">
-                {t("home.requestQuote")}
-              </Button>
-            </Link>
+        <div className="container">
+          <div className="grid md:grid-cols-2 gap-12 items-start">
+            <div className="text-center md:text-left">
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4" style={{ fontFamily: "var(--font-heading)" }}>
+                {t("home.readyToCreate")} <span className="text-gold">{t("home.customPackaging")}</span>?
+              </h2>
+              <p className="text-white/60 max-w-lg mx-auto md:mx-0 mb-8">
+                {t("home.freeQuoteDescription")}
+              </p>
+              <div className="flex justify-center md:justify-start gap-3">
+                <Link href="/contact">
+                  <Button size="lg" className="bg-gold text-charcoal-dark hover:bg-gold-dark font-semibold px-8">
+                    {t("home.requestQuote")}
+                  </Button>
+                </Link>
+              </div>
+            </div>
+            <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+              <h3 className="text-xl font-bold text-white mb-4 text-center" style={{ fontFamily: "var(--font-heading)" }}>
+                {t("home.sendQuickInquiry")}
+              </h3>
+              <ContactForm source="home_page" />
+            </div>
           </div>
         </div>
       </section>
