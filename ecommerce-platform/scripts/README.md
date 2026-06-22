@@ -3,6 +3,7 @@
 ## 1. 批量导入产品 (bulk-import-products.ts)
 
 ### 前置条件
+
 - 确保项目根目录的 `.env` 文件中有正确的 `DATABASE_URL`
 - 确保已安装依赖：`pnpm install` (或 npm/yarn)
 
@@ -47,6 +48,7 @@
    - 输出导入结果统计
 
 ### 图片处理建议
+
 批量导入时，图片建议先上传到阿里云 OSS（见下方第 3 节），然后将 URL 填入 `images` 数组。
 
 ---
@@ -81,6 +83,7 @@ npx tsx scripts/migrate-images-to-oss.ts
 ```
 
 脚本会：
+
 1. 扫描数据库中 `products.images` 和 `blog_posts.coverImage` 里的旧 CDN 图片
 2. 自动下载并上传到阿里云 OSS
 3. 更新数据库字段为新 URL
@@ -92,10 +95,12 @@ npx tsx scripts/migrate-images-to-oss.ts
 
 ```typescript
 // client/src/lib/constants.ts
-export const HERO_IMAGE = "https://your-bucket.oss-cn-shanghai.aliyuncs.com/banners/hero.jpg";
+export const HERO_IMAGE =
+  "https://your-bucket.oss-cn-shanghai.aliyuncs.com/banners/hero.jpg";
 ```
 
 修改后重新构建：
+
 ```bash
 pnpm build && pm2 restart dypacks
 ```
@@ -113,5 +118,6 @@ pnpm build && pm2 restart dypacks
 ## 4. 批量更新/导出产品（待扩展）
 
 如需批量更新价格、库存等，可以：
+
 - 直接操作 MySQL：`UPDATE products SET price = '9.99' WHERE categoryId = 1;`
 - 或基于本脚本改造，写 `bulk-update-products.ts`

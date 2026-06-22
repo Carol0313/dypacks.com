@@ -62,15 +62,22 @@ export default function Navbar() {
       <div className="container flex h-16 items-center justify-between">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2.5 shrink-0">
-          <img src={LOGO_URL} alt={BRAND_NAME} className="h-9 w-9 object-contain" />
-          <span className="text-lg font-semibold tracking-tight text-foreground" style={{ fontFamily: "var(--font-heading)" }}>
+          <img
+            src={LOGO_URL}
+            alt={BRAND_NAME}
+            className="h-9 w-9 object-contain"
+          />
+          <span
+            className="text-lg font-semibold tracking-tight text-foreground"
+            style={{ fontFamily: "var(--font-heading)" }}
+          >
             {BRAND_NAME}
           </span>
         </Link>
 
         {/* Desktop Nav */}
         <nav className="hidden md:flex items-center gap-1">
-          {navLinks.map((link) => (
+          {navLinks.map(link => (
             <Link key={link.href} href={link.href}>
               <span
                 className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
@@ -157,7 +164,9 @@ export default function Navbar() {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-48">
                 <div className="px-2 py-1.5">
-                  <p className="text-sm font-medium">{user?.name || t("navbar.user")}</p>
+                  <p className="text-sm font-medium">
+                    {user?.name || t("navbar.user")}
+                  </p>
                   <p className="text-xs text-muted-foreground">{user?.email}</p>
                 </div>
                 <DropdownMenuSeparator />
@@ -205,7 +214,10 @@ export default function Navbar() {
             </DropdownMenu>
           ) : (
             <a href={getLoginUrl()}>
-              <Button size="sm" className="bg-charcoal text-white hover:bg-charcoal-dark">
+              <Button
+                size="sm"
+                className="bg-charcoal text-white hover:bg-charcoal-dark"
+              >
                 {t("navbar.signIn")}
               </Button>
             </a>
@@ -224,8 +236,12 @@ export default function Navbar() {
                 <SearchAutocomplete onClose={() => setMobileOpen(false)} />
               </div>
               <nav className="flex flex-col gap-1">
-                {navLinks.map((link) => (
-                  <Link key={link.href} href={link.href} onClick={() => setMobileOpen(false)}>
+                {navLinks.map(link => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    onClick={() => setMobileOpen(false)}
+                  >
                     <span
                       className={`block px-3 py-2.5 text-sm font-medium rounded-md transition-colors ${
                         location === link.href

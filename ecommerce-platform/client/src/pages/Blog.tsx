@@ -1,29 +1,61 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { trpc } from "@/lib/trpc";
+import { getThumbnailUrl } from "@/lib/image-utils";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
 import { ChevronLeft, ChevronRight, BookOpen } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { usePageSEO } from "@/lib/seo";
+import { BreadcrumbSchema, BlogListSchema } from "@/components/SchemaMarkup";
 
 export default function Blog() {
   const { t } = useTranslation();
   const [page, setPage] = useState(1);
   const limit = 9;
 
-  const postsQuery = trpc.blog.list.useQuery({ page, limit, status: "published" });
+  usePageSEO({
+    title: t("blog.title"),
+    description: t("blog.metaDescription"),
+    keywords:
+      "packaging blog, custom packaging tips, packaging industry insights, cosmetic packaging guide, sustainable packaging, DY Packs",
+    canonicalPath: "/blog",
+  });
+
+  const postsQuery = trpc.blog.list.useQuery({
+    page,
+    limit,
+    status: "published",
+  });
   const posts = postsQuery.data?.items ?? [];
   const totalPages = Math.ceil((postsQuery.data?.total ?? 0) / limit);
 
   return (
     <div className="min-h-screen flex flex-col">
+      <BreadcrumbSchema
+        items={[
+          { name: t("blog.home"), url: "/" },
+          { name: t("blog.blog"), url: "/blog" },
+        ]}
+      />
+      <BlogListSchema
+        posts={posts.map(p => ({
+          title: p.title,
+          slug: p.slug,
+          coverImage: p.coverImage,
+          publishedAt: p.publishedAt,
+        }))}
+      />
       <Navbar />
 
       <section className="bg-charcoal-dark py-12">
         <div className="container">
-          <h1 className="text-3xl md:text-4xl font-bold text-white mb-2" style={{ fontFamily: "var(--font-heading)" }}>
+          <h1
+            className="text-3xl md:text-4xl font-bold text-white mb-2"
+            style={{ fontFamily: "var(--font-heading)" }}
+          >
             {t("blog.blogInsights")}
           </h1>
           <p className="text-white/60">{t("blog.industryNews")}</p>
@@ -34,8 +66,12 @@ export default function Blog() {
         {posts.length === 0 ? (
           <div className="text-center py-16">
             <BookOpen className="h-12 w-12 mx-auto text-muted-foreground/40 mb-4" />
-            <h3 className="text-lg font-semibold mb-1">{t("blog.noPostsYet")}</h3>
-            <p className="text-sm text-muted-foreground">{t("blog.checkBackSoon")}</p>
+            <h3 className="text-lg font-semibold mb-1">
+              {t("blog.noPostsYet")}
+            </h3>
+            <p className="text-sm text-muted-foreground">
+              {t("blog.checkBackSoon")}
+            </p>
           </div>
         ) : (
           <>
@@ -45,7 +81,13 @@ export default function Blog() {
                   <Card className="group overflow-hidden hover:shadow-lg transition-all duration-300 cursor-pointer border-border/50 h-full">
                     <div className="aspect-[16/10] overflow-hidden bg-muted">
                       {post.coverImage ? (
-                        <img src={post.coverImage} alt={post.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                        <img
+                          src={getThumbnailUrl(post.coverImage, 600)}
+                          alt={post.title}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                          loading="lazy"
+                          decoding="async"
+                        />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gold/10 to-charcoal/5">
                           <BookOpen className="h-12 w-12 text-gold/40" />
@@ -53,9 +95,19 @@ export default function Blog() {
                       )}
                     </div>
                     <CardContent className="p-5">
-                      <p className="text-xs text-muted-foreground mb-2">{new Date(post.publishedAt || post.createdAt).toLocaleDateString()}</p>
-                      <h3 className="text-base font-semibold text-foreground line-clamp-2 group-hover:text-gold-dark transition-colors">{post.title}</h3>
-                      {post.excerpt && <p className="text-sm text-muted-foreground line-clamp-2 mt-1">{post.excerpt}</p>}
+                      <p className="text-xs text-muted-foreground mb-2">
+                        {new Date(
+                          post.publishedAt || post.createdAt
+                        ).toLocaleDateString()}
+                      </p>
+                      <h3 className="text-base font-semibold text-foreground line-clamp-2 group-hover:text-gold-dark transition-colors">
+                        {post.title}
+                      </h3>
+                      {post.excerpt && (
+                        <p className="text-sm text-muted-foreground line-clamp-2 mt-1">
+                          {post.excerpt}
+                        </p>
+                      )}
                     </CardContent>
                   </Card>
                 </Link>
@@ -64,9 +116,25 @@ export default function Blog() {
 
             {totalPages > 1 && (
               <div className="flex items-center justify-center gap-2 mt-8">
-                <Button variant="outline" size="sm" disabled={page <= 1} onClick={() => setPage((p) => p - 1)}><ChevronLeft className="h-4 w-4" /></Button>
-                <span className="text-sm text-muted-foreground px-3">{t("blog.page")} {page} {t("blog.of")} {totalPages}</span>
-                <Button variant="outline" size="sm" disabled={page >= totalPages} onClick={() => setPage((p) => p + 1)}><ChevronRight className="h-4 w-4" /></Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={page <= 1}
+                  onClick={() => setPage(p => p - 1)}
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                </Button>
+                <span className="text-sm text-muted-foreground px-3">
+                  {t("blog.page")} {page} {t("blog.of")} {totalPages}
+                </span>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={page >= totalPages}
+                  onClick={() => setPage(p => p + 1)}
+                >
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
               </div>
             )}
           </>

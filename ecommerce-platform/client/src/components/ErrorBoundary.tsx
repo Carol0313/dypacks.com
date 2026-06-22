@@ -31,8 +31,12 @@ function ErrorFallback() {
   const { t } = useTranslation();
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-background px-4">
-      <h2 className="text-xl font-semibold text-foreground mb-2">{t("error.unexpectedError")}</h2>
-      <Button onClick={() => window.location.reload()}>{t("error.reloadPage")}</Button>
+      <h2 className="text-xl font-semibold text-foreground mb-2">
+        {t("error.unexpectedError")}
+      </h2>
+      <Button onClick={() => window.location.reload()}>
+        {t("error.reloadPage")}
+      </Button>
     </div>
   );
 }

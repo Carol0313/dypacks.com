@@ -1,35 +1,72 @@
-import { Button } from "'components/ui/button"' (see below for file content);
-import { Card, CardContent } from "'components/ui/card"' (see below for file content);
-import { trpc } from "'lib/trpc"' (see below for file content);
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { trpc } from "@/lib/trpc";
 import {
   PLACEHOLDER_IMAGE,
   SHOWCASE_IMAGE_1,
   SHOWCASE_IMAGE_2,
   SHOWCASE_IMAGE_3,
   SHOWCASE_IMAGE_4,
-} from "'lib/constants"' (see below for file content);
+  HERO_IMAGE,
+} from "@/lib/constants";
 import { Link } from "wouter";
 import { Package, Shield, Truck, Star, ChevronRight } from "lucide-react";
-import Navbar from "'components/Navbar"' (see below for file content);
-import Footer from "'components/Footer"' (see below for file content);
-import { OrganizationSchema, WebSiteSchema } from "'components/SchemaMarkup"' (see below for file content);
-import HeroCarousel from "'components/HeroCarousel"' (see below for file content);
-import ContactForm from "'components/ContactForm"' (see below for file content);
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+import {
+  OrganizationSchema,
+  WebSiteSchema,
+  BreadcrumbSchema,
+} from "@/components/SchemaMarkup";
+import HeroCarousel from "@/components/HeroCarousel";
+import ContactForm from "@/components/ContactForm";
 import { useTranslation } from "react-i18next";
+import { usePageSEO } from "@/lib/seo";
 
 export default function Home() {
   const { t } = useTranslation();
+
+  usePageSEO({
+    title: "Custom Packaging Manufacturer | Premium Boxes by DY Packs",
+    description:
+      "DY Packs is a premium custom packaging manufacturer in China. Low MOQ luxury gift boxes, cosmetic packaging, rigid boxes & food packaging with global shipping.",
+    keywords:
+      "custom packaging manufacturer, premium packaging boxes, custom packaging China, luxury gift boxes, cosmetic packaging boxes, rigid boxes, low MOQ custom boxes",
+    ogImage: HERO_IMAGE,
+    ogType: "website",
+    canonicalPath: "/",
+  });
   const categoriesQuery = trpc.category.list.useQuery();
-  const featuredQuery = trpc.product.list.useQuery({ featured: true, status: "active", limit: 8 });
+  const featuredQuery = trpc.product.list.useQuery({
+    featured: true,
+    status: "active",
+    limit: 8,
+  });
 
   const categories = categoriesQuery.data ?? [];
   const featuredProducts = featuredQuery.data?.items ?? [];
 
   const features = [
-    { icon: Package, title: t("home.customDesign"), desc: t("home.tailoredToYourBrand") },
-    { icon: Shield, title: t("home.qualityAssured"), desc: t("home.premiumMaterials") },
-    { icon: Truck, title: t("home.globalShipping"), desc: t("home.worldwideDelivery") },
-    { icon: Star, title: t("home.expertService"), desc: t("home.yearsExperience") },
+    {
+      icon: Package,
+      title: t("home.customDesign"),
+      desc: t("home.tailoredToYourBrand"),
+    },
+    {
+      icon: Shield,
+      title: t("home.qualityAssured"),
+      desc: t("home.premiumMaterials"),
+    },
+    {
+      icon: Truck,
+      title: t("home.globalShipping"),
+      desc: t("home.worldwideDelivery"),
+    },
+    {
+      icon: Star,
+      title: t("home.expertService"),
+      desc: t("home.yearsExperience"),
+    },
   ];
 
   const defaultCategories = [
@@ -52,6 +89,7 @@ export default function Home() {
     <div className="min-h-screen flex flex-col">
       <OrganizationSchema />
       <WebSiteSchema />
+      <BreadcrumbSchema items={[{ name: "Home", url: "/" }]} />
       <Navbar />
 
       {/* Hero Carousel */}
@@ -67,7 +105,9 @@ export default function Home() {
                   <item.icon className="h-5 w-5 text-gold-dark" />
                 </div>
                 <div>
-                  <p className="text-sm font-semibold text-foreground">{item.title}</p>
+                  <p className="text-sm font-semibold text-foreground">
+                    {item.title}
+                  </p>
                   <p className="text-xs text-muted-foreground">{item.desc}</p>
                 </div>
               </div>
@@ -80,7 +120,10 @@ export default function Home() {
       <section className="py-16 md:py-20 bg-background">
         <div className="container">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-3" style={{ fontFamily: "var(--font-heading)" }}>
+            <h2
+              className="text-3xl md:text-4xl font-bold text-foreground mb-3"
+              style={{ fontFamily: "var(--font-heading)" }}
+            >
               {t("home.ourCategories")}
             </h2>
             <p className="text-muted-foreground max-w-lg mx-auto">
@@ -89,7 +132,7 @@ export default function Home() {
           </div>
           {categories.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {categories.map((cat) => (
+              {categories.map(cat => (
                 <Link key={cat.id} href={`/products?category=${cat.slug}`}>
                   <Card className="group overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer border-border/50">
                     <div className="aspect-[16/10] overflow-hidden bg-muted relative">
@@ -107,9 +150,13 @@ export default function Home() {
                       )}
                       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
                       <div className="absolute bottom-0 left-0 right-0 p-5">
-                        <h3 className="text-lg font-semibold text-white mb-1">{cat.name}</h3>
+                        <h3 className="text-lg font-semibold text-white mb-1">
+                          {cat.name}
+                        </h3>
                         {cat.description && (
-                          <p className="text-sm text-white/70 line-clamp-2">{cat.description}</p>
+                          <p className="text-sm text-white/70 line-clamp-2">
+                            {cat.description}
+                          </p>
                         )}
                       </div>
                     </div>
@@ -119,13 +166,18 @@ export default function Home() {
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {defaultCategories.map((name) => (
-                <Card key={name} className="group overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer border-border/50">
+              {defaultCategories.map(name => (
+                <Card
+                  key={name}
+                  className="group overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer border-border/50"
+                >
                   <CardContent className="p-8 text-center">
                     <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gold/10 flex items-center justify-center group-hover:bg-gold/20 transition-colors">
                       <Package className="h-8 w-8 text-gold-dark" />
                     </div>
-                    <h3 className="text-lg font-semibold text-foreground">{name}</h3>
+                    <h3 className="text-lg font-semibold text-foreground">
+                      {name}
+                    </h3>
                   </CardContent>
                 </Card>
               ))}
@@ -140,7 +192,10 @@ export default function Home() {
           <div className="container">
             <div className="flex items-end justify-between mb-10">
               <div>
-                <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-3" style={{ fontFamily: "var(--font-heading)" }}>
+                <h2
+                  className="text-3xl md:text-4xl font-bold text-foreground mb-3"
+                  style={{ fontFamily: "var(--font-heading)" }}
+                >
                   {t("home.featuredProducts")}
                 </h2>
                 <p className="text-muted-foreground">
@@ -148,14 +203,17 @@ export default function Home() {
                 </p>
               </div>
               <Link href="/products">
-                <Button variant="ghost" className="hidden md:flex text-muted-foreground hover:text-foreground">
+                <Button
+                  variant="ghost"
+                  className="hidden md:flex text-muted-foreground hover:text-foreground"
+                >
                   {t("home.viewAll")}
                   <ChevronRight className="ml-1 h-4 w-4" />
                 </Button>
               </Link>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-              {featuredProducts.map((product) => {
+              {featuredProducts.map(product => {
                 const images = product.images ? JSON.parse(product.images) : [];
                 const mainImage = images[0] || PLACEHOLDER_IMAGE;
                 return (
@@ -164,7 +222,7 @@ export default function Home() {
                       <div className="aspect-square overflow-hidden bg-muted">
                         <img
                           src={mainImage}
-                          alt={product.name}
+                          alt={`${product.name} - Custom Packaging | DY Packs`}
                           loading="lazy"
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                         />
@@ -179,11 +237,15 @@ export default function Home() {
                           </p>
                         )}
                         <p className="text-sm text-muted-foreground">
-                          {t("home.from")} <span className="text-base font-bold text-foreground">${Number(product.price).toFixed(2)}</span>
+                          {t("home.from")}{" "}
+                          <span className="text-base font-bold text-foreground">
+                            ${Number(product.price).toFixed(2)}
+                          </span>
                         </p>
                         {product.minOrderQty > 0 && (
                           <p className="text-xs text-muted-foreground mt-1">
-                            {t("home.moq")} {product.minOrderQty} {t("home.pcs")}
+                            {t("home.moq")} {product.minOrderQty}{" "}
+                            {t("home.pcs")}
                           </p>
                         )}
                       </CardContent>
@@ -235,15 +297,22 @@ export default function Home() {
               />
             </div>
             <div>
-              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4" style={{ fontFamily: "var(--font-heading)" }}>
-                {t("home.whyChoose")} <span className="text-gold-dark">{t("home.dyPacks")}</span>?
+              <h2
+                className="text-3xl md:text-4xl font-bold text-foreground mb-4"
+                style={{ fontFamily: "var(--font-heading)" }}
+              >
+                {t("home.whyChoose")}{" "}
+                <span className="text-gold-dark">{t("home.dyPacks")}</span>?
               </h2>
               <p className="text-muted-foreground leading-relaxed mb-6">
                 {t("home.experienceDescription")}
               </p>
               <ul className="space-y-3 mb-8">
                 {whyChooseItems.map((item, i) => (
-                  <li key={i} className="flex items-center gap-2.5 text-sm text-foreground">
+                  <li
+                    key={i}
+                    className="flex items-center gap-2.5 text-sm text-foreground"
+                  >
                     <div className="w-1.5 h-1.5 rounded-full bg-gold shrink-0" />
                     {item}
                   </li>
@@ -256,12 +325,52 @@ export default function Home() {
                   </Button>
                 </Link>
                 <Link href="/contact">
-                  <Button variant="outline">
-                    {t("home.getInTouch")}
-                  </Button>
+                  <Button variant="outline">{t("home.getInTouch")}</Button>
                 </Link>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* SEO Content Section — keyword-rich intro for crawlers */}
+      <section className="py-16 md:py-20 bg-secondary/30">
+        <div className="container max-w-4xl">
+          <h2
+            className="text-2xl md:text-3xl font-bold text-foreground mb-6 text-center"
+            style={{ fontFamily: "var(--font-heading)" }}
+          >
+            {t("home.seoSectionTitle")}
+          </h2>
+          <div className="prose prose-sm md:prose-base max-w-none text-muted-foreground text-center leading-relaxed">
+            <p>{t("home.seoSectionText")}</p>
+          </div>
+          <div className="flex flex-wrap justify-center gap-3 mt-8">
+            <Link href="/products?category=gift-boxes">
+              <Button variant="outline" size="sm">
+                {t("home.giftBoxes")}
+              </Button>
+            </Link>
+            <Link href="/products?category=cosmetic-packaging">
+              <Button variant="outline" size="sm">
+                {t("home.cosmeticPackaging")}
+              </Button>
+            </Link>
+            <Link href="/products?category=jewelry-boxes">
+              <Button variant="outline" size="sm">
+                {t("home.jewelryBoxes")}
+              </Button>
+            </Link>
+            <Link href="/products?category=food-packaging">
+              <Button variant="outline" size="sm">
+                {t("home.foodPackaging")}
+              </Button>
+            </Link>
+            <Link href="/products?category=luxury-packaging">
+              <Button variant="outline" size="sm">
+                {t("home.luxuryPackaging")}
+              </Button>
+            </Link>
           </div>
         </div>
       </section>
@@ -271,22 +380,32 @@ export default function Home() {
         <div className="container">
           <div className="grid md:grid-cols-2 gap-12 items-start">
             <div className="text-center md:text-left">
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4" style={{ fontFamily: "var(--font-heading)" }}>
-                {t("home.readyToCreate")} <span className="text-gold">{t("home.customPackaging")}</span>?
+              <h2
+                className="text-3xl md:text-4xl font-bold text-white mb-4"
+                style={{ fontFamily: "var(--font-heading)" }}
+              >
+                {t("home.readyToCreate")}{" "}
+                <span className="text-gold">{t("home.customPackaging")}</span>?
               </h2>
               <p className="text-white/60 max-w-lg mx-auto md:mx-0 mb-8">
                 {t("home.freeQuoteDescription")}
               </p>
               <div className="flex justify-center md:justify-start gap-3">
                 <Link href="/contact">
-                  <Button size="lg" className="bg-gold text-charcoal-dark hover:bg-gold-dark font-semibold px-8">
+                  <Button
+                    size="lg"
+                    className="bg-gold text-charcoal-dark hover:bg-gold-dark font-semibold px-8"
+                  >
                     {t("home.requestQuote")}
                   </Button>
                 </Link>
               </div>
             </div>
             <div className="bg-white/5 rounded-xl p-6 border border-white/10">
-              <h3 className="text-xl font-bold text-white mb-4 text-center" style={{ fontFamily: "var(--font-heading)" }}>
+              <h3
+                className="text-xl font-bold text-white mb-4 text-center"
+                style={{ fontFamily: "var(--font-heading)" }}
+              >
                 {t("home.sendQuickInquiry")}
               </h3>
               <ContactForm source="home_page" />

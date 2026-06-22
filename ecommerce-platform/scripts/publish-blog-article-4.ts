@@ -21,7 +21,8 @@ async function main() {
   const now = new Date();
 
   const article = {
-    title: "Custom Packaging with Logo: The Small Business Branding Playbook (2026)",
+    title:
+      "Custom Packaging with Logo: The Small Business Branding Playbook (2026)",
     slug: "custom-packaging-with-logo-small-business-guide",
     excerpt:
       "Learn how custom packaging with logo can boost brand recognition by 80%. A practical guide for small businesses covering logo placement, materials, colors, and budget-friendly strategies.",
@@ -324,14 +325,23 @@ Request a Free Quote → https://dypacks.com/contact`,
     console.log(`   URL: https://dypacks.com/blog/${article.slug}`);
     console.log(`   Published at: ${now.toISOString()}`);
     console.log("\n📌 Next steps:");
-    console.log("   1. Verify the article renders correctly at /blog/custom-packaging-with-logo-small-business-guide");
+    console.log(
+      "   1. Verify the article renders correctly at /blog/custom-packaging-with-logo-small-business-guide"
+    );
     console.log("   2. Add internal links from product pages to this article");
-    console.log("   3. Share on LinkedIn, Pinterest, and other social channels");
+    console.log(
+      "   3. Share on LinkedIn, Pinterest, and other social channels"
+    );
     console.log("   4. Submit the URL to Google Search Console for indexing");
   } catch (error: any) {
-    if (error.message?.includes("Duplicate entry") || error.code === "ER_DUP_ENTRY") {
+    if (
+      error.message?.includes("Duplicate entry") ||
+      error.code === "ER_DUP_ENTRY"
+    ) {
       console.error("❌ An article with this slug already exists.");
-      console.error("   If you want to update it, use the admin panel or delete the existing article first.");
+      console.error(
+        "   If you want to update it, use the admin panel or delete the existing article first."
+      );
     } else {
       console.error("❌ Failed to publish article:", error.message || error);
     }

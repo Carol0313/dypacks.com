@@ -9,7 +9,11 @@ const languages = [
   { code: "es", label: "ES", name: "Español" },
 ];
 
-export default function LanguageSwitcher({ className }: { className?: string }) {
+export default function LanguageSwitcher({
+  className,
+}: {
+  className?: string;
+}) {
   const { i18n } = useTranslation();
   const current = i18n.language;
 
@@ -24,7 +28,7 @@ export default function LanguageSwitcher({ className }: { className?: string }) 
       </button>
       <div className="absolute right-0 top-full mt-1 w-36 rounded-lg border bg-popover shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
         <div className="py-1">
-          {languages.map((lang) => (
+          {languages.map(lang => (
             <button
               key={lang.code}
               onClick={() => i18n.changeLanguage(lang.code)}

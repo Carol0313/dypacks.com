@@ -53,7 +53,7 @@ async function startServer() {
       ];
 
       let urls = staticPages.map(
-        (p) =>
+        p =>
           `  <url>\n    <loc>${origin}${p.url}</loc>\n    <lastmod>${now}</lastmod>\n    <changefreq>${p.changefreq}</changefreq>\n    <priority>${p.priority}</priority>\n  </url>`
       );
 
@@ -66,7 +66,9 @@ async function startServer() {
           .from(products)
           .where(eq(products.status, "active"));
         for (const p of allProducts) {
-          const lastmod = p.updatedAt ? new Date(p.updatedAt).toISOString().split("T")[0] : now;
+          const lastmod = p.updatedAt
+            ? new Date(p.updatedAt).toISOString().split("T")[0]
+            : now;
           urls.push(
             `  <url>\n    <loc>${origin}/product/${p.slug}</loc>\n    <lastmod>${lastmod}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>`
           );
@@ -79,7 +81,9 @@ async function startServer() {
           .from(blogPosts)
           .where(eq(blogPosts.status, "published"));
         for (const p of allPosts) {
-          const lastmod = p.updatedAt ? new Date(p.updatedAt).toISOString().split("T")[0] : now;
+          const lastmod = p.updatedAt
+            ? new Date(p.updatedAt).toISOString().split("T")[0]
+            : now;
           urls.push(
             `  <url>\n    <loc>${origin}/blog/${p.slug}</loc>\n    <lastmod>${lastmod}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.7</priority>\n  </url>`
           );
@@ -87,7 +91,9 @@ async function startServer() {
 
         // Category pages
         const { categories } = await import("../../drizzle/schema");
-        const allCats = await db.select({ slug: categories.slug }).from(categories);
+        const allCats = await db
+          .select({ slug: categories.slug })
+          .from(categories);
         for (const c of allCats) {
           urls.push(
             `  <url>\n    <loc>${origin}/products?category=${c.slug}</loc>\n    <lastmod>${now}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.6</priority>\n  </url>`

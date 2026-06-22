@@ -1,6 +1,7 @@
 # DY Packs E-Commerce Platform TODO
 
 ## Database Design
+
 - [x] Categories table
 - [x] Products table (with images, pricing, SEO fields)
 - [x] Cart items table
@@ -10,6 +11,7 @@
 - [x] Blog posts table
 
 ## Backend API
+
 - [x] Product CRUD API (admin)
 - [x] Category CRUD API (admin)
 - [x] Public product listing/search/filter API
@@ -21,6 +23,7 @@
 - [x] Payment info integration (Alipay/PayPal)
 
 ## Frontend Pages
+
 - [x] Global theme (grey + gold color scheme matching logo)
 - [x] Navigation bar with cart badge
 - [x] Homepage (hero, featured products, categories, about)
@@ -41,18 +44,21 @@
 - [x] Admin blog management
 
 ## SEO & GEO
+
 - [x] Meta tags and structured data
 - [x] Semantic HTML
 - [x] SEO-friendly URLs
 - [x] Blog for content marketing / SEO
 
 ## Design
+
 - [x] Upload and set DY Packs logo
 - [x] Elegant premium design style
 - [x] Responsive design (desktop + mobile)
 - [x] Smooth animations and transitions
 
 ## Changes
+
 - [x] Update contact email to carolni@dypacks.com
 - [x] Add Cosmetic Packaging, Food Packaging, Jewelry Boxes, Luxury Packaging categories to database
 - [x] Update homepage Categories section to show all categories with image cards

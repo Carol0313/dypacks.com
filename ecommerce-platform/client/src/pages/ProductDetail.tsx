@@ -8,62 +8,58 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { PLACEHOLDER_IMAGE } from "@/lib/constants";
 import { useRoute } from "wouter";
-import { useState, useEffect } from "react";
-import { Minus, Plus, ArrowLeft, Package, Truck, Shield, FileText, Mail, Ruler, Palette } from "lucide-react";
+import { useState } from "react";
+import {
+  Minus,
+  Plus,
+  ArrowLeft,
+  Package,
+  Truck,
+  Shield,
+  FileText,
+  Mail,
+  Ruler,
+  Palette,
+} from "lucide-react";
 import ProductReviews from "@/components/ProductReviews";
 import ImageLightbox from "@/components/ImageLightbox";
 import ContactForm from "@/components/ContactForm";
 import { Link } from "wouter";
 import { toast } from "sonner";
-import { ProductSchema, BreadcrumbSchema } from "@/components/SchemaMarkup";
+import {
+  ProductSchema,
+  BreadcrumbSchema,
+  FAQSchema,
+} from "@/components/SchemaMarkup";
 import { useTranslation } from "react-i18next";
+import {
+  usePageSEO,
+  buildProductTitle,
+  buildProductDescription,
+} from "@/lib/seo";
 
 function useProductSEO(product: any) {
-  useEffect(() => {
-    if (!product) return;
+  const title = product
+    ? product.metaTitle || buildProductTitle(product.name)
+    : "Product | DY Packs";
+  const description = product
+    ? product.metaDescription ||
+      buildProductDescription(product.name, product.shortDescription)
+    : "Premium custom packaging solutions from DY Packs.";
+  const keywords = product
+    ? product.metaKeywords ||
+      `custom packaging, ${product.name}, packaging manufacturer, ${product.categoryName || ""}, DY Packs`
+    : "custom packaging, packaging manufacturer, DY Packs";
+  const images = product?.images ? JSON.parse(product.images) : [];
 
-    const title = product.metaTitle || `${product.name} | DY Packs - Premium Custom Packaging`;
-    const description = product.metaDescription || product.shortDescription || `${product.name} - Premium custom packaging solutions from Shanghai Douyue Industrial Co., Ltd.`;
-    const keywords = product.metaKeywords || `custom packaging, ${product.name}, packaging manufacturer, DY Packs`;
-
-    document.title = title;
-
-    const setMeta = (name: string, content: string) => {
-      let el = document.querySelector(`meta[name="${name}"]`) as HTMLMetaElement | null;
-      if (!el) {
-        el = document.createElement("meta");
-        el.setAttribute("name", name);
-        document.head.appendChild(el);
-      }
-      el.setAttribute("content", content);
-    };
-
-    const setPropertyMeta = (property: string, content: string) => {
-      let el = document.querySelector(`meta[property="${property}"]`) as HTMLMetaElement | null;
-      if (!el) {
-        el = document.createElement("meta");
-        el.setAttribute("property", property);
-        document.head.appendChild(el);
-      }
-      el.setAttribute("content", content);
-    };
-
-    setMeta("description", description);
-    setMeta("keywords", keywords);
-    setPropertyMeta("og:title", title);
-    setPropertyMeta("og:description", description);
-    setPropertyMeta("og:type", "product");
-
-    const images = product.images ? JSON.parse(product.images) : [];
-    if (images.length > 0) {
-      setPropertyMeta("og:image", images[0]);
-    }
-
-    return () => {
-      // Reset to default on unmount
-      document.title = "DY Packs - Premium Custom Packaging Solutions | Shanghai Douyue Industrial Co., Ltd";
-    };
-  }, [product]);
+  usePageSEO({
+    title,
+    description,
+    keywords,
+    ogImage: images[0],
+    ogType: "product",
+    canonicalPath: product ? `/product/${product.slug}` : undefined,
+  });
 }
 
 export default function ProductDetail() {
@@ -75,7 +71,10 @@ export default function ProductDetail() {
   const [selectedImage, setSelectedImage] = useState(0);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
 
-  const productQuery = trpc.product.getBySlug.useQuery({ slug }, { enabled: !!slug });
+  const productQuery = trpc.product.getBySlug.useQuery(
+    { slug },
+    { enabled: !!slug }
+  );
   const product = productQuery.data;
 
   useProductSEO(product);
@@ -101,7 +100,10 @@ export default function ProductDetail() {
   const utils = trpc.useUtils();
 
   // Fetch review stats for schema
-  const ratingQuery = trpc.review.ratingStats.useQuery({ productId: product?.id ?? 0 }, { enabled: !!product });
+  const ratingQuery = trpc.review.ratingStats.useQuery(
+    { productId: product?.id ?? 0 },
+    { enabled: !!product }
+  );
   const ratingStats = ratingQuery.data;
 
   if (productQuery.isLoading) {
@@ -129,8 +131,12 @@ export default function ProductDetail() {
         <Navbar />
         <div className="container py-20 text-center">
           <Package className="h-12 w-12 mx-auto text-muted-foreground/40 mb-4" />
-          <h2 className="text-xl font-semibold mb-2">{t("productDetail.productNotFound")}</h2>
-          <p className="text-muted-foreground mb-6">{t("productDetail.productNotExist")}</p>
+          <h2 className="text-xl font-semibold mb-2">
+            {t("productDetail.productNotFound")}
+          </h2>
+          <p className="text-muted-foreground mb-6">
+            {t("productDetail.productNotExist")}
+          </p>
           <Link href="/products">
             <Button>{t("productDetail.backToProducts")}</Button>
           </Link>
@@ -194,6 +200,29 @@ export default function ProductDetail() {
         ratingValue={ratingStats?.averageRating}
         reviewCount={ratingStats?.totalReviews}
       />
+      <FAQSchema
+        items={[
+          {
+            question: `What is the MOQ for ${product.name}?`,
+            answer: `Our standard MOQ starts from ${product.minOrderQty || 100} pieces. We also support lower quantities for sample orders. Contact us for details.`,
+          },
+          {
+            question: `Can I customize the ${product.name}?`,
+            answer:
+              "Yes. We support custom sizes, colors, materials, printing, foil stamping, embossing, spot UV, and inserts. Send us your requirements for a tailored quote.",
+          },
+          {
+            question: "How long is production and shipping?",
+            answer:
+              "Sample production takes 3-7 days. Bulk production typically takes 10-25 days depending on quantity and customization. We ship worldwide by sea, air or express.",
+          },
+          {
+            question: "Do you provide samples before bulk order?",
+            answer:
+              "Absolutely. We recommend samples to confirm material, color, structure and print quality before mass production.",
+          },
+        ]}
+      />
       <BreadcrumbSchema
         items={[
           { name: t("productDetail.home"), url: "/" },
@@ -207,7 +236,10 @@ export default function ProductDetail() {
       <div className="container py-8">
         {/* Breadcrumb */}
         <div className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
-          <Link href="/products" className="hover:text-foreground transition-colors flex items-center gap-1">
+          <Link
+            href="/products"
+            className="hover:text-foreground transition-colors flex items-center gap-1"
+          >
             <ArrowLeft className="h-3.5 w-3.5" />
             {t("productDetail.products")}
           </Link>
@@ -224,12 +256,27 @@ export default function ProductDetail() {
             >
               <img
                 src={images[selectedImage]}
-                alt={product.name}
+                alt={`${product.name} - Custom Packaging | DY Packs`}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
               />
               <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/20">
                 <div className="p-3 rounded-full bg-white/80 text-charcoal-dark">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <circle cx="11" cy="11" r="8" />
+                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                    <line x1="11" y1="8" x2="11" y2="14" />
+                    <line x1="8" y1="11" x2="14" y2="11" />
+                  </svg>
                 </div>
               </div>
             </div>
@@ -243,7 +290,11 @@ export default function ProductDetail() {
                       selectedImage === i ? "border-gold" : "border-transparent"
                     }`}
                   >
-                    <img src={img} alt="" className="w-full h-full object-cover" />
+                    <img
+                      src={img}
+                      alt=""
+                      className="w-full h-full object-cover"
+                    />
                   </button>
                 ))}
               </div>
@@ -252,17 +303,24 @@ export default function ProductDetail() {
 
           {/* Product Info */}
           <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-3" style={{ fontFamily: "var(--font-heading)" }}>
+            <h1
+              className="text-2xl md:text-3xl font-bold text-foreground mb-3"
+              style={{ fontFamily: "var(--font-heading)" }}
+            >
               {product.name}
             </h1>
 
             {product.shortDescription && (
-              <p className="text-muted-foreground mb-4">{product.shortDescription}</p>
+              <p className="text-muted-foreground mb-4">
+                {product.shortDescription}
+              </p>
             )}
 
             {/* Reference Price */}
             <div className="mb-6">
-              <p className="text-sm text-muted-foreground mb-1">{t("productDetail.referencePrice")}</p>
+              <p className="text-sm text-muted-foreground mb-1">
+                {t("productDetail.referencePrice")}
+              </p>
               <span className="text-3xl font-bold text-foreground">
                 ${Number(product.price).toFixed(2)}
               </span>
@@ -280,7 +338,9 @@ export default function ProductDetail() {
                   {t("productDetail.customizable")}
                 </Badge>
                 {product.minOrderQty > 0 && (
-                  <span className="text-sm text-muted-foreground">{t("home.moq")} {product.minOrderQty} {t("home.pcs")}</span>
+                  <span className="text-sm text-muted-foreground">
+                    {t("home.moq")} {product.minOrderQty} {t("home.pcs")}
+                  </span>
                 )}
               </div>
               <div className="grid grid-cols-2 gap-2 text-sm text-muted-foreground">
@@ -297,17 +357,23 @@ export default function ProductDetail() {
 
             {/* Quantity */}
             <div className="flex items-center gap-4 mb-6">
-              <span className="text-sm font-medium text-foreground">{t("productDetail.quantity")}</span>
+              <span className="text-sm font-medium text-foreground">
+                {t("productDetail.quantity")}
+              </span>
               <div className="flex items-center border rounded-md">
                 <button
-                  onClick={() => setQuantity((q) => Math.max(product.minOrderQty || 1, q - 1))}
+                  onClick={() =>
+                    setQuantity(q => Math.max(product.minOrderQty || 1, q - 1))
+                  }
                   className="px-3 py-2 hover:bg-muted transition-colors"
                 >
                   <Minus className="h-4 w-4" />
                 </button>
-                <span className="px-4 py-2 text-sm font-medium min-w-[3rem] text-center">{quantity}</span>
+                <span className="px-4 py-2 text-sm font-medium min-w-[3rem] text-center">
+                  {quantity}
+                </span>
                 <button
-                  onClick={() => setQuantity((q) => q + 1)}
+                  onClick={() => setQuantity(q => q + 1)}
                   className="px-3 py-2 hover:bg-muted transition-colors"
                 >
                   <Plus className="h-4 w-4" />
@@ -324,7 +390,9 @@ export default function ProductDetail() {
                 disabled={addToInquiryMutation.isPending}
               >
                 <FileText className="mr-2 h-5 w-5" />
-                {addToInquiryMutation.isPending ? t("productDetail.adding") : t("productDetail.addToInquiryList")}
+                {addToInquiryMutation.isPending
+                  ? t("productDetail.adding")
+                  : t("productDetail.addToInquiryList")}
               </Button>
               <Link href={`/contact?product=${product.slug}`}>
                 <Button
@@ -353,7 +421,10 @@ export default function ProductDetail() {
         {/* Description */}
         {product.description && (
           <div className="mt-12 pt-8 border-t">
-            <h2 className="text-xl font-bold text-foreground mb-4" style={{ fontFamily: "var(--font-heading)" }}>
+            <h2
+              className="text-xl font-bold text-foreground mb-4"
+              style={{ fontFamily: "var(--font-heading)" }}
+            >
               {t("productDetail.productDescription")}
             </h2>
             <div className="prose prose-sm max-w-none text-muted-foreground whitespace-pre-wrap">
@@ -376,7 +447,10 @@ export default function ProductDetail() {
 
         {/* Contact Form Section */}
         <div className="mt-12 pt-8 border-t">
-          <h2 className="text-xl font-bold text-foreground mb-4" style={{ fontFamily: "var(--font-heading)" }}>
+          <h2
+            className="text-xl font-bold text-foreground mb-4"
+            style={{ fontFamily: "var(--font-heading)" }}
+          >
             {t("productDetail.requestQuote")}
           </h2>
           <div className="max-w-2xl">
@@ -387,8 +461,14 @@ export default function ProductDetail() {
         {/* Pricing Note */}
         <div className="mt-8 p-4 bg-gold/5 border border-gold/20 rounded-lg">
           <p className="text-sm text-muted-foreground">
-            <strong className="text-foreground">{t("productDetail.note")}</strong> {t("productDetail.pricesReference")}{" "}
-            <Link href="/contact" className="text-gold-dark underline">{t("productDetail.contactUs")}</Link> {t("productDetail.detailedQuote")}
+            <strong className="text-foreground">
+              {t("productDetail.note")}
+            </strong>{" "}
+            {t("productDetail.pricesReference")}{" "}
+            <Link href="/contact" className="text-gold-dark underline">
+              {t("productDetail.contactUs")}
+            </Link>{" "}
+            {t("productDetail.detailedQuote")}
           </p>
         </div>
       </div>

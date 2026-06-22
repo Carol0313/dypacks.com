@@ -14,22 +14,22 @@ export function registerOAuthRoutes(app: Express) {
   // Local admin login
   app.post("/api/auth/local-login", async (req: Request, res: Response) => {
     const { username, password } = req.body;
-    
+
     if (!username || !password) {
       res.status(400).json({ error: "Username and password are required" });
       return;
     }
-    
+
     // Verify admin password from env
     const adminPassword = process.env.ADMIN_PASSWORD;
     if (!adminPassword || password !== adminPassword) {
       res.status(401).json({ error: "Invalid credentials" });
       return;
     }
-    
+
     const openId = ENV.ownerOpenId || "local_admin";
     const userName = username || "Admin";
-    
+
     // Upsert user to database
     await db.upsertUser({
       openId,
@@ -39,17 +39,20 @@ export function registerOAuthRoutes(app: Express) {
       role: "admin",
       lastSignedIn: new Date(),
     });
-    
+
     // Create session token
     const sessionToken = await sdk.createSessionToken(openId, {
       name: userName,
       expiresInMs: ONE_YEAR_MS,
     });
-    
+
     // Set cookie
     const cookieOptions = getSessionCookieOptions(req);
-    res.cookie(COOKIE_NAME, sessionToken, { ...cookieOptions, maxAge: ONE_YEAR_MS });
-    
+    res.cookie(COOKIE_NAME, sessionToken, {
+      ...cookieOptions,
+      maxAge: ONE_YEAR_MS,
+    });
+
     res.json({ success: true, redirect: "/admin" });
   });
 
@@ -85,7 +88,10 @@ export function registerOAuthRoutes(app: Express) {
       });
 
       const cookieOptions = getSessionCookieOptions(req);
-      res.cookie(COOKIE_NAME, sessionToken, { ...cookieOptions, maxAge: ONE_YEAR_MS });
+      res.cookie(COOKIE_NAME, sessionToken, {
+        ...cookieOptions,
+        maxAge: ONE_YEAR_MS,
+      });
 
       res.redirect(302, "/");
     } catch (error) {

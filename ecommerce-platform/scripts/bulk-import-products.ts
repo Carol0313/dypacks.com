@@ -63,8 +63,10 @@ async function importProducts(filePath: string) {
   console.log(`📦 Importing ${items.length} products...\n`);
 
   // Pre-fetch categories to validate categoryId
-  const allCats = await db.select({ id: categories.id, name: categories.name }).from(categories);
-  const catMap = new Map(allCats.map((c) => [c.id, c.name]));
+  const allCats = await db
+    .select({ id: categories.id, name: categories.name })
+    .from(categories);
+  const catMap = new Map(allCats.map(c => [c.id, c.name]));
 
   let created = 0;
   let skipped = 0;
@@ -72,13 +74,17 @@ async function importProducts(filePath: string) {
   for (const item of items) {
     // Validation
     if (!item.name || !item.slug || !item.price || !item.categoryId) {
-      console.warn(`⏭️  Skipped (missing required fields): ${item.name || "[unnamed]"}`);
+      console.warn(
+        `⏭️  Skipped (missing required fields): ${item.name || "[unnamed]"}`
+      );
       skipped++;
       continue;
     }
 
     if (!catMap.has(item.categoryId)) {
-      console.warn(`⏭️  Skipped (invalid categoryId ${item.categoryId}): ${item.name}`);
+      console.warn(
+        `⏭️  Skipped (invalid categoryId ${item.categoryId}): ${item.name}`
+      );
       skipped++;
       continue;
     }
@@ -104,7 +110,10 @@ async function importProducts(filePath: string) {
       price: item.price,
       compareAtPrice: item.compareAtPrice ?? null,
       categoryId: item.categoryId,
-      images: item.images && item.images.length > 0 ? JSON.stringify(item.images) : null,
+      images:
+        item.images && item.images.length > 0
+          ? JSON.stringify(item.images)
+          : null,
       featured: item.featured ?? false,
       status: item.status ?? "draft",
       stock: item.stock ?? 0,
@@ -130,7 +139,9 @@ async function importProducts(filePath: string) {
 
 const fileArg = process.argv[2];
 if (!fileArg) {
-  console.log("Usage: npx tsx scripts/bulk-import-products.ts <path-to-products.json>");
+  console.log(
+    "Usage: npx tsx scripts/bulk-import-products.ts <path-to-products.json>"
+  );
   process.exit(1);
 }
 

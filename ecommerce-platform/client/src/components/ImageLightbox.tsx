@@ -32,11 +32,11 @@ export default function ImageLightbox({
   }, [isOpen, initialIndex]);
 
   const goToPrevious = useCallback(() => {
-    setCurrentIndex((prev) => (prev > 0 ? prev - 1 : images.length - 1));
+    setCurrentIndex(prev => (prev > 0 ? prev - 1 : images.length - 1));
   }, [images.length]);
 
   const goToNext = useCallback(() => {
-    setCurrentIndex((prev) => (prev < images.length - 1 ? prev + 1 : 0));
+    setCurrentIndex(prev => (prev < images.length - 1 ? prev + 1 : 0));
   }, [images.length]);
 
   // Keyboard navigation
@@ -78,7 +78,7 @@ export default function ImageLightbox({
       {/* Previous button */}
       {images.length > 1 && (
         <button
-          onClick={(e) => {
+          onClick={e => {
             e.stopPropagation();
             goToPrevious();
           }}
@@ -92,7 +92,7 @@ export default function ImageLightbox({
       {/* Next button */}
       {images.length > 1 && (
         <button
-          onClick={(e) => {
+          onClick={e => {
             e.stopPropagation();
             goToNext();
           }}
@@ -106,7 +106,7 @@ export default function ImageLightbox({
       {/* Main image */}
       <div
         className="relative max-w-[90vw] max-h-[80vh] flex items-center justify-center"
-        onClick={(e) => e.stopPropagation()}
+        onClick={e => e.stopPropagation()}
       >
         <img
           src={images[currentIndex]}
@@ -119,7 +119,7 @@ export default function ImageLightbox({
       {images.length > 1 && (
         <div
           className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 px-4 py-2 rounded-xl bg-white/10 backdrop-blur-md overflow-x-auto max-w-[90vw]"
-          onClick={(e) => e.stopPropagation()}
+          onClick={e => e.stopPropagation()}
         >
           {images.map((img, i) => (
             <button

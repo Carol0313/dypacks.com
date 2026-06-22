@@ -77,7 +77,9 @@ export default function BaiduPromotionLoginPage() {
     document.title = "DY Packs 定制包装 - 百度推广专享 | 上海逗悦实业";
 
     const setMeta = (name: string, content: string) => {
-      let el = document.querySelector(`meta[name="${name}"]`) as HTMLMetaElement | null;
+      let el = document.querySelector(
+        `meta[name="${name}"]`
+      ) as HTMLMetaElement | null;
       if (!el) {
         el = document.createElement("meta");
         el.setAttribute("name", name);
@@ -86,7 +88,10 @@ export default function BaiduPromotionLoginPage() {
       el.setAttribute("content", content);
     };
 
-    setMeta("description", "DY Packs 百度推广专属通道，专业定制纸袋、纸盒、无纺布袋、精装礼盒。24 小时内快速报价，助力品牌出海。");
+    setMeta(
+      "description",
+      "DY Packs 百度推广专属通道，专业定制纸袋、纸盒、无纺布袋、精装礼盒。24 小时内快速报价，助力品牌出海。"
+    );
     setMeta("robots", "noindex, nofollow");
 
     return () => {
@@ -102,7 +107,13 @@ export default function BaiduPromotionLoginPage() {
 
   const inquiryForm = useForm<InquiryValues>({
     resolver: zodResolver(inquirySchema),
-    defaultValues: { companyName: "", contactName: "", phone: "", email: "", product: "" },
+    defaultValues: {
+      companyName: "",
+      contactName: "",
+      phone: "",
+      email: "",
+      product: "",
+    },
   });
 
   const submitInquiry = trpc.inquiry.submitAnonymous.useMutation({
@@ -111,7 +122,7 @@ export default function BaiduPromotionLoginPage() {
       inquiryForm.reset();
       toast.success("提交成功，我们会尽快与您联系！");
     },
-    onError: (err) => {
+    onError: err => {
       toast.error(err.message || "提交失败，请稍后重试");
     },
   });
@@ -160,7 +171,9 @@ export default function BaiduPromotionLoginPage() {
               <h1 className="text-lg font-bold leading-tight text-[oklch(0.22_0.02_75)]">
                 DY Packs
               </h1>
-              <p className="text-xs text-muted-foreground">上海逗悦实业有限公司</p>
+              <p className="text-xs text-muted-foreground">
+                上海逗悦实业有限公司
+              </p>
             </div>
           </div>
           <div className="hidden items-center gap-4 text-sm text-muted-foreground sm:flex">
@@ -191,20 +204,25 @@ export default function BaiduPromotionLoginPage() {
                 助力品牌出海
               </h2>
               <p className="max-w-lg text-base text-muted-foreground sm:text-lg">
-                DY Packs 专注于 B2B 包装定制，为全球客户提供高品质、可持续的包装解决方案。
+                DY Packs 专注于 B2B
+                包装定制，为全球客户提供高品质、可持续的包装解决方案。
                 留下您的需求，我们将在 24 小时内联系您。
               </p>
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2">
-              {highlights.map((item) => (
+              {highlights.map(item => (
                 <div
                   key={item.title}
                   className="rounded-xl border bg-white p-4 shadow-sm transition-shadow hover:shadow-md"
                 >
                   <item.icon className="mb-2 h-6 w-6 text-[oklch(0.72_0.16_85)]" />
-                  <h3 className="font-semibold text-[oklch(0.22_0.02_75)]">{item.title}</h3>
-                  <p className="mt-1 text-sm text-muted-foreground">{item.desc}</p>
+                  <h3 className="font-semibold text-[oklch(0.22_0.02_75)]">
+                    {item.title}
+                  </h3>
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    {item.desc}
+                  </p>
                 </div>
               ))}
             </div>
@@ -274,7 +292,10 @@ export default function BaiduPromotionLoginPage() {
                             <FormItem>
                               <FormLabel>公司名称</FormLabel>
                               <FormControl>
-                                <Input placeholder="请输入公司名称" {...field} />
+                                <Input
+                                  placeholder="请输入公司名称"
+                                  {...field}
+                                />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -315,7 +336,10 @@ export default function BaiduPromotionLoginPage() {
                             <FormItem>
                               <FormLabel>邮箱（选填）</FormLabel>
                               <FormControl>
-                                <Input placeholder="example@company.com" {...field} />
+                                <Input
+                                  placeholder="example@company.com"
+                                  {...field}
+                                />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -328,7 +352,10 @@ export default function BaiduPromotionLoginPage() {
                             <FormItem>
                               <FormLabel>感兴趣的产品（选填）</FormLabel>
                               <FormControl>
-                                <Input placeholder="纸袋 / 纸盒 / 礼盒 / 其他" {...field} />
+                                <Input
+                                  placeholder="纸袋 / 纸盒 / 礼盒 / 其他"
+                                  {...field}
+                                />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -376,7 +403,11 @@ export default function BaiduPromotionLoginPage() {
                           <FormItem>
                             <FormLabel>密码</FormLabel>
                             <FormControl>
-                              <Input type="password" placeholder="请输入密码" {...field} />
+                              <Input
+                                type="password"
+                                placeholder="请输入密码"
+                                {...field}
+                              />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -387,7 +418,9 @@ export default function BaiduPromotionLoginPage() {
                         className="w-full"
                         disabled={loginForm.formState.isSubmitting}
                       >
-                        {loginForm.formState.isSubmitting ? "登录中..." : "登录"}
+                        {loginForm.formState.isSubmitting
+                          ? "登录中..."
+                          : "登录"}
                       </Button>
                     </form>
                   </Form>
@@ -420,7 +453,9 @@ export default function BaiduPromotionLoginPage() {
 
       {/* Footer */}
       <footer className="bg-[oklch(0.22_0.02_75)] py-6 text-center text-sm text-white/70">
-        <p>© {new Date().getFullYear()} DY Packs. 上海逗悦实业有限公司 版权所有</p>
+        <p>
+          © {new Date().getFullYear()} DY Packs. 上海逗悦实业有限公司 版权所有
+        </p>
       </footer>
     </div>
   );

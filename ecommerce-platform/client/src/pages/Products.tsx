@@ -7,8 +7,10 @@ import { Input } from "@/components/ui/input";
 import { PLACEHOLDER_IMAGE } from "@/lib/constants";
 import { Link, useSearch } from "wouter";
 import { useState, useEffect, useMemo } from "react";
-import { Search, Package, ChevronLeft, ChevronRight } from "lucide-react";
+import { Search, Package, ChevronLeft, ChevronRight, ChevronRight as ChevronRightIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { usePageSEO, CATEGORY_SEO } from "@/lib/seo";
+import { BreadcrumbSchema } from "@/components/SchemaMarkup";
 
 export default function Products() {
   const { t } = useTranslation();
@@ -27,15 +29,34 @@ export default function Products() {
     return () => clearTimeout(timer);
   }, [search]);
 
-  useEffect(() => { setPage(1); }, [debouncedSearch, selectedCategory]);
+  useEffect(() => {
+    setPage(1);
+  }, [debouncedSearch, selectedCategory]);
 
   const categoriesQuery = trpc.category.list.useQuery();
   const categories = categoriesQuery.data ?? [];
 
   const selectedCat = useMemo(
-    () => categories.find((c) => c.slug === selectedCategory),
+    () => categories.find(c => c.slug === selectedCategory),
     [categories, selectedCategory]
   );
+
+  const categorySeo = selectedCategory
+    ? CATEGORY_SEO[selectedCategory]
+    : undefined;
+
+  usePageSEO({
+    title: categorySeo?.title ?? "Custom Packaging Boxes Wholesale | DY Packs",
+    description:
+      categorySeo?.description ??
+      "Browse DY Packs' wholesale custom packaging boxes. Gift boxes, cosmetic packaging, jewelry boxes & more. Low MOQ, fast quotes, global shipping.",
+    keywords:
+      categorySeo?.keywords ??
+      "custom packaging boxes, wholesale packaging boxes, premium packaging solutions, custom boxes manufacturer",
+    canonicalPath: selectedCategory
+      ? `/products?category=${selectedCategory}`
+      : "/products",
+  });
 
   const productsQuery = trpc.product.list.useQuery({
     categoryId: selectedCat?.id,
@@ -49,7 +70,7 @@ export default function Products() {
   const total = productsQuery.data?.total ?? 0;
   const totalPages = Math.ceil(total / limit);
 
-  const productIds = useMemo(() => products.map((p) => p.id), [products]);
+  const productIds = useMemo(() => products.map(p => p.id), [products]);
   const ratingsQuery = trpc.review.batchRatingStats.useQuery(
     { productIds },
     { enabled: productIds.length > 0 }
@@ -58,13 +79,28 @@ export default function Products() {
 
   return (
     <div className="min-h-screen flex flex-col">
+      <BreadcrumbSchema
+        items={[
+          { name: t("productDetail.home"), url: "/" },
+          {
+            name: selectedCat?.name || t("products.allProducts"),
+            url: selectedCategory
+              ? `/products?category=${selectedCategory}`
+              : "/products",
+          },
+        ]}
+      />
       <Navbar />
 
       {/* Header */}
       <section className="bg-charcoal-dark py-12">
         <div className="container">
-          <h1 className="text-3xl md:text-4xl font-bold text-white mb-2" style={{ fontFamily: "var(--font-heading)" }}>
-            {selectedCat ? selectedCat.name : t("products.allProducts")}
+          <h1
+            className="text-3xl md:text-4xl font-bold text-white mb-2"
+            style={{ fontFamily: "var(--font-heading)" }}
+          >
+            {categorySeo?.h1 ??
+              (selectedCat ? selectedCat.name : t("products.allProducts"))}
           </h1>
           <p className="text-white/60">
             {selectedCat?.description || t("products.browseRange")}
@@ -82,29 +118,35 @@ export default function Products() {
               <Input
                 placeholder={t("products.searchProducts")}
                 value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                onChange={e => setSearch(e.target.value)}
                 className="pl-9"
               />
             </div>
 
             {/* Categories */}
             <div>
-              <h3 className="text-sm font-semibold text-foreground mb-3 uppercase tracking-wider">{t("products.categories")}</h3>
+              <h3 className="text-sm font-semibold text-foreground mb-3 uppercase tracking-wider">
+                {t("products.categories")}
+              </h3>
               <div className="space-y-1">
                 <button
                   onClick={() => setSelectedCategory("")}
                   className={`w-full text-left px-3 py-2 text-sm rounded-md transition-colors ${
-                    !selectedCategory ? "bg-accent text-foreground font-medium" : "text-muted-foreground hover:text-foreground hover:bg-accent/50"
+                    !selectedCategory
+                      ? "bg-accent text-foreground font-medium"
+                      : "text-muted-foreground hover:text-foreground hover:bg-accent/50"
                   }`}
                 >
                   {t("products.allProducts")}
                 </button>
-                {categories.map((cat) => (
+                {categories.map(cat => (
                   <button
                     key={cat.id}
                     onClick={() => setSelectedCategory(cat.slug)}
                     className={`w-full text-left px-3 py-2 text-sm rounded-md transition-colors ${
-                      selectedCategory === cat.slug ? "bg-accent text-foreground font-medium" : "text-muted-foreground hover:text-foreground hover:bg-accent/50"
+                      selectedCategory === cat.slug
+                        ? "bg-accent text-foreground font-medium"
+                        : "text-muted-foreground hover:text-foreground hover:bg-accent/50"
                     }`}
                   >
                     {cat.name}
@@ -118,7 +160,11 @@ export default function Products() {
           <div className="flex-1">
             <div className="flex items-center justify-between mb-6">
               <p className="text-sm text-muted-foreground">
-                {total} {total !== 1 ? t("products.productsFound") : t("products.productFound")} {t("products.found")}
+                {total}{" "}
+                {total !== 1
+                  ? t("products.productsFound")
+                  : t("products.productFound")}{" "}
+                {t("products.found")}
               </p>
             </div>
 
@@ -137,7 +183,9 @@ export default function Products() {
             ) : products.length === 0 ? (
               <div className="text-center py-16">
                 <Package className="h-12 w-12 mx-auto text-muted-foreground/40 mb-4" />
-                <h3 className="text-lg font-semibold text-foreground mb-1">{t("products.noProductsFound")}</h3>
+                <h3 className="text-lg font-semibold text-foreground mb-1">
+                  {t("products.noProductsFound")}
+                </h3>
                 <p className="text-sm text-muted-foreground">
                   {t("products.tryAdjusting")}
                 </p>
@@ -145,8 +193,10 @@ export default function Products() {
             ) : (
               <>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
-                  {products.map((product) => {
-                    const images = product.images ? JSON.parse(product.images) : [];
+                  {products.map(product => {
+                    const images = product.images
+                      ? JSON.parse(product.images)
+                      : [];
                     const mainImage = images[0] || PLACEHOLDER_IMAGE;
                     return (
                       <Link key={product.id} href={`/product/${product.slug}`}>
@@ -154,7 +204,7 @@ export default function Products() {
                           <div className="aspect-square overflow-hidden bg-muted">
                             <img
                               src={mainImage}
-                              alt={product.name}
+                              alt={`${product.name} - Custom Packaging | DY Packs`}
                               loading="lazy"
                               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                             />
@@ -170,11 +220,17 @@ export default function Products() {
                             )}
                             <div className="flex items-baseline gap-2">
                               <span className="text-sm text-muted-foreground">
-                                {t("products.from")} <span className="text-base font-bold text-foreground">${Number(product.price).toFixed(2)}</span>
+                                {t("products.from")}{" "}
+                                <span className="text-base font-bold text-foreground">
+                                  ${Number(product.price).toFixed(2)}
+                                </span>
                               </span>
                             </div>
                             {product.minOrderQty > 0 && (
-                              <p className="text-xs text-muted-foreground mt-1">{t("products.moq")} {product.minOrderQty} {t("products.pcs")}</p>
+                              <p className="text-xs text-muted-foreground mt-1">
+                                {t("products.moq")} {product.minOrderQty}{" "}
+                                {t("products.pcs")}
+                              </p>
                             )}
                           </CardContent>
                         </Card>
@@ -190,18 +246,19 @@ export default function Products() {
                       variant="outline"
                       size="sm"
                       disabled={page <= 1}
-                      onClick={() => setPage((p) => p - 1)}
+                      onClick={() => setPage(p => p - 1)}
                     >
                       <ChevronLeft className="h-4 w-4" />
                     </Button>
                     <span className="text-sm text-muted-foreground px-3">
-                      {t("products.page")} {page} {t("products.of")} {totalPages}
+                      {t("products.page")} {page} {t("products.of")}{" "}
+                      {totalPages}
                     </span>
                     <Button
                       variant="outline"
                       size="sm"
                       disabled={page >= totalPages}
-                      onClick={() => setPage((p) => p + 1)}
+                      onClick={() => setPage(p => p + 1)}
                     >
                       <ChevronRight className="h-4 w-4" />
                     </Button>
@@ -212,6 +269,37 @@ export default function Products() {
           </div>
         </div>
       </div>
+
+      {/* SEO Text Block */}
+      {!selectedCategory && (
+        <section className="py-12 md:py-16 bg-secondary/30 border-t">
+          <div className="container max-w-4xl">
+            <h2 className="text-2xl font-bold text-foreground mb-4 text-center" style={{ fontFamily: "var(--font-heading)" }}>
+              {t("products.seoTitle")}
+            </h2>
+            <p className="text-muted-foreground leading-relaxed text-center mb-6">
+              {t("products.seoText")}
+            </p>
+            <div className="flex flex-wrap justify-center gap-3">
+              <Link href="/products?category=gift-boxes">
+                <Button variant="outline" size="sm">{t("home.giftBoxes")}</Button>
+              </Link>
+              <Link href="/products?category=cosmetic-packaging">
+                <Button variant="outline" size="sm">{t("home.cosmeticPackaging")}</Button>
+              </Link>
+              <Link href="/products?category=jewelry-boxes">
+                <Button variant="outline" size="sm">{t("home.jewelryBoxes")}</Button>
+              </Link>
+              <Link href="/products?category=food-packaging">
+                <Button variant="outline" size="sm">{t("home.foodPackaging")}</Button>
+              </Link>
+              <Link href="/contact">
+                <Button size="sm">{t("products.requestQuote")} <ChevronRight className="ml-1 h-3 w-3" /></Button>
+              </Link>
+            </div>
+          </div>
+        </section>
+      )}
 
       <Footer />
     </div>

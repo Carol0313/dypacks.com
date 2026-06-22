@@ -58,7 +58,9 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl font-bold">{t("login.adminDashboard")}</CardTitle>
+          <CardTitle className="text-2xl font-bold">
+            {t("login.adminDashboard")}
+          </CardTitle>
           <p className="text-sm text-muted-foreground mt-1">管理员登录</p>
         </CardHeader>
         <CardContent>
@@ -73,7 +75,11 @@ export default function LoginPage() {
                     <FormControl>
                       <div className="relative">
                         <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                        <Input placeholder="请输入用户名" className="pl-10" {...field} />
+                        <Input
+                          placeholder="请输入用户名"
+                          className="pl-10"
+                          {...field}
+                        />
                       </div>
                     </FormControl>
                     <FormMessage />
@@ -89,14 +95,23 @@ export default function LoginPage() {
                     <FormControl>
                       <div className="relative">
                         <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                        <Input type="password" placeholder="请输入密码" className="pl-10" {...field} />
+                        <Input
+                          type="password"
+                          placeholder="请输入密码"
+                          className="pl-10"
+                          {...field}
+                        />
                       </div>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-              <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
+              <Button
+                type="submit"
+                className="w-full"
+                disabled={form.formState.isSubmitting}
+              >
                 {form.formState.isSubmitting ? "登录中..." : "登录"}
               </Button>
             </form>

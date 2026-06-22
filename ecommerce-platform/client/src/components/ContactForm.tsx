@@ -24,15 +24,21 @@ interface ContactFormProps {
   source?: string;
 }
 
-export default function ContactForm({ product, source = "contact_page" }: ContactFormProps) {
+export default function ContactForm({
+  product,
+  source = "contact_page",
+}: ContactFormProps) {
   const { t } = useTranslation();
   const [submitted, setSubmitted] = useState(false);
 
   const formSchema = z.object({
     contactName: z.string().min(1, t("contactForm.fillRequired")),
     email: z.string().email(t("contactForm.fillRequired")),
+    companyName: z.string().optional(),
     phone: z.string().optional(),
     country: z.string().optional(),
+    product: z.string().optional(),
+    quantity: z.string().optional(),
     message: z.string().optional(),
   });
 
@@ -43,8 +49,11 @@ export default function ContactForm({ product, source = "contact_page" }: Contac
     defaultValues: {
       contactName: "",
       email: "",
+      companyName: "",
       phone: "",
       country: "",
+      product: product || "",
+      quantity: "",
       message: "",
     },
   });
@@ -54,7 +63,7 @@ export default function ContactForm({ product, source = "contact_page" }: Contac
       setSubmitted(true);
       form.reset();
     },
-    onError: (err) => {
+    onError: err => {
       toast.error(err.message || t("contactForm.failedSubmit"));
     },
   });
@@ -63,9 +72,11 @@ export default function ContactForm({ product, source = "contact_page" }: Contac
     submitMutation.mutate({
       contactName: values.contactName,
       email: values.email,
+      companyName: values.companyName || undefined,
       phone: values.phone || undefined,
       country: values.country || undefined,
-      product: product || undefined,
+      product: product || values.product || undefined,
+      quantity: values.quantity || undefined,
       details: values.message || undefined,
       source,
     });
@@ -76,10 +87,15 @@ export default function ContactForm({ product, source = "contact_page" }: Contac
       <Card className="border-gold/20 bg-gold/5">
         <CardContent className="p-8 text-center">
           <CheckCircle className="h-12 w-12 text-gold-dark mx-auto mb-4" />
-          <h3 className="text-xl font-bold text-foreground mb-2" style={{ fontFamily: "var(--font-heading)" }}>
+          <h3
+            className="text-xl font-bold text-foreground mb-2"
+            style={{ fontFamily: "var(--font-heading)" }}
+          >
             {t("contactForm.thankYou")}
           </h3>
-          <p className="text-muted-foreground mb-4">{t("contactForm.teamWillContact")}</p>
+          <p className="text-muted-foreground mb-4">
+            {t("contactForm.teamWillContact")}
+          </p>
           <Button
             variant="outline"
             className="border-gold text-gold-dark hover:bg-gold/10"
@@ -97,7 +113,9 @@ export default function ContactForm({ product, source = "contact_page" }: Contac
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         {product && (
           <div className="p-3 bg-gold/5 border border-gold/20 rounded-lg text-sm text-muted-foreground">
-            <span className="font-medium text-foreground">{t("contactForm.inquiringAbout")}</span>{" "}
+            <span className="font-medium text-foreground">
+              {t("contactForm.inquiringAbout")}
+            </span>{" "}
             {product}
           </div>
         )}
@@ -109,10 +127,14 @@ export default function ContactForm({ product, source = "contact_page" }: Contac
             render={({ field }) => (
               <FormItem>
                 <FormLabel>
-                  {t("contactForm.name")} <span className="text-red-500">*</span>
+                  {t("contactForm.name")}{" "}
+                  <span className="text-red-500">*</span>
                 </FormLabel>
                 <FormControl>
-                  <Input placeholder={t("contactForm.namePlaceholder")} {...field} />
+                  <Input
+                    placeholder={t("contactForm.namePlaceholder")}
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -124,16 +146,38 @@ export default function ContactForm({ product, source = "contact_page" }: Contac
             render={({ field }) => (
               <FormItem>
                 <FormLabel>
-                  {t("contactForm.email")} <span className="text-red-500">*</span>
+                  {t("contactForm.email")}{" "}
+                  <span className="text-red-500">*</span>
                 </FormLabel>
                 <FormControl>
-                  <Input type="email" placeholder={t("contactForm.emailPlaceholder")} {...field} />
+                  <Input
+                    type="email"
+                    placeholder={t("contactForm.emailPlaceholder")}
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
         </div>
+
+        <FormField
+          control={form.control}
+          name="companyName"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>{t("contactForm.companyName")}</FormLabel>
+              <FormControl>
+                <Input
+                  placeholder={t("contactForm.companyNamePlaceholder")}
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <FormField
@@ -143,7 +187,10 @@ export default function ContactForm({ product, source = "contact_page" }: Contac
               <FormItem>
                 <FormLabel>{t("contactForm.phone")}</FormLabel>
                 <FormControl>
-                  <Input placeholder={t("contactForm.phonePlaceholder")} {...field} />
+                  <Input
+                    placeholder={t("contactForm.phonePlaceholder")}
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -156,13 +203,52 @@ export default function ContactForm({ product, source = "contact_page" }: Contac
               <FormItem>
                 <FormLabel>{t("contactForm.country")}</FormLabel>
                 <FormControl>
-                  <Input placeholder={t("contactForm.countryPlaceholder")} {...field} />
+                  <Input
+                    placeholder={t("contactForm.countryPlaceholder")}
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
         </div>
+
+        {!product && (
+          <FormField
+            control={form.control}
+            name="product"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>{t("contactForm.productInterest")}</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder={t("contactForm.productInterestPlaceholder")}
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )}
+
+        <FormField
+          control={form.control}
+          name="quantity"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>{t("contactForm.quantity")}</FormLabel>
+              <FormControl>
+                <Input
+                  placeholder={t("contactForm.quantityPlaceholder")}
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
         <FormField
           control={form.control}
@@ -171,7 +257,11 @@ export default function ContactForm({ product, source = "contact_page" }: Contac
             <FormItem>
               <FormLabel>{t("contactForm.message")}</FormLabel>
               <FormControl>
-                <Textarea rows={4} placeholder={t("contactForm.messagePlaceholder")} {...field} />
+                <Textarea
+                  rows={4}
+                  placeholder={t("contactForm.messagePlaceholder")}
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>

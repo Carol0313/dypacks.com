@@ -26,9 +26,7 @@
     "description": "Specially designed folding carton for cosmetic serum dropper bottles. Features premium 350gsm art paper with spot UV coating to highlight your brand logo.\n\nSpecifications:\n- Material: 350gsm white card paper\n- Finish: Matte lamination + spot UV\n- Size: Customizable to fit your bottle\n- Window cutout option available",
     "price": "0.85",
     "categoryId": 2,
-    "images": [
-      "https://your-cdn.com/images/cosmetic-box-serum-1.jpg"
-    ],
+    "images": ["https://your-cdn.com/images/cosmetic-box-serum-1.jpg"],
     "featured": false,
     "status": "active",
     "stock": 2000,

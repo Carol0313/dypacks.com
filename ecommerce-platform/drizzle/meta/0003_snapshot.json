@@ -101,9 +101,7 @@
       "compositePrimaryKeys": {
         "addresses_id": {
           "name": "addresses_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "uniqueConstraints": {},
@@ -220,17 +218,13 @@
       "compositePrimaryKeys": {
         "blog_posts_id": {
           "name": "blog_posts_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "uniqueConstraints": {
         "blog_posts_slug_unique": {
           "name": "blog_posts_slug_unique",
-          "columns": [
-            "slug"
-          ]
+          "columns": ["slug"]
         }
       },
       "checkConstraint": {}
@@ -290,9 +284,7 @@
       "compositePrimaryKeys": {
         "cart_items_id": {
           "name": "cart_items_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "uniqueConstraints": {},
@@ -367,17 +359,13 @@
       "compositePrimaryKeys": {
         "categories_id": {
           "name": "categories_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "uniqueConstraints": {
         "categories_slug_unique": {
           "name": "categories_slug_unique",
-          "columns": [
-            "slug"
-          ]
+          "columns": ["slug"]
         }
       },
       "checkConstraint": {}
@@ -444,9 +432,7 @@
       "compositePrimaryKeys": {
         "inquiry_items_id": {
           "name": "inquiry_items_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "uniqueConstraints": {},
@@ -556,17 +542,13 @@
       "compositePrimaryKeys": {
         "inquiry_submissions_id": {
           "name": "inquiry_submissions_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "uniqueConstraints": {
         "inquiry_submissions_inquiryNumber_unique": {
           "name": "inquiry_submissions_inquiryNumber_unique",
-          "columns": [
-            "inquiryNumber"
-          ]
+          "columns": ["inquiryNumber"]
         }
       },
       "checkConstraint": {}
@@ -644,9 +626,7 @@
       "compositePrimaryKeys": {
         "order_items_id": {
           "name": "order_items_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "uniqueConstraints": {},
@@ -800,17 +780,13 @@
       "compositePrimaryKeys": {
         "orders_id": {
           "name": "orders_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "uniqueConstraints": {
         "orders_orderNumber_unique": {
           "name": "orders_orderNumber_unique",
-          "columns": [
-            "orderNumber"
-          ]
+          "columns": ["orderNumber"]
         }
       },
       "checkConstraint": {}
@@ -898,9 +874,7 @@
       "compositePrimaryKeys": {
         "product_reviews_id": {
           "name": "product_reviews_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "uniqueConstraints": {},
@@ -1048,17 +1022,13 @@
       "compositePrimaryKeys": {
         "products_id": {
           "name": "products_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "uniqueConstraints": {
         "products_slug_unique": {
           "name": "products_slug_unique",
-          "columns": [
-            "slug"
-          ]
+          "columns": ["slug"]
         }
       },
       "checkConstraint": {}
@@ -1140,17 +1110,13 @@
       "compositePrimaryKeys": {
         "users_id": {
           "name": "users_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "uniqueConstraints": {
         "users_openId_unique": {
           "name": "users_openId_unique",
-          "columns": [
-            "openId"
-          ]
+          "columns": ["openId"]
         }
       },
       "checkConstraint": {}

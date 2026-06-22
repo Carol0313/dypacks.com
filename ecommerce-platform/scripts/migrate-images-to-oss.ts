@@ -18,9 +18,7 @@ import { ossPut, ossEnabled } from "../server/_core/oss";
 import { products, blogPosts } from "../drizzle/schema";
 import { sql } from "drizzle-orm";
 
-const OLD_CDN_DOMAINS = [
-  "files.manuscdn.com",
-];
+const OLD_CDN_DOMAINS = ["files.manuscdn.com"];
 
 interface ImageRecord {
   type: "product" | "blog";
@@ -32,7 +30,7 @@ interface ImageRecord {
 function isOldCdnUrl(url: string): boolean {
   try {
     const domain = new URL(url).hostname;
-    return OLD_CDN_DOMAINS.some((d) => domain.includes(d));
+    return OLD_CDN_DOMAINS.some(d => domain.includes(d));
   } catch {
     return false;
   }
@@ -42,7 +40,8 @@ async function downloadImage(url: string): Promise<Buffer | null> {
   try {
     const response = await fetch(url, {
       headers: {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.0",
+        "User-Agent":
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.0",
       },
     });
     if (!response.ok) {
@@ -83,7 +82,9 @@ function guessContentType(fileName: string): string {
 
 async function main() {
   if (!ossEnabled) {
-    console.error("❌ OSS 未配置。请确保 .env 中设置了 OSS_BUCKET, OSS_ENDPOINT, OSS_ACCESS_KEY_ID, OSS_ACCESS_KEY_SECRET, OSS_PUBLIC_URL");
+    console.error(
+      "❌ OSS 未配置。请确保 .env 中设置了 OSS_BUCKET, OSS_ENDPOINT, OSS_ACCESS_KEY_ID, OSS_ACCESS_KEY_SECRET, OSS_PUBLIC_URL"
+    );
     process.exit(1);
   }
 
@@ -98,14 +99,21 @@ async function main() {
   const records: ImageRecord[] = [];
 
   // 扫描产品图片
-  const allProducts = await db.select({ id: products.id, name: products.name, images: products.images }).from(products);
+  const allProducts = await db
+    .select({ id: products.id, name: products.name, images: products.images })
+    .from(products);
   for (const p of allProducts) {
     if (!p.images) continue;
     try {
       const urls: string[] = JSON.parse(p.images);
       const oldUrls = urls.filter(isOldCdnUrl);
       if (oldUrls.length > 0) {
-        records.push({ type: "product", id: p.id, field: "images", urls: oldUrls });
+        records.push({
+          type: "product",
+          id: p.id,
+          field: "images",
+          urls: oldUrls,
+        });
       }
     } catch {
       // ignore invalid JSON
@@ -113,10 +121,21 @@ async function main() {
   }
 
   // 扫描博客封面图
-  const allBlogs = await db.select({ id: blogPosts.id, title: blogPosts.title, coverImage: blogPosts.coverImage }).from(blogPosts);
+  const allBlogs = await db
+    .select({
+      id: blogPosts.id,
+      title: blogPosts.title,
+      coverImage: blogPosts.coverImage,
+    })
+    .from(blogPosts);
   for (const b of allBlogs) {
     if (b.coverImage && isOldCdnUrl(b.coverImage)) {
-      records.push({ type: "blog", id: b.id, field: "coverImage", urls: [b.coverImage] });
+      records.push({
+        type: "blog",
+        id: b.id,
+        field: "coverImage",
+        urls: [b.coverImage],
+      });
     }
   }
 
@@ -132,7 +151,9 @@ async function main() {
   const urlMapping = new Map<string, string>(); // oldUrl -> newUrl
 
   for (const record of records) {
-    console.log(`🔄 ${record.type === "product" ? "Product" : "Blog"} #${record.id}: ${record.urls.length} image(s)`);
+    console.log(
+      `🔄 ${record.type === "product" ? "Product" : "Blog"} #${record.id}: ${record.urls.length} image(s)`
+    );
 
     const newUrls: string[] = [];
     for (const oldUrl of record.urls) {
@@ -174,9 +195,9 @@ async function main() {
         const allOldUrls = record.urls;
         // 需要重新组装完整的 images 数组（包含未变化的 URL）
         const originalUrls: string[] = JSON.parse(
-          allProducts.find((p) => p.id === record.id)!.images!
+          allProducts.find(p => p.id === record.id)!.images!
         );
-        const finalUrls = originalUrls.map((url) => urlMapping.get(url) || url);
+        const finalUrls = originalUrls.map(url => urlMapping.get(url) || url);
         await db
           .update(products)
           .set({ images: JSON.stringify(finalUrls) })
@@ -188,7 +209,10 @@ async function main() {
           .where(sql`${blogPosts.id} = ${record.id}`);
       }
     } catch (err) {
-      console.error(`  ❌ 数据库更新失败 #${record.id}:`, (err as Error).message);
+      console.error(
+        `  ❌ 数据库更新失败 #${record.id}:`,
+        (err as Error).message
+      );
     }
   }
 
@@ -203,7 +227,9 @@ async function main() {
   console.log(`--------------------------------------------------------`);
 
   console.log(`\n🎉 迁移完成！成功: ${migratedCount}, 失败: ${failedCount}`);
-  console.log(`\n⚠️ 提醒：请手动修改 client/src/lib/constants.ts 中的 Banner 图片 URL！`);
+  console.log(
+    `\n⚠️ 提醒：请手动修改 client/src/lib/constants.ts 中的 Banner 图片 URL！`
+  );
   process.exit(0);
 }
 

@@ -20,7 +20,13 @@ const accessKeyId = process.env.OSS_ACCESS_KEY_ID;
 const secretAccessKey = process.env.OSS_ACCESS_KEY_SECRET;
 const publicUrl = process.env.OSS_PUBLIC_URL;
 
-export const ossEnabled = !!(bucket && endpoint && accessKeyId && secretAccessKey && publicUrl);
+export const ossEnabled = !!(
+  bucket &&
+  endpoint &&
+  accessKeyId &&
+  secretAccessKey &&
+  publicUrl
+);
 
 export const ossClient = ossEnabled
   ? new S3Client({
@@ -30,7 +36,8 @@ export const ossClient = ossEnabled
         accessKeyId,
         secretAccessKey,
       },
-      forcePathStyle: true,
+      // 阿里云 OSS 要求使用 virtual-hosted style（bucket.endpoint/key）
+      // 不要设置 forcePathStyle: true
     })
   : null;
 

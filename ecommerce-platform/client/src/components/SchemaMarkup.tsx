@@ -1,5 +1,10 @@
 import { useEffect } from "react";
-import { BRAND_NAME, COMPANY_NAME, LOGO_URL, CONTACT_EMAIL } from "@/lib/constants";
+import {
+  BRAND_NAME,
+  COMPANY_NAME,
+  LOGO_URL,
+  CONTACT_EMAIL,
+} from "@/lib/constants";
 
 // Helper to inject JSON-LD script tags into the document head
 function useJsonLd(id: string, data: Record<string, unknown> | null) {
@@ -125,7 +130,9 @@ export function BlogPostSchema({
     description: description,
     image: coverImage || LOGO_URL,
     datePublished: new Date(publishedAt).toISOString(),
-    dateModified: updatedAt ? new Date(updatedAt).toISOString() : new Date(publishedAt).toISOString(),
+    dateModified: updatedAt
+      ? new Date(updatedAt).toISOString()
+      : new Date(publishedAt).toISOString(),
     url: `${origin}/blog/${slug}`,
     author: {
       "@type": "Organization",
@@ -166,7 +173,8 @@ export function BlogListSchema({ posts }: { posts: BlogListItem[] }) {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
     name: "Blog & Insights - DY Packs",
-    description: "Industry news, packaging tips, and company updates from DY Packs.",
+    description:
+      "Industry news, packaging tips, and company updates from DY Packs.",
     url: `${origin}/blog`,
     mainEntity: {
       "@type": "ItemList",
@@ -262,7 +270,7 @@ export function FAQSchema({ items }: { items: FAQItem[] }) {
   const data = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    mainEntity: items.map((item) => ({
+    mainEntity: items.map(item => ({
       "@type": "Question",
       name: item.question,
       acceptedAnswer: {

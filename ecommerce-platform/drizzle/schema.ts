@@ -1,5 +1,14 @@
 import { sql } from "drizzle-orm";
-import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, decimal, boolean } from "drizzle-orm/mysql-core";
+import {
+  int,
+  mysqlEnum,
+  mysqlTable,
+  text,
+  timestamp,
+  varchar,
+  decimal,
+  boolean,
+} from "drizzle-orm/mysql-core";
 
 export const users = mysqlTable("users", {
   id: int("id").autoincrement().primaryKey(),
@@ -8,9 +17,16 @@ export const users = mysqlTable("users", {
   email: varchar("email", { length: 320 }),
   loginMethod: varchar("loginMethod", { length: 64 }),
   role: mysqlEnum("role", ["user", "admin"]).default("user").notNull(),
-  createdAt: timestamp("createdAt").default(sql`CURRENT_TIMESTAMP`).notNull(),
-  updatedAt: timestamp("updatedAt").default(sql`CURRENT_TIMESTAMP`).onUpdateNow().notNull(),
-  lastSignedIn: timestamp("lastSignedIn").default(sql`CURRENT_TIMESTAMP`).notNull(),
+  createdAt: timestamp("createdAt")
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+  updatedAt: timestamp("updatedAt")
+    .default(sql`CURRENT_TIMESTAMP`)
+    .onUpdateNow()
+    .notNull(),
+  lastSignedIn: timestamp("lastSignedIn")
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
 });
 
 export type User = typeof users.$inferSelect;
@@ -23,8 +39,13 @@ export const categories = mysqlTable("categories", {
   description: text("description"),
   image: text("image"),
   sortOrder: int("sortOrder").default(0).notNull(),
-  createdAt: timestamp("createdAt").default(sql`CURRENT_TIMESTAMP`).notNull(),
-  updatedAt: timestamp("updatedAt").default(sql`CURRENT_TIMESTAMP`).onUpdateNow().notNull(),
+  createdAt: timestamp("createdAt")
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+  updatedAt: timestamp("updatedAt")
+    .default(sql`CURRENT_TIMESTAMP`)
+    .onUpdateNow()
+    .notNull(),
 });
 
 export type Category = typeof categories.$inferSelect;
@@ -41,14 +62,21 @@ export const products = mysqlTable("products", {
   categoryId: int("categoryId").notNull(),
   images: text("images"),
   featured: boolean("featured").default(false).notNull(),
-  status: mysqlEnum("status", ["active", "draft", "archived"]).default("draft").notNull(),
+  status: mysqlEnum("status", ["active", "draft", "archived"])
+    .default("draft")
+    .notNull(),
   stock: int("stock").default(0).notNull(),
   minOrderQty: int("minOrderQty").default(1).notNull(),
   metaTitle: varchar("metaTitle", { length: 256 }),
   metaDescription: text("metaDescription"),
   metaKeywords: text("metaKeywords"),
-  createdAt: timestamp("createdAt").default(sql`CURRENT_TIMESTAMP`).notNull(),
-  updatedAt: timestamp("updatedAt").default(sql`CURRENT_TIMESTAMP`).onUpdateNow().notNull(),
+  createdAt: timestamp("createdAt")
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+  updatedAt: timestamp("updatedAt")
+    .default(sql`CURRENT_TIMESTAMP`)
+    .onUpdateNow()
+    .notNull(),
 });
 
 export type Product = typeof products.$inferSelect;
@@ -59,8 +87,13 @@ export const cartItems = mysqlTable("cart_items", {
   userId: int("userId").notNull(),
   productId: int("productId").notNull(),
   quantity: int("quantity").default(1).notNull(),
-  createdAt: timestamp("createdAt").default(sql`CURRENT_TIMESTAMP`).notNull(),
-  updatedAt: timestamp("updatedAt").default(sql`CURRENT_TIMESTAMP`).onUpdateNow().notNull(),
+  createdAt: timestamp("createdAt")
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+  updatedAt: timestamp("updatedAt")
+    .default(sql`CURRENT_TIMESTAMP`)
+    .onUpdateNow()
+    .notNull(),
 });
 
 export type CartItem = typeof cartItems.$inferSelect;
@@ -77,8 +110,13 @@ export const addresses = mysqlTable("addresses", {
   address: text("address").notNull(),
   zipCode: varchar("zipCode", { length: 16 }).notNull(),
   isDefault: boolean("isDefault").default(false).notNull(),
-  createdAt: timestamp("createdAt").default(sql`CURRENT_TIMESTAMP`).notNull(),
-  updatedAt: timestamp("updatedAt").default(sql`CURRENT_TIMESTAMP`).onUpdateNow().notNull(),
+  createdAt: timestamp("createdAt")
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+  updatedAt: timestamp("updatedAt")
+    .default(sql`CURRENT_TIMESTAMP`)
+    .onUpdateNow()
+    .notNull(),
 });
 
 export type Address = typeof addresses.$inferSelect;
@@ -88,11 +126,24 @@ export const orders = mysqlTable("orders", {
   id: int("id").autoincrement().primaryKey(),
   orderNumber: varchar("orderNumber", { length: 32 }).notNull().unique(),
   userId: int("userId").notNull(),
-  status: mysqlEnum("status", ["pending", "paid", "processing", "shipped", "delivered", "cancelled"]).default("pending").notNull(),
+  status: mysqlEnum("status", [
+    "pending",
+    "paid",
+    "processing",
+    "shipped",
+    "delivered",
+    "cancelled",
+  ])
+    .default("pending")
+    .notNull(),
   paymentMethod: mysqlEnum("paymentMethod", ["alipay", "paypal"]).notNull(),
-  paymentStatus: mysqlEnum("paymentStatus", ["unpaid", "paid", "refunded"]).default("unpaid").notNull(),
+  paymentStatus: mysqlEnum("paymentStatus", ["unpaid", "paid", "refunded"])
+    .default("unpaid")
+    .notNull(),
   subtotal: decimal("subtotal", { precision: 10, scale: 2 }).notNull(),
-  shippingFee: decimal("shippingFee", { precision: 10, scale: 2 }).default("0.00").notNull(),
+  shippingFee: decimal("shippingFee", { precision: 10, scale: 2 })
+    .default("0.00")
+    .notNull(),
   total: decimal("total", { precision: 10, scale: 2 }).notNull(),
   shippingName: varchar("shippingName", { length: 128 }).notNull(),
   shippingPhone: varchar("shippingPhone", { length: 32 }).notNull(),
@@ -102,8 +153,13 @@ export const orders = mysqlTable("orders", {
   shippingAddress: text("shippingAddress").notNull(),
   shippingZipCode: varchar("shippingZipCode", { length: 16 }).notNull(),
   note: text("note"),
-  createdAt: timestamp("createdAt").default(sql`CURRENT_TIMESTAMP`).notNull(),
-  updatedAt: timestamp("updatedAt").default(sql`CURRENT_TIMESTAMP`).onUpdateNow().notNull(),
+  createdAt: timestamp("createdAt")
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+  updatedAt: timestamp("updatedAt")
+    .default(sql`CURRENT_TIMESTAMP`)
+    .onUpdateNow()
+    .notNull(),
 });
 
 export type Order = typeof orders.$inferSelect;
@@ -118,7 +174,9 @@ export const orderItems = mysqlTable("order_items", {
   price: decimal("price", { precision: 10, scale: 2 }).notNull(),
   quantity: int("quantity").notNull(),
   subtotal: decimal("subtotal", { precision: 10, scale: 2 }).notNull(),
-  createdAt: timestamp("createdAt").default(sql`CURRENT_TIMESTAMP`).notNull(),
+  createdAt: timestamp("createdAt")
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
 });
 
 export type OrderItem = typeof orderItems.$inferSelect;
@@ -132,13 +190,20 @@ export const blogPosts = mysqlTable("blog_posts", {
   content: text("content").notNull(),
   coverImage: text("coverImage"),
   authorId: int("authorId").notNull(),
-  status: mysqlEnum("status", ["published", "draft"]).default("draft").notNull(),
+  status: mysqlEnum("status", ["published", "draft"])
+    .default("draft")
+    .notNull(),
   metaTitle: varchar("metaTitle", { length: 256 }),
   metaDescription: text("metaDescription"),
   metaKeywords: text("metaKeywords"),
   publishedAt: timestamp("publishedAt"),
-  createdAt: timestamp("createdAt").default(sql`CURRENT_TIMESTAMP`).notNull(),
-  updatedAt: timestamp("updatedAt").default(sql`CURRENT_TIMESTAMP`).onUpdateNow().notNull(),
+  createdAt: timestamp("createdAt")
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+  updatedAt: timestamp("updatedAt")
+    .default(sql`CURRENT_TIMESTAMP`)
+    .onUpdateNow()
+    .notNull(),
 });
 
 export type BlogPost = typeof blogPosts.$inferSelect;
@@ -152,9 +217,16 @@ export const productReviews = mysqlTable("product_reviews", {
   rating: int("rating").notNull(),
   title: varchar("title", { length: 256 }),
   content: text("content"),
-  status: mysqlEnum("status", ["approved", "pending", "rejected"]).default("approved").notNull(),
-  createdAt: timestamp("createdAt").default(sql`CURRENT_TIMESTAMP`).notNull(),
-  updatedAt: timestamp("updatedAt").default(sql`CURRENT_TIMESTAMP`).onUpdateNow().notNull(),
+  status: mysqlEnum("status", ["approved", "pending", "rejected"])
+    .default("approved")
+    .notNull(),
+  createdAt: timestamp("createdAt")
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+  updatedAt: timestamp("updatedAt")
+    .default(sql`CURRENT_TIMESTAMP`)
+    .onUpdateNow()
+    .notNull(),
 });
 
 export type ProductReview = typeof productReviews.$inferSelect;
@@ -166,8 +238,13 @@ export const inquiryItems = mysqlTable("inquiry_items", {
   productId: int("productId").notNull(),
   quantity: int("quantity").default(1).notNull(),
   note: text("note"),
-  createdAt: timestamp("createdAt").default(sql`CURRENT_TIMESTAMP`).notNull(),
-  updatedAt: timestamp("updatedAt").default(sql`CURRENT_TIMESTAMP`).onUpdateNow().notNull(),
+  createdAt: timestamp("createdAt")
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+  updatedAt: timestamp("updatedAt")
+    .default(sql`CURRENT_TIMESTAMP`)
+    .onUpdateNow()
+    .notNull(),
 });
 
 export type InquiryItem = typeof inquiryItems.$inferSelect;
@@ -185,9 +262,16 @@ export const inquirySubmissions = mysqlTable("inquiry_submissions", {
   message: text("message"),
   items: text("items").notNull(),
   source: varchar("source", { length: 64 }).default("website"),
-  status: mysqlEnum("status", ["pending", "replied", "closed"]).default("pending").notNull(),
-  createdAt: timestamp("createdAt").default(sql`CURRENT_TIMESTAMP`).notNull(),
-  updatedAt: timestamp("updatedAt").default(sql`CURRENT_TIMESTAMP`).onUpdateNow().notNull(),
+  status: mysqlEnum("status", ["pending", "replied", "closed"])
+    .default("pending")
+    .notNull(),
+  createdAt: timestamp("createdAt")
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+  updatedAt: timestamp("updatedAt")
+    .default(sql`CURRENT_TIMESTAMP`)
+    .onUpdateNow()
+    .notNull(),
 });
 
 export type InquirySubmission = typeof inquirySubmissions.$inferSelect;

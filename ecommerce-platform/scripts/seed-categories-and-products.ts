@@ -18,31 +18,41 @@ const categoryData = [
   {
     name: "Gift Boxes",
     slug: "gift-boxes",
-    description: "Elegant gift boxes for every occasion, from magnetic closures to drawer styles.",
+    description:
+      "Elegant gift boxes for every occasion, from magnetic closures to drawer styles.",
+    image: "/products/product-burgundy-royal-magnetic-gift-box.jpg",
     sortOrder: 1,
   },
   {
     name: "Cosmetic Packaging",
     slug: "cosmetic-packaging",
-    description: "Premium cosmetic boxes, perfume packaging, and makeup palette cases.",
+    description:
+      "Premium cosmetic boxes, perfume packaging, and makeup palette cases.",
+    image: "/products/product-luxury-perfume-gift-box.jpg",
     sortOrder: 2,
   },
   {
     name: "Jewelry & Watch Boxes",
     slug: "jewelry-watch-boxes",
-    description: "Luxury jewelry boxes, ring cases, necklace displays, and watch organizers.",
+    description:
+      "Luxury jewelry boxes, ring cases, necklace displays, and watch organizers.",
+    image: "/products/product-rose-gold-necklace-box.jpg",
     sortOrder: 3,
   },
   {
     name: "Food & Beverage Packaging",
     slug: "food-beverage-packaging",
-    description: "Specialized food-safe packaging for chocolates, bakery, tea, and honey.",
+    description:
+      "Specialized food-safe packaging for chocolates, bakery, tea, and honey.",
+    image: "/products/product-chocolate-truffle-box.jpg",
     sortOrder: 4,
   },
   {
     name: "Luxury & Corporate Packaging",
     slug: "luxury-corporate-packaging",
-    description: "High-end corporate gift boxes, wine cases, and luxury specialty packaging.",
+    description:
+      "High-end corporate gift boxes, wine cases, and luxury specialty packaging.",
+    image: "/products/product-leather-corporate-box.jpg",
     sortOrder: 5,
   },
 ];
@@ -70,7 +80,8 @@ const productData: ProductSeed[] = [
   {
     name: "Burgundy Royal Magnetic Gift Box",
     slug: "burgundy-royal-magnetic-gift-box",
-    shortDescription: "Luxurious burgundy rigid box with gold foil accents and magnetic closure.",
+    shortDescription:
+      "Luxurious burgundy rigid box with gold foil accents and magnetic closure.",
     description: `Our Burgundy Royal Magnetic Gift Box exudes sophistication and elegance. Crafted with premium 1500gsm rigid paperboard and wrapped in rich burgundy specialty paper, this box features a seamless magnetic closure and gold foil stamping accents.
 
 Features:
@@ -87,20 +98,24 @@ Customization Options:
 - Logo: Hot stamping, embossing, debossing, or UV printing
 - Interior: Velvet, satin, foam insert, or custom molded tray
 - Accessories: Ribbon pulls, magnetic seals, window patches`,
-    price: "12.50",
+    price: "8.75",
     categorySlug: "gift-boxes",
     imageFile: "product-burgundy-royal-magnetic-gift-box.jpg",
     featured: true,
     stock: 1000,
     minOrderQty: 200,
-    metaTitle: "Burgundy Royal Magnetic Gift Box | Luxury Custom Packaging Wholesale",
-    metaDescription: "Premium burgundy magnetic gift boxes with gold foil accents. Custom luxury packaging for wine, corporate gifts, and retail. MOQ 200pcs. Factory direct from Shanghai.",
-    metaKeywords: "burgundy gift box, magnetic closure box, luxury gift packaging, wine gift box, corporate gift box wholesale, custom rigid box",
+    metaTitle:
+      "Burgundy Royal Magnetic Gift Box | Luxury Custom Packaging Wholesale",
+    metaDescription:
+      "Premium burgundy magnetic gift boxes with gold foil accents. Custom luxury packaging for wine, corporate gifts, and retail. MOQ 200pcs. Factory direct from Shanghai.",
+    metaKeywords:
+      "burgundy gift box, magnetic closure box, luxury gift packaging, wine gift box, corporate gift box wholesale, custom rigid box",
   },
   {
     name: "Celestial Navy Nested Gift Box Set",
     slug: "celestial-navy-nested-gift-box-set",
-    shortDescription: "Set of three navy nested boxes with celestial gold pattern and satin ribbon.",
+    shortDescription:
+      "Set of three navy nested boxes with celestial gold pattern and satin ribbon.",
     description: `The Celestial Navy Nested Gift Box Set offers a stunning presentation with three progressively sized boxes that nest inside one another. Each box is wrapped in deep navy paper adorned with an elegant celestial gold foil pattern.
 
 Features:
@@ -120,20 +135,24 @@ Customization:
 - Pattern: Custom foil designs, logos, or full-color printing
 - Colors: Any Pantone matching available
 - Ribbon: Satin, grosgrain, or custom printed ribbon`,
-    price: "18.00",
+    price: "12.60",
     categorySlug: "gift-boxes",
     imageFile: "product-celestial-navy-nested-box.jpg",
     featured: true,
     stock: 800,
     minOrderQty: 300,
-    metaTitle: "Celestial Navy Nested Gift Box Set | Custom Nested Boxes Wholesale",
-    metaDescription: "Elegant navy nested gift box set with celestial gold pattern. Perfect for jewelry sets, corporate kits, and wedding favors. Custom designs available. MOQ 300pcs.",
-    metaKeywords: "nested gift boxes, navy gift box set, celestial pattern box, wedding favor boxes, jewelry gift box set, custom nested boxes",
+    metaTitle:
+      "Celestial Navy Nested Gift Box Set | Custom Nested Boxes Wholesale",
+    metaDescription:
+      "Elegant navy nested gift box set with celestial gold pattern. Perfect for jewelry sets, corporate kits, and wedding favors. Custom designs available. MOQ 300pcs.",
+    metaKeywords:
+      "nested gift boxes, navy gift box set, celestial pattern box, wedding favor boxes, jewelry gift box set, custom nested boxes",
   },
   {
     name: "Black & Gold Magnetic Closure Box",
     slug: "black-gold-magnetic-closure-box",
-    shortDescription: "Sleek black rigid box with premium gold magnetic closure and soft-touch finish.",
+    shortDescription:
+      "Sleek black rigid box with premium gold magnetic closure and soft-touch finish.",
     description: `A modern classic, our Black & Gold Magnetic Closure Box combines minimalist design with premium materials. The soft-touch matte black exterior pairs beautifully with the precision-engineered gold magnetic closure.
 
 Features:
@@ -154,20 +173,23 @@ Finishing Options:
 - Embossed/debossed logos
 - Custom gold or silver foil stamping
 - Interior foam or velvet inserts`,
-    price: "9.80",
+    price: "6.86",
     categorySlug: "gift-boxes",
     imageFile: "product-black-gold-magnetic-box.jpg",
     featured: true,
     stock: 1200,
     minOrderQty: 200,
     metaTitle: "Black & Gold Magnetic Closure Box | Premium Custom Packaging",
-    metaDescription: "Sleek black magnetic gift boxes with gold closure and soft-touch finish. Ideal for electronics, cosmetics, and corporate gifts. Custom sizes and branding. MOQ 200pcs.",
-    metaKeywords: "black gift box, magnetic closure box, gold magnetic box, soft touch packaging, luxury electronics box, custom magnetic box",
+    metaDescription:
+      "Sleek black magnetic gift boxes with gold closure and soft-touch finish. Ideal for electronics, cosmetics, and corporate gifts. Custom sizes and branding. MOQ 200pcs.",
+    metaKeywords:
+      "black gift box, magnetic closure box, gold magnetic box, soft touch packaging, luxury electronics box, custom magnetic box",
   },
   {
     name: "Minimalist White & Gold Rigid Box",
     slug: "minimalist-white-gold-rigid-box",
-    shortDescription: "Clean white rigid box with subtle gold edge detailing and minimalist design.",
+    shortDescription:
+      "Clean white rigid box with subtle gold edge detailing and minimalist design.",
     description: `The Minimalist White & Gold Rigid Box embodies Scandinavian-inspired simplicity. The crisp white exterior is accented with delicate gold edge detailing, creating a timeless aesthetic that lets your product shine.
 
 Features:
@@ -187,20 +209,23 @@ Customization:
 - Edge color: Gold, silver, rose gold, or custom Pantone
 - Logo: Blind embossing, foil stamping, or silk-screen
 - Interior: Custom molded pulp, foam, or fabric lining`,
-    price: "8.20",
+    price: "5.74",
     categorySlug: "gift-boxes",
     imageFile: "product-minimalist-white-gold-rigid-box.jpg",
     featured: false,
     stock: 1500,
     minOrderQty: 300,
     metaTitle: "Minimalist White & Gold Rigid Box | Clean Custom Packaging",
-    metaDescription: "Minimalist white rigid gift boxes with gold edge detailing. Perfect for bridal, skincare, and artisanal products. Custom branding available. MOQ 300pcs from Shanghai.",
-    metaKeywords: "white gift box, minimalist packaging, gold edge box, bridal gift box, skincare packaging, clean rigid box",
+    metaDescription:
+      "Minimalist white rigid gift boxes with gold edge detailing. Perfect for bridal, skincare, and artisanal products. Custom branding available. MOQ 300pcs from Shanghai.",
+    metaKeywords:
+      "white gift box, minimalist packaging, gold edge box, bridal gift box, skincare packaging, clean rigid box",
   },
   {
     name: "Kraft Window Gift Box",
     slug: "kraft-window-gift-box",
-    shortDescription: "Eco-friendly kraft box with clear PVC window and natural twine closure.",
+    shortDescription:
+      "Eco-friendly kraft box with clear PVC window and natural twine closure.",
     description: `Our Kraft Window Gift Box offers a charming, natural aesthetic perfect for artisanal and eco-conscious brands. The clear PVC window provides a tempting preview of the contents while the kraft paper construction conveys sustainability.
 
 Features:
@@ -222,20 +247,24 @@ Eco Options:
 - Compostable window film (PLA)
 - FSC-certified paper sources
 - Seed paper tags and labels`,
-    price: "3.50",
+    price: "2.45",
     categorySlug: "gift-boxes",
     imageFile: "product-kraft-window-gift-box.jpg",
     featured: false,
     stock: 3000,
     minOrderQty: 500,
-    metaTitle: "Kraft Window Gift Box | Eco-Friendly Custom Packaging Wholesale",
-    metaDescription: "Eco-friendly kraft gift boxes with clear window. Perfect for artisanal foods, soaps, and organic products. Sustainable packaging with custom branding. MOQ 500pcs.",
-    metaKeywords: "kraft gift box, window gift box, eco friendly packaging, artisanal packaging, sustainable gift box, kraft paper box wholesale",
+    metaTitle:
+      "Kraft Window Gift Box | Eco-Friendly Custom Packaging Wholesale",
+    metaDescription:
+      "Eco-friendly kraft gift boxes with clear window. Perfect for artisanal foods, soaps, and organic products. Sustainable packaging with custom branding. MOQ 500pcs.",
+    metaKeywords:
+      "kraft gift box, window gift box, eco friendly packaging, artisanal packaging, sustainable gift box, kraft paper box wholesale",
   },
   {
     name: "Blush Pink Hexagonal Gift Box",
     slug: "blush-pink-hexagonal-gift-box",
-    shortDescription: "Unique hexagonal rigid box in blush pink with gold foil geometric pattern.",
+    shortDescription:
+      "Unique hexagonal rigid box in blush pink with gold foil geometric pattern.",
     description: `Stand out from ordinary square boxes with our Blush Pink Hexagonal Gift Box. The unique six-sided shape creates visual interest, while the soft blush pink color and gold geometric pattern exude feminine elegance.
 
 Features:
@@ -257,20 +286,23 @@ Customization:
 - Pattern: Full-color printing, foil, or embossing
 - Closure: Magnetic, ribbon, or snap button
 - Interior: Custom inserts for specific products`,
-    price: "11.00",
+    price: "7.70",
     categorySlug: "gift-boxes",
     imageFile: "product-blush-pink-hexagonal-box.jpg",
     featured: true,
     stock: 900,
     minOrderQty: 300,
     metaTitle: "Blush Pink Hexagonal Gift Box | Unique Custom Shape Packaging",
-    metaDescription: "Unique hexagonal gift boxes in blush pink with gold pattern. Perfect for weddings, bridal gifts, and cosmetics. Custom shapes and branding available. MOQ 300pcs.",
-    metaKeywords: "hexagonal gift box, blush pink box, geometric pattern box, wedding favor box, bridal gift box, unique shape packaging",
+    metaDescription:
+      "Unique hexagonal gift boxes in blush pink with gold pattern. Perfect for weddings, bridal gifts, and cosmetics. Custom shapes and branding available. MOQ 300pcs.",
+    metaKeywords:
+      "hexagonal gift box, blush pink box, geometric pattern box, wedding favor box, bridal gift box, unique shape packaging",
   },
   {
     name: "Marble Texture Premium Gift Box",
     slug: "marble-texture-premium-gift-box",
-    shortDescription: "High-end rigid box with realistic marble texture print and silver foil logo area.",
+    shortDescription:
+      "High-end rigid box with realistic marble texture print and silver foil logo area.",
     description: `The Marble Texture Premium Gift Box brings the timeless elegance of natural stone to your packaging. The high-resolution marble texture print creates a luxurious look, complemented by a designated silver foil logo area.
 
 Features:
@@ -291,22 +323,25 @@ Finishing:
 - Texture: Marble, granite, wood grain, or custom patterns
 - Logo area: Foil, embossing, or metal plate options
 - Interior: Velvet, suede, or leatherette lining`,
-    price: "14.50",
+    price: "10.15",
     categorySlug: "gift-boxes",
     imageFile: "product-marble-texture-box.jpg",
     featured: false,
     stock: 600,
     minOrderQty: 200,
     metaTitle: "Marble Texture Premium Gift Box | Luxury Custom Packaging",
-    metaDescription: "Premium marble texture gift boxes with silver foil branding. Ultra-luxury packaging for cosmetics, candles, and corporate gifts. Custom patterns available. MOQ 200pcs.",
-    metaKeywords: "marble gift box, marble texture packaging, luxury candle box, premium cosmetic packaging, marble pattern box wholesale",
+    metaDescription:
+      "Premium marble texture gift boxes with silver foil branding. Ultra-luxury packaging for cosmetics, candles, and corporate gifts. Custom patterns available. MOQ 200pcs.",
+    metaKeywords:
+      "marble gift box, marble texture packaging, luxury candle box, premium cosmetic packaging, marble pattern box wholesale",
   },
 
   // ── Cosmetic Packaging ──
   {
     name: "Luxury Perfume Presentation Box",
     slug: "luxury-perfume-presentation-box",
-    shortDescription: "Elegant perfume box with satin interior, magnetic closure, and gold foil branding.",
+    shortDescription:
+      "Elegant perfume box with satin interior, magnetic closure, and gold foil branding.",
     description: `Designed specifically for fragrance brands, our Luxury Perfume Presentation Box creates an unforgettable unboxing experience. The custom-molded interior cradles your bottle securely while the exterior conveys premium quality.
 
 Features:
@@ -327,20 +362,23 @@ Branding Options:
 - UV spot gloss on logo or pattern areas
 - Embossed or debossed brand name
 - Custom printed interior lid`,
-    price: "6.50",
+    price: "4.55",
     categorySlug: "cosmetic-packaging",
     imageFile: "product-luxury-perfume-gift-box.jpg",
     featured: true,
     stock: 2000,
     minOrderQty: 500,
     metaTitle: "Luxury Perfume Presentation Box | Custom Fragrance Packaging",
-    metaDescription: "Premium perfume boxes with custom molded inserts and satin lining. Designed for 30ml-100ml fragrance bottles. Custom branding and sizes. MOQ 500pcs from Shanghai.",
-    metaKeywords: "perfume box, fragrance packaging, perfume presentation box, cosmetic box wholesale, custom perfume packaging, luxury fragrance box",
+    metaDescription:
+      "Premium perfume boxes with custom molded inserts and satin lining. Designed for 30ml-100ml fragrance bottles. Custom branding and sizes. MOQ 500pcs from Shanghai.",
+    metaKeywords:
+      "perfume box, fragrance packaging, perfume presentation box, cosmetic box wholesale, custom perfume packaging, luxury fragrance box",
   },
   {
     name: "Rose Gold Skincare Packaging Box",
     slug: "rose-gold-skincare-packaging-box",
-    shortDescription: "Trendy rose gold skincare box with soft-touch lamination and custom insert tray.",
+    shortDescription:
+      "Trendy rose gold skincare box with soft-touch lamination and custom insert tray.",
     description: `Capitalize on the rose gold trend with our stunning Skincare Packaging Box. The soft-touch lamination provides a tactile luxury feel, while the custom insert tray keeps serums, creams, and toners perfectly organized.
 
 Features:
@@ -361,20 +399,23 @@ Insert Materials:
 - Molded pulp (eco-friendly)
 - Cardboard with satin lining
 - Custom thermoformed plastic`,
-    price: "5.80",
+    price: "4.06",
     categorySlug: "cosmetic-packaging",
     imageFile: "product-rose-gold-skincare-box.jpg",
     featured: true,
     stock: 1500,
     minOrderQty: 500,
     metaTitle: "Rose Gold Skincare Packaging Box | Custom Beauty Box Wholesale",
-    metaDescription: "Trendy rose gold skincare boxes with soft-touch finish and custom inserts. Perfect for serum sets, cream collections, and beauty regimens. MOQ 500pcs. Factory direct.",
-    metaKeywords: "rose gold skincare box, cosmetic packaging box, beauty box wholesale, skincare set packaging, custom beauty packaging, rose gold cosmetic box",
+    metaDescription:
+      "Trendy rose gold skincare boxes with soft-touch finish and custom inserts. Perfect for serum sets, cream collections, and beauty regimens. MOQ 500pcs. Factory direct.",
+    metaKeywords:
+      "rose gold skincare box, cosmetic packaging box, beauty box wholesale, skincare set packaging, custom beauty packaging, rose gold cosmetic box",
   },
   {
     name: "Art Deco Makeup Palette Box",
     slug: "art-deco-makeup-palette-box",
-    shortDescription: "Vintage-inspired makeup palette case with art deco pattern and metallic accents.",
+    shortDescription:
+      "Vintage-inspired makeup palette case with art deco pattern and metallic accents.",
     description: `Inspired by the glamour of the 1920s, our Art Deco Makeup Palette Box features striking geometric patterns and metallic accents that make your product impossible to ignore on retail shelves.
 
 Features:
@@ -395,20 +436,24 @@ Special Features:
 - Magnetic pan holders
 - Brush compartment
 - Protective sleeve or overwrap`,
-    price: "4.20",
+    price: "2.94",
     categorySlug: "cosmetic-packaging",
     imageFile: "product-art-deco-makeup-palette-box.jpg",
     featured: false,
     stock: 2500,
     minOrderQty: 1000,
-    metaTitle: "Art Deco Makeup Palette Box | Custom Cosmetic Packaging Wholesale",
-    metaDescription: "Vintage art deco makeup palette boxes with metallic accents. Custom shapes and sizes for eyeshadow, face, and lip palettes. MOQ 1000pcs from Shanghai manufacturer.",
-    metaKeywords: "makeup palette box, art deco cosmetic packaging, eyeshadow palette case, custom makeup packaging, cosmetic palette box wholesale",
+    metaTitle:
+      "Art Deco Makeup Palette Box | Custom Cosmetic Packaging Wholesale",
+    metaDescription:
+      "Vintage art deco makeup palette boxes with metallic accents. Custom shapes and sizes for eyeshadow, face, and lip palettes. MOQ 1000pcs from Shanghai manufacturer.",
+    metaKeywords:
+      "makeup palette box, art deco cosmetic packaging, eyeshadow palette case, custom makeup packaging, cosmetic palette box wholesale",
   },
   {
     name: "Blush Pink Lipstick Drawer Box",
     slug: "blush-pink-lipstick-drawer-box",
-    shortDescription: "Slide-out drawer box for lipstick with blush pink wrap and gold foil logo.",
+    shortDescription:
+      "Slide-out drawer box for lipstick with blush pink wrap and gold foil logo.",
     description: `Our Blush Pink Lipstick Drawer Box offers a delightful slide-out mechanism that reveals your lipstick in style. The compact, elegant design is perfect for single lipsticks or small lip collections.
 
 Features:
@@ -429,20 +474,23 @@ Interior Options:
 - Satin lining with elastic holder
 - Cardboard insert with die-cut window
 - Magnetic holder for metal tubes`,
-    price: "2.80",
+    price: "1.96",
     categorySlug: "cosmetic-packaging",
     imageFile: "product-blush-pink-lipstick-drawer-box.jpg",
     featured: false,
     stock: 3000,
     minOrderQty: 1000,
     metaTitle: "Blush Pink Lipstick Drawer Box | Custom Lipstick Packaging",
-    metaDescription: "Elegant slide-out drawer boxes for lipstick in blush pink. Single or multi-piece configurations with custom branding. MOQ 1000pcs. Factory direct pricing.",
-    metaKeywords: "lipstick drawer box, blush pink cosmetic box, lipstick packaging wholesale, custom lipstick box, slide out drawer box, makeup packaging",
+    metaDescription:
+      "Elegant slide-out drawer boxes for lipstick in blush pink. Single or multi-piece configurations with custom branding. MOQ 1000pcs. Factory direct pricing.",
+    metaKeywords:
+      "lipstick drawer box, blush pink cosmetic box, lipstick packaging wholesale, custom lipstick box, slide out drawer box, makeup packaging",
   },
   {
     name: "Eco-Friendly Botanical Cosmetic Box",
     slug: "eco-friendly-botanical-cosmetic-box",
-    shortDescription: "Sustainable cosmetic packaging with botanical print and compostable window film.",
+    shortDescription:
+      "Sustainable cosmetic packaging with botanical print and compostable window film.",
     description: `Showcase your commitment to sustainability with our Eco-Friendly Botanical Cosmetic Box. Made from recycled and biodegradable materials, this packaging proves that eco-conscious design can be beautiful.
 
 Features:
@@ -470,22 +518,26 @@ Customization:
 - Water-based coatings instead of lamination
 - Soy ink color matching
 - Embossed botanical patterns`,
-    price: "3.90",
+    price: "2.73",
     categorySlug: "cosmetic-packaging",
     imageFile: "product-eco-friendly-botanical-cosmetic.jpg",
     featured: true,
     stock: 2000,
     minOrderQty: 500,
-    metaTitle: "Eco-Friendly Botanical Cosmetic Box | Sustainable Beauty Packaging",
-    metaDescription: "Sustainable botanical cosmetic boxes with compostable window film and soy inks. FSC-certified recycled materials. Perfect for organic and vegan beauty brands. MOQ 500pcs.",
-    metaKeywords: "eco friendly cosmetic box, sustainable beauty packaging, botanical packaging, compostable cosmetic box, organic skincare packaging, green beauty box",
+    metaTitle:
+      "Eco-Friendly Botanical Cosmetic Box | Sustainable Beauty Packaging",
+    metaDescription:
+      "Sustainable botanical cosmetic boxes with compostable window film and soy inks. FSC-certified recycled materials. Perfect for organic and vegan beauty brands. MOQ 500pcs.",
+    metaKeywords:
+      "eco friendly cosmetic box, sustainable beauty packaging, botanical packaging, compostable cosmetic box, organic skincare packaging, green beauty box",
   },
 
   // ── Jewelry & Watch Boxes ──
   {
     name: "Rose Gold Necklace Jewelry Box",
     slug: "rose-gold-necklace-jewelry-box",
-    shortDescription: "Elegant necklace box in rose gold with velvet interior and magnetic closure.",
+    shortDescription:
+      "Elegant necklace box in rose gold with velvet interior and magnetic closure.",
     description: `Present necklaces and pendants in stunning style with our Rose Gold Necklace Jewelry Box. The exterior rose gold finish catches the light beautifully, while the plush velvet interior protects precious pieces.
 
 Features:
@@ -511,20 +563,24 @@ Branding:
 - Embossed pattern on exterior
 - Custom printed interior lid
 - Ribbon accent in brand colors`,
-    price: "4.50",
+    price: "3.15",
     categorySlug: "jewelry-watch-boxes",
     imageFile: "product-rose-gold-necklace-box.jpg",
     featured: true,
     stock: 2000,
     minOrderQty: 500,
-    metaTitle: "Rose Gold Necklace Jewelry Box | Custom Jewelry Packaging Wholesale",
-    metaDescription: "Elegant rose gold necklace boxes with velvet interior and magnetic closure. Custom sizes and branding for jewelry brands. MOQ 500pcs from Shanghai.",
-    metaKeywords: "rose gold jewelry box, necklace box wholesale, custom jewelry packaging, velvet jewelry box, pendant box, jewelry gift box",
+    metaTitle:
+      "Rose Gold Necklace Jewelry Box | Custom Jewelry Packaging Wholesale",
+    metaDescription:
+      "Elegant rose gold necklace boxes with velvet interior and magnetic closure. Custom sizes and branding for jewelry brands. MOQ 500pcs from Shanghai.",
+    metaKeywords:
+      "rose gold jewelry box, necklace box wholesale, custom jewelry packaging, velvet jewelry box, pendant box, jewelry gift box",
   },
   {
     name: "Velvet Ring Box",
     slug: "velvet-ring-box",
-    shortDescription: "Classic velvet ring box with hinged lid and soft cushion insert.",
+    shortDescription:
+      "Classic velvet ring box with hinged lid and soft cushion insert.",
     description: `The timeless Velvet Ring Box is the perfect presentation for engagement rings, wedding bands, and fine jewelry. The luxurious velvet exterior and soft cushion insert create an emotional unboxing moment.
 
 Features:
@@ -552,20 +608,23 @@ Special Features:
 - Dual ring slot for wedding sets
 - Secret compartment under cushion
 - Custom engraved metal plate on lid`,
-    price: "3.20",
+    price: "2.24",
     categorySlug: "jewelry-watch-boxes",
     imageFile: "product-velvet-ring-box.jpg",
     featured: true,
     stock: 3000,
     minOrderQty: 500,
     metaTitle: "Velvet Ring Box | Custom Engagement Ring Packaging Wholesale",
-    metaDescription: "Classic velvet ring boxes with hinged lid and cushion insert. Perfect for engagement rings, wedding bands, and fine jewelry. Custom colors and branding. MOQ 500pcs.",
-    metaKeywords: "velvet ring box, engagement ring box, wedding ring box, custom ring packaging, jewelry ring box wholesale, ring gift box",
+    metaDescription:
+      "Classic velvet ring boxes with hinged lid and cushion insert. Perfect for engagement rings, wedding bands, and fine jewelry. Custom colors and branding. MOQ 500pcs.",
+    metaKeywords:
+      "velvet ring box, engagement ring box, wedding ring box, custom ring packaging, jewelry ring box wholesale, ring gift box",
   },
   {
     name: "Earring Display Card Box",
     slug: "earring-display-card-box",
-    shortDescription: "Compact box with display card insert for stud and drop earrings.",
+    shortDescription:
+      "Compact box with display card insert for stud and drop earrings.",
     description: `Our Earring Display Card Box combines practical storage with beautiful presentation. The custom display card insert keeps pairs organized and visible, while the compact box protects them during shipping and display.
 
 Features:
@@ -592,20 +651,23 @@ Customization:
 - Foil accents on logo or borders
 - Embossed patterns
 - Custom die-cut shapes`,
-    price: "1.80",
+    price: "1.26",
     categorySlug: "jewelry-watch-boxes",
     imageFile: "product-earring-card-box.jpg",
     featured: false,
     stock: 5000,
     minOrderQty: 1000,
     metaTitle: "Earring Display Card Box | Custom Earring Packaging Wholesale",
-    metaDescription: "Compact earring boxes with custom display card inserts. Perfect for stud and drop earrings. Matchbox, hinged, and window styles available. MOQ 1000pcs.",
-    metaKeywords: "earring box, earring display card, stud earring packaging, custom earring box, jewelry display box, earring gift box wholesale",
+    metaDescription:
+      "Compact earring boxes with custom display card inserts. Perfect for stud and drop earrings. Matchbox, hinged, and window styles available. MOQ 1000pcs.",
+    metaKeywords:
+      "earring box, earring display card, stud earring packaging, custom earring box, jewelry display box, earring gift box wholesale",
   },
   {
     name: "Wooden Watch Display Box",
     slug: "wooden-watch-display-box",
-    shortDescription: "Premium wood-grain finish box with watch pillow and glass viewing window.",
+    shortDescription:
+      "Premium wood-grain finish box with watch pillow and glass viewing window.",
     description: `The Wooden Watch Display Box elevates timepiece presentation with its sophisticated wood-grain finish and thoughtful interior design. The plush watch pillow cradles automatic and quartz watches perfectly.
 
 Features:
@@ -633,20 +695,23 @@ Branding:
 - Metal plate with engraved brand
 - Foil stamping on interior lid
 - Custom printed watch pillow tags`,
-    price: "15.00",
+    price: "10.50",
     categorySlug: "jewelry-watch-boxes",
     imageFile: "product-wooden-watch-box.jpg",
     featured: true,
     stock: 800,
     minOrderQty: 200,
     metaTitle: "Wooden Watch Display Box | Custom Watch Packaging Wholesale",
-    metaDescription: "Premium wood-grain watch boxes with velvet pillows and glass window. Single to ten-watch capacities available. Laser engraving and custom branding. MOQ 200pcs.",
-    metaKeywords: "wooden watch box, watch display box, watch gift box, custom watch packaging, wood watch case, luxury watch box wholesale",
+    metaDescription:
+      "Premium wood-grain watch boxes with velvet pillows and glass window. Single to ten-watch capacities available. Laser engraving and custom branding. MOQ 200pcs.",
+    metaKeywords:
+      "wooden watch box, watch display box, watch gift box, custom watch packaging, wood watch case, luxury watch box wholesale",
   },
   {
     name: "Multi-Tier Jewelry Organizer",
     slug: "multi-tier-jewelry-organizer",
-    shortDescription: "Three-tier jewelry box with drawers for rings, necklaces, and earrings.",
+    shortDescription:
+      "Three-tier jewelry box with drawers for rings, necklaces, and earrings.",
     description: `Keep jewelry collections organized and beautifully displayed with our Multi-Tier Jewelry Organizer. Three pull-out drawers provide dedicated space for different jewelry types, while the compact footprint saves vanity space.
 
 Features:
@@ -679,22 +744,25 @@ Perfect For:
 - Retail display
 - Personal travel organizer
 - Gift box for jewelry sets`,
-    price: "13.50",
+    price: "9.45",
     categorySlug: "jewelry-watch-boxes",
     imageFile: "product-multi-tier-organizer.jpg",
     featured: false,
     stock: 1000,
     minOrderQty: 300,
     metaTitle: "Multi-Tier Jewelry Organizer | Custom Jewelry Box Wholesale",
-    metaDescription: "Three-tier jewelry organizers with dedicated drawers for rings, necklaces, and earrings. Mirror lid and velvet lining. Custom branding available. MOQ 300pcs from Shanghai.",
-    metaKeywords: "jewelry organizer box, multi tier jewelry box, ring drawer box, necklace organizer, custom jewelry packaging, travel jewelry case",
+    metaDescription:
+      "Three-tier jewelry organizers with dedicated drawers for rings, necklaces, and earrings. Mirror lid and velvet lining. Custom branding available. MOQ 300pcs from Shanghai.",
+    metaKeywords:
+      "jewelry organizer box, multi tier jewelry box, ring drawer box, necklace organizer, custom jewelry packaging, travel jewelry case",
   },
 
   // ── Food & Beverage Packaging ──
   {
     name: "Chocolate Truffle Gift Box",
     slug: "chocolate-truffle-gift-box",
-    shortDescription: "Food-safe truffle box with insert tray and gold foil accent lid.",
+    shortDescription:
+      "Food-safe truffle box with insert tray and gold foil accent lid.",
     description: `Present artisanal chocolates in packaging as exquisite as the confections inside. Our Chocolate Truffle Gift Box features food-safe materials and a custom insert tray that keeps each piece perfectly positioned.
 
 Features:
@@ -722,20 +790,24 @@ Customization:
 - Embossed patterns
 - Seasonal and holiday designs
 - Custom window shapes`,
-    price: "4.00",
+    price: "2.80",
     categorySlug: "food-beverage-packaging",
     imageFile: "product-chocolate-truffle-box.jpg",
     featured: true,
     stock: 2500,
     minOrderQty: 500,
-    metaTitle: "Chocolate Truffle Gift Box | Custom Food-Safe Packaging Wholesale",
-    metaDescription: "Food-safe chocolate truffle boxes with custom insert trays. FDA-compliant materials for 6-24 pieces. Gold foil and custom printing. MOQ 500pcs from Shanghai.",
-    metaKeywords: "chocolate truffle box, chocolate gift box, food safe packaging, custom chocolate box, confectionery packaging, truffle box wholesale",
+    metaTitle:
+      "Chocolate Truffle Gift Box | Custom Food-Safe Packaging Wholesale",
+    metaDescription:
+      "Food-safe chocolate truffle boxes with custom insert trays. FDA-compliant materials for 6-24 pieces. Gold foil and custom printing. MOQ 500pcs from Shanghai.",
+    metaKeywords:
+      "chocolate truffle box, chocolate gift box, food safe packaging, custom chocolate box, confectionery packaging, truffle box wholesale",
   },
   {
     name: "Honey Gift Set Packaging",
     slug: "honey-gift-set-packaging",
-    shortDescription: "Rustic honey gift box with kraft finish and custom jar holder insert.",
+    shortDescription:
+      "Rustic honey gift box with kraft finish and custom jar holder insert.",
     description: `Our Honey Gift Set Packaging captures the natural, artisanal appeal of premium honey products. The rustic kraft finish and custom jar holder create a farmhouse-chic presentation that appeals to gourmet food lovers.
 
 Features:
@@ -763,20 +835,23 @@ Sustainability:
 - Soy-based inks
 - Compostable window film option
 - Plastic-free construction available`,
-    price: "5.50",
+    price: "3.85",
     categorySlug: "food-beverage-packaging",
     imageFile: "product-honey-gift-set.jpg",
     featured: false,
     stock: 2000,
     minOrderQty: 500,
     metaTitle: "Honey Gift Set Packaging | Custom Food Packaging Wholesale",
-    metaDescription: "Rustic kraft honey gift boxes with custom jar holders. Supports 50ml-500ml jars, single or multi-jar sets. Eco-friendly options available. MOQ 500pcs.",
-    metaKeywords: "honey gift box, honey jar packaging, artisan food box, kraft honey box, custom food packaging, gourmet gift box",
+    metaDescription:
+      "Rustic kraft honey gift boxes with custom jar holders. Supports 50ml-500ml jars, single or multi-jar sets. Eco-friendly options available. MOQ 500pcs.",
+    metaKeywords:
+      "honey gift box, honey jar packaging, artisan food box, kraft honey box, custom food packaging, gourmet gift box",
   },
   {
     name: "Kraft Bakery Box",
     slug: "kraft-bakery-box",
-    shortDescription: "Grease-resistant kraft box for pastries, cupcakes, and baked goods.",
+    shortDescription:
+      "Grease-resistant kraft box for pastries, cupcakes, and baked goods.",
     description: `Designed for bakeries and pastry shops, our Kraft Bakery Box keeps baked goods fresh and presentable. The grease-resistant coating prevents oil stains while the sturdy construction protects delicate items during transport.
 
 Features:
@@ -805,20 +880,23 @@ Customization:
 - Custom die-cut handles
 - Seasonal design templates
 - QR code printing for online ordering`,
-    price: "2.20",
+    price: "1.54",
     categorySlug: "food-beverage-packaging",
     imageFile: "product-kraft-bakery-box.jpg",
     featured: false,
     stock: 5000,
     minOrderQty: 1000,
     metaTitle: "Kraft Bakery Box | Custom Food Packaging Wholesale",
-    metaDescription: "Grease-resistant kraft bakery boxes for pastries, cupcakes, and cakes. Window and insert options available. Custom branding for bakeries. MOQ 1000pcs.",
-    metaKeywords: "kraft bakery box, pastry box, cupcake box, grease resistant box, custom bakery packaging, food safe kraft box",
+    metaDescription:
+      "Grease-resistant kraft bakery boxes for pastries, cupcakes, and cakes. Window and insert options available. Custom branding for bakeries. MOQ 1000pcs.",
+    metaKeywords:
+      "kraft bakery box, pastry box, cupcake box, grease resistant box, custom bakery packaging, food safe kraft box",
   },
   {
     name: "Premium Tea Tube Packaging",
     slug: "premium-tea-tube-packaging",
-    shortDescription: "Cylinder tube for loose-leaf tea with airtight inner seal and gold rim.",
+    shortDescription:
+      "Cylinder tube for loose-leaf tea with airtight inner seal and gold rim.",
     description: `Our Premium Tea Tube Packaging offers a distinctive cylindrical presentation for loose-leaf teas, tea bags, and herbal blends. The airtight inner seal preserves freshness while the elegant exterior tells your brand story.
 
 Features:
@@ -847,20 +925,23 @@ Eco Options:
 - Compostable inner seal
 - Plant-based inks
 - Plastic-free construction`,
-    price: "3.80",
+    price: "2.66",
     categorySlug: "food-beverage-packaging",
     imageFile: "product-tea-tube.jpg",
     featured: false,
     stock: 3000,
     minOrderQty: 1000,
     metaTitle: "Premium Tea Tube Packaging | Custom Tea Packaging Wholesale",
-    metaDescription: "Cylinder tea tubes with airtight foil seal and gold rim. For loose-leaf tea, tea bags, and samplers. Custom sizes and eco-friendly options. MOQ 1000pcs.",
-    metaKeywords: "tea tube packaging, tea cylinder box, loose leaf tea packaging, custom tea box, tea gift tube, herbal tea packaging",
+    metaDescription:
+      "Cylinder tea tubes with airtight foil seal and gold rim. For loose-leaf tea, tea bags, and samplers. Custom sizes and eco-friendly options. MOQ 1000pcs.",
+    metaKeywords:
+      "tea tube packaging, tea cylinder box, loose leaf tea packaging, custom tea box, tea gift tube, herbal tea packaging",
   },
   {
     name: "Macaron Drawer Gift Box",
     slug: "macaron-drawer-gift-box",
-    shortDescription: "Pastel drawer box with individual macaron slots and clear window.",
+    shortDescription:
+      "Pastel drawer box with individual macaron slots and clear window.",
     description: `The Macaron Drawer Gift Box is specifically designed to showcase and protect delicate French macarons. The individual slots prevent shifting and crushing, while the clear window tempts customers with a colorful preview.
 
 Features:
@@ -888,22 +969,25 @@ Customization:
 - Custom window shapes (heart, star, etc.)
 - Seasonal design variations
 - Personalized message printing`,
-    price: "4.80",
+    price: "3.36",
     categorySlug: "food-beverage-packaging",
     imageFile: "product-macaron-drawer-box.jpg",
     featured: true,
     stock: 2000,
     minOrderQty: 500,
     metaTitle: "Macaron Drawer Gift Box | Custom Macaron Packaging Wholesale",
-    metaDescription: "Pastel drawer boxes with individual macaron slots and clear window. Holds 6-36 macarons in standard, mini, or jumbo sizes. Custom branding. MOQ 500pcs.",
-    metaKeywords: "macaron box, macaron drawer box, macaron gift box, custom macaron packaging, pastel dessert box, french macaron box",
+    metaDescription:
+      "Pastel drawer boxes with individual macaron slots and clear window. Holds 6-36 macarons in standard, mini, or jumbo sizes. Custom branding. MOQ 500pcs.",
+    metaKeywords:
+      "macaron box, macaron drawer box, macaron gift box, custom macaron packaging, pastel dessert box, french macaron box",
   },
 
   // ── Luxury & Corporate Packaging ──
   {
     name: "Leather Corporate Gift Box",
     slug: "leather-corporate-gift-box",
-    shortDescription: "Executive gift box with leather-textured wrap and brass clasp closure.",
+    shortDescription:
+      "Executive gift box with leather-textured wrap and brass clasp closure.",
     description: `Make a lasting impression with our Leather Corporate Gift Box. The premium leather-textured wrap and brass clasp closure convey professionalism and quality, perfect for executive gifts and corporate recognition programs.
 
 Features:
@@ -939,20 +1023,24 @@ Branding:
 - Foil stamping
 - Custom printed interior
 - Branded ribbon or seal`,
-    price: "16.00",
+    price: "11.20",
     categorySlug: "luxury-corporate-packaging",
     imageFile: "product-leather-corporate-box.jpg",
     featured: true,
     stock: 600,
     minOrderQty: 200,
-    metaTitle: "Leather Corporate Gift Box | Executive Custom Packaging Wholesale",
-    metaDescription: "Premium leather-textured corporate gift boxes with brass clasp. Executive welcome kits, client appreciation, and recognition gifts. Custom branding. MOQ 200pcs.",
-    metaKeywords: "leather gift box, corporate gift box, executive packaging, luxury corporate box, custom business gift box, leather textured box",
+    metaTitle:
+      "Leather Corporate Gift Box | Executive Custom Packaging Wholesale",
+    metaDescription:
+      "Premium leather-textured corporate gift boxes with brass clasp. Executive welcome kits, client appreciation, and recognition gifts. Custom branding. MOQ 200pcs.",
+    metaKeywords:
+      "leather gift box, corporate gift box, executive packaging, luxury corporate box, custom business gift box, leather textured box",
   },
   {
     name: "Premium Wine Case",
     slug: "premium-wine-case",
-    shortDescription: "Single or dual bottle wine case with satin lining and rope handle.",
+    shortDescription:
+      "Single or dual bottle wine case with satin lining and rope handle.",
     description: `Our Premium Wine Case elevates wine gifting with sophisticated design and protective construction. The satin-lined interior cradles bottles securely while the rope handle adds a touch of rustic elegance.
 
 Features:
@@ -988,20 +1076,23 @@ Special Features:
 - Water-resistant coating
 - Temperature insulation option
 - Custom shape (book style, chest style)`,
-    price: "10.50",
+    price: "7.35",
     categorySlug: "luxury-corporate-packaging",
     imageFile: "product-wine-case.jpg",
     featured: true,
     stock: 1000,
     minOrderQty: 300,
     metaTitle: "Premium Wine Case | Custom Wine Packaging Wholesale",
-    metaDescription: "Premium single and dual bottle wine cases with satin lining and rope handle. Custom cavity molding for 750ml and magnum bottles. MOQ 300pcs from Shanghai.",
-    metaKeywords: "wine gift box, wine case wholesale, custom wine packaging, bottle gift box, wine carrier box, vineyard packaging",
+    metaDescription:
+      "Premium single and dual bottle wine cases with satin lining and rope handle. Custom cavity molding for 750ml and magnum bottles. MOQ 300pcs from Shanghai.",
+    metaKeywords:
+      "wine gift box, wine case wholesale, custom wine packaging, bottle gift box, wine carrier box, vineyard packaging",
   },
   {
     name: "Blush Pink Ribbon Luxury Gift Bag",
     slug: "blush-pink-ribbon-luxury-gift-bag",
-    shortDescription: "Heavy-duty luxury gift bag with satin ribbon handles and reinforced base.",
+    shortDescription:
+      "Heavy-duty luxury gift bag with satin ribbon handles and reinforced base.",
     description: `When a box isn't the right choice, our Blush Pink Ribbon Luxury Gift Bag offers an elegant alternative. The heavy-duty construction and satin ribbon handles create a premium shopping and gifting experience.
 
 Features:
@@ -1039,15 +1130,17 @@ Customization:
 - QR code printing
 - Interior printing
 - Tissue paper and sticker sets`,
-    price: "2.50",
+    price: "1.75",
     categorySlug: "luxury-corporate-packaging",
     imageFile: "product-blush-ribbon-bag.jpg",
     featured: false,
     stock: 5000,
     minOrderQty: 1000,
     metaTitle: "Blush Pink Ribbon Luxury Gift Bag | Custom Gift Bag Wholesale",
-    metaDescription: "Heavy-duty luxury gift bags with satin ribbon handles and reinforced base. Multiple sizes for jewelry to clothing. Custom branding and colors. MOQ 1000pcs.",
-    metaKeywords: "luxury gift bag, ribbon gift bag, custom gift bag wholesale, blush pink gift bag, satin handle bag, premium shopping bag",
+    metaDescription:
+      "Heavy-duty luxury gift bags with satin ribbon handles and reinforced base. Multiple sizes for jewelry to clothing. Custom branding and colors. MOQ 1000pcs.",
+    metaKeywords:
+      "luxury gift bag, ribbon gift bag, custom gift bag wholesale, blush pink gift bag, satin handle bag, premium shopping bag",
   },
 ];
 
@@ -1074,8 +1167,24 @@ async function seed() {
       .limit(1);
 
     if (existing.length > 0) {
-      console.log(`  ⏭️  Category exists: ${cat.name} (ID: ${existing[0].id})`);
-      categoryIdMap.set(cat.slug, existing[0].id);
+      const id = existing[0].id;
+      // Backfill category image if the existing record is missing one
+      if (cat.image) {
+        const [record] = await db
+          .select({ image: categories.image })
+          .from(categories)
+          .where(eq(categories.id, id))
+          .limit(1);
+        if (!record?.image) {
+          await db
+            .update(categories)
+            .set({ image: cat.image })
+            .where(eq(categories.id, id));
+          console.log(`  🖼️  Backfilled image for category: ${cat.name}`);
+        }
+      }
+      console.log(`  ⏭️  Category exists: ${cat.name} (ID: ${id})`);
+      categoryIdMap.set(cat.slug, id);
     } else {
       const result = await db.insert(categories).values(cat);
       const id = Number(result[0].insertId);
@@ -1136,11 +1245,13 @@ async function seed() {
     }
   }
 
-  console.log(`\n🎉 Done! Categories: ${categoryIdMap.size}, Products created: ${created}, Skipped: ${skipped}`);
+  console.log(
+    `\n🎉 Done! Categories: ${categoryIdMap.size}, Products created: ${created}, Skipped: ${skipped}`
+  );
   process.exit(0);
 }
 
-seed().catch((err) => {
+seed().catch(err => {
   console.error("❌ Seed failed:", err);
   process.exit(1);
 });

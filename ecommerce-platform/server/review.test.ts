@@ -4,8 +4,11 @@ import type { TrpcContext } from "./_core/context";
 
 type AuthenticatedUser = NonNullable<TrpcContext["user"]>;
 
-function createMockContext(opts: { role?: "user" | "admin"; userId?: number } = {}) {
-  const clearedCookies: { name: string; options: Record<string, unknown> }[] = [];
+function createMockContext(
+  opts: { role?: "user" | "admin"; userId?: number } = {}
+) {
+  const clearedCookies: { name: string; options: Record<string, unknown> }[] =
+    [];
 
   const user: AuthenticatedUser = {
     id: opts.userId ?? 1,
@@ -67,7 +70,11 @@ describe("review router", () => {
       const { ctx } = createPublicContext();
       const caller = appRouter.createCaller(ctx);
 
-      const result = await caller.review.listByProduct({ productId: 1, page: 1, limit: 5 });
+      const result = await caller.review.listByProduct({
+        productId: 1,
+        page: 1,
+        limit: 5,
+      });
 
       expect(result).toHaveProperty("items");
       expect(result).toHaveProperty("total");
@@ -137,7 +144,8 @@ describe("review router", () => {
           productId: 1,
           rating: 5,
           title: "Excellent packaging quality",
-          content: "The perfume box exceeded our expectations. Great craftsmanship!",
+          content:
+            "The perfume box exceeded our expectations. Great craftsmanship!",
         });
         expect(typeof result).toBe("number");
       } catch (err: any) {
@@ -197,7 +205,10 @@ describe("review router", () => {
       const caller = appRouter.createCaller(ctx);
 
       // Should not throw validation errors for valid statuses
-      const result = await caller.review.updateStatus({ id: 1, status: "approved" });
+      const result = await caller.review.updateStatus({
+        id: 1,
+        status: "approved",
+      });
       expect(result).toEqual({ success: true });
     });
   });

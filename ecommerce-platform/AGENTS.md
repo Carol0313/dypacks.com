@@ -9,39 +9,40 @@
 This is a **full-stack B2B e-commerce platform** for DY Packs (Shanghai Douyue Industrial Co., Ltd), a custom packaging manufacturer. The platform targets international buyers and supports inquiry/quote-based wholesale transactions rather than pure online checkout.
 
 **Key characteristics:**
+
 - Monolithic architecture with clear client/server/shared separation
 - tRPC for end-to-end type-safe APIs (no REST except OAuth callback and sitemap)
 - B2B-focused: "Add to Inquiry List" + quote request system
 - Multi-language: English (fallback), Turkish, Russian, Spanish
-- Comprehensive SEO: JSON-LD schemas, dynamic sitemap, meta tags, blog system
+- Comprehensive SEO: JSON-LD schemas, dynamic sitemap, meta tags, blog system, centralized `client/src/lib/seo.ts` hook/config, plus strategy docs `SEO-KEYWORD-MAPPING.md`, `BACKLINK-BUILDING-GUIDE.md`, and sample content in `content-samples/`
 - Dual image storage: Alibaba Cloud OSS (primary) → Manus Forge Storage (fallback)
 
 ---
 
 ## Technology Stack
 
-| Layer | Technology | Version |
-|-------|-----------|---------|
-| Runtime | Node.js | 20+ |
-| Language | TypeScript | 5.9.3 (ESM) |
-| Package Manager | pnpm | 10.4.1 |
-| Frontend Framework | React | 19.2.1 |
-| Build Tool | Vite | 7.1.7 |
-| CSS Framework | Tailwind CSS | 4.1.14 |
-| UI Components | shadcn/ui + Radix UI | ~50 components |
-| Router | Wouter | 3.3.5 (patched) |
-| State Management | TanStack Query (React Query) | 5.90.2 |
-| Forms | React Hook Form + Zod | 7.64.0 / 4.1.12 |
-| Animation | Framer Motion | 12.23.22 |
-| i18n | i18next + react-i18next | 24.2.3 |
-| Backend Framework | Express | 4.21.2 |
-| API | tRPC | 11.6.0 |
-| Database ORM | Drizzle ORM | 0.44.5 |
-| Database | MySQL | (via mysql2) |
-| Auth | OAuth 2.0 + JWT (jose) | 6.1.0 |
-| Storage | Alibaba Cloud OSS (@aws-sdk/client-s3) | 3.693.0 |
-| Email | Nodemailer | 6.9.16 |
-| Test Runner | Vitest | 2.1.4 |
+| Layer              | Technology                             | Version         |
+| ------------------ | -------------------------------------- | --------------- |
+| Runtime            | Node.js                                | 20+             |
+| Language           | TypeScript                             | 5.9.3 (ESM)     |
+| Package Manager    | pnpm                                   | 10.4.1          |
+| Frontend Framework | React                                  | 19.2.1          |
+| Build Tool         | Vite                                   | 7.1.7           |
+| CSS Framework      | Tailwind CSS                           | 4.1.14          |
+| UI Components      | shadcn/ui + Radix UI                   | ~50 components  |
+| Router             | Wouter                                 | 3.3.5 (patched) |
+| State Management   | TanStack Query (React Query)           | 5.90.2          |
+| Forms              | React Hook Form + Zod                  | 7.64.0 / 4.1.12 |
+| Animation          | Framer Motion                          | 12.23.22        |
+| i18n               | i18next + react-i18next                | 24.2.3          |
+| Backend Framework  | Express                                | 4.21.2          |
+| API                | tRPC                                   | 11.6.0          |
+| Database ORM       | Drizzle ORM                            | 0.44.5          |
+| Database           | MySQL                                  | (via mysql2)    |
+| Auth               | OAuth 2.0 + JWT (jose)                 | 6.1.0           |
+| Storage            | Alibaba Cloud OSS (@aws-sdk/client-s3) | 3.693.0         |
+| Email              | Nodemailer                             | 6.9.16          |
+| Test Runner        | Vitest                                 | 2.1.4           |
 
 ---
 
@@ -64,7 +65,7 @@ ecommerce-platform/
 │   │   ├── contexts/                # React contexts (ThemeContext)
 │   │   ├── hooks/                   # Custom hooks (useMobile, useComposition)
 │   │   ├── i18n/                    # i18n config + 4 locale JSON files
-│   │   ├── lib/                     # Utilities (trpc client, constants, utils)
+│   │   ├── lib/                     # Utilities (trpc client, constants, utils, seo)
 │   │   ├── pages/                   # 17 page components (route-level)
 │   │   ├── App.tsx                  # Router definition (wouter)
 │   │   ├── main.tsx                 # Entry point (trpc provider, query client)
@@ -144,6 +145,7 @@ pnpm db:push
 ```
 
 **Build details:**
+
 - Frontend: Vite builds to `dist/public/` with `emptyOutDir: true`
 - Backend: esbuild bundles `server/_core/index.ts` to `dist/index.js` as ESM with external packages
 - In development, Vite middleware handles HMR and SPA routing
@@ -154,6 +156,7 @@ pnpm db:push
 ## Code Style Guidelines
 
 ### TypeScript
+
 - **ESM modules** (`"type": "module"` in package.json)
 - **Strict mode** enabled
 - **Path aliases:**
@@ -162,6 +165,7 @@ pnpm db:push
   - `@assets/` → `attached_assets/`
 
 ### Component Patterns
+
 - **shadcn/ui architecture:** Radix UI primitives + Tailwind CSS + `class-variance-authority` for variants
 - Use `cn()` utility (from `clsx` + `tailwind-merge`) for conditional class merging
 - Custom color palette using OKLCH color space:
@@ -170,12 +174,14 @@ pnpm db:push
   - Font: Inter (sans), Playfair Display (heading)
 
 ### Naming Conventions
+
 - React components: PascalCase (e.g., `ProductDetail.tsx`)
 - Hooks: camelCase with `use` prefix (e.g., `useAuth.ts`)
 - Database tables: snake_case in schema, camelCase in TypeScript
 - tRPC routers: camelCase (e.g., `productRouter`, `categoryRouter`)
 
 ### File Organization
+
 - **Database operations are centralized** in `server/db.ts` — not split into repositories
 - **All tRPC routers are in one file** `server/routers.ts` — 8 domain routers
 - **Shared types** exported from `shared/types.ts` which re-exports from `drizzle/schema.ts`
@@ -186,19 +192,19 @@ pnpm db:push
 
 **11 tables** defined in `drizzle/schema.ts`:
 
-| Table | Purpose |
-|-------|---------|
-| `users` | User accounts (openId unique, role: user/admin) |
-| `categories` | Product categories (slug unique, sortOrder) |
-| `products` | Product catalog (slug unique, images JSON, SEO fields, status enum) |
-| `cart_items` | Shopping cart |
-| `addresses` | Shipping addresses |
-| `orders` | Orders (orderNumber unique, status/payment enums) |
-| `order_items` | Order line items |
-| `blog_posts` | Blog articles (slug unique, status: published/draft) |
-| `product_reviews` | Product reviews (rating 1-5, status: approved/pending/rejected) |
-| `inquiry_items` | B2B inquiry list |
-| `inquiry_submissions` | B2B quote requests (inquiryNumber unique, items JSON) |
+| Table                 | Purpose                                                             |
+| --------------------- | ------------------------------------------------------------------- |
+| `users`               | User accounts (openId unique, role: user/admin)                     |
+| `categories`          | Product categories (slug unique, sortOrder)                         |
+| `products`            | Product catalog (slug unique, images JSON, SEO fields, status enum) |
+| `cart_items`          | Shopping cart                                                       |
+| `addresses`           | Shipping addresses                                                  |
+| `orders`              | Orders (orderNumber unique, status/payment enums)                   |
+| `order_items`         | Order line items                                                    |
+| `blog_posts`          | Blog articles (slug unique, status: published/draft)                |
+| `product_reviews`     | Product reviews (rating 1-5, status: approved/pending/rejected)     |
+| `inquiry_items`       | B2B inquiry list                                                    |
+| `inquiry_submissions` | B2B quote requests (inquiryNumber unique, items JSON)               |
 
 **Migration approach:** Drizzle Kit generates SQL migrations from schema changes. Run `pnpm db:push` to generate and apply.
 
@@ -207,11 +213,13 @@ pnpm db:push
 ## Authentication & Authorization
 
 ### Three Procedure Types
+
 1. **`publicProcedure`** — no authentication required
 2. **`protectedProcedure`** — requires valid login (any role)
 3. **`adminProcedure`** — requires `role === 'admin'`
 
 ### Auth Flow
+
 - **Regular users:** OAuth 2.0 via Manus/WebDev auth server → JWT session cookie
 - **Admin users:** Local password login at `/api/auth/local-login` → JWT session cookie
 - **Auto-promotion:** User with `OWNER_OPEN_ID` automatically gets admin role
@@ -219,6 +227,7 @@ pnpm db:push
 - Cookie name: `app_session_id`
 
 ### Context
+
 - tRPC context (`server/_core/context.ts`) extracts user from session cookie via `sdk.authenticateRequest()`
 - Unauthenticated requests get `user: null` in context (allowed for public procedures)
 
@@ -235,7 +244,9 @@ pnpm db:push
   - `server/auth.logout.test.ts` — tests logout cookie clearing
 
 ### Test Pattern
+
 Tests use `appRouter.createCaller()` with mock contexts:
+
 ```typescript
 // Public context — no user
 const publicCtx = { user: null, req: {...}, res: {...} };
@@ -255,19 +266,19 @@ const adminCtx = { user: { id: 99, openId: "...", role: "admin", ... }, req: {..
 
 All API endpoints are tRPC procedures under `/api/trpc`. Domain routers:
 
-| Router | Public | Protected | Admin |
-|--------|--------|-----------|-------|
-| `auth` | `me` | — | — |
-| `category` | `list`, `getBySlug` | — | `create`, `update`, `delete` |
-| `product` | `list`, `getById`, `getBySlug`, `searchSuggestions` | — | `create`, `update`, `delete` |
-| `cart` | — | `list`, `add`, `update`, `remove`, `clear` | — |
-| `address` | — | `list`, `create`, `update`, `delete`, `setDefault` | — |
-| `order` | — | `list`, `create`, `getById` | `listAll`, `updateStatus` |
-| `blog` | `list`, `getBySlug` | — | `create`, `update`, `delete` |
-| `review` | `list`, `stats` | `create` | `listAll`, `updateStatus`, `delete` |
-| `inquiry` | — | `list`, `add`, `update`, `remove`, `submit` | `listAll`, `updateStatus` |
-| `adminUser` | — | — | `list`, `updateRole` |
-| `system` | `health` | — | `notifyOwner` |
+| Router      | Public                                              | Protected                                          | Admin                               |
+| ----------- | --------------------------------------------------- | -------------------------------------------------- | ----------------------------------- |
+| `auth`      | `me`                                                | —                                                  | —                                   |
+| `category`  | `list`, `getBySlug`                                 | —                                                  | `create`, `update`, `delete`        |
+| `product`   | `list`, `getById`, `getBySlug`, `searchSuggestions` | —                                                  | `create`, `update`, `delete`        |
+| `cart`      | —                                                   | `list`, `add`, `update`, `remove`, `clear`         | —                                   |
+| `address`   | —                                                   | `list`, `create`, `update`, `delete`, `setDefault` | —                                   |
+| `order`     | —                                                   | `list`, `create`, `getById`                        | `listAll`, `updateStatus`           |
+| `blog`      | `list`, `getBySlug`                                 | —                                                  | `create`, `update`, `delete`        |
+| `review`    | `list`, `stats`                                     | `create`                                           | `listAll`, `updateStatus`, `delete` |
+| `inquiry`   | —                                                   | `list`, `add`, `update`, `remove`, `submit`        | `listAll`, `updateStatus`           |
+| `adminUser` | —                                                   | —                                                  | `list`, `updateRole`                |
+| `system`    | `health`                                            | —                                                  | `notifyOwner`                       |
 
 **Input validation:** All mutations use Zod schemas.
 **Serialization:** SuperJSON handles Date, Map, Set, BigInt, etc.
@@ -338,6 +349,7 @@ BUILT_IN_FORGE_API_KEY=...
 **Target environment:** Alibaba Cloud ECS + Baota Panel (宝塔面板) + Ubuntu/CentOS
 
 **Deployment process (`deploy.sh`):**
+
 1. Install Node.js 20, pnpm, PM2 if missing
 2. Generate `.env` file
 3. `pnpm install`
@@ -348,6 +360,7 @@ BUILT_IN_FORGE_API_KEY=...
 8. Health check via curl
 
 **Update process (`update.sh`):**
+
 1. `git pull` (if git repo)
 2. `pnpm install`
 3. `pnpm build`

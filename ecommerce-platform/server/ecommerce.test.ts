@@ -14,7 +14,9 @@ function createPublicContext(): TrpcContext {
   };
 }
 
-function createUserContext(overrides?: Partial<AuthenticatedUser>): TrpcContext {
+function createUserContext(
+  overrides?: Partial<AuthenticatedUser>
+): TrpcContext {
   const user: AuthenticatedUser = {
     id: 1,
     openId: "test-user-001",
@@ -35,7 +37,12 @@ function createUserContext(overrides?: Partial<AuthenticatedUser>): TrpcContext 
 }
 
 function createAdminContext(): TrpcContext {
-  return createUserContext({ id: 99, openId: "admin-001", name: "Admin", role: "admin" });
+  return createUserContext({
+    id: 99,
+    openId: "admin-001",
+    name: "Admin",
+    role: "admin",
+  });
 }
 
 // ─── Tests ──────────────────────────────────────────────
@@ -116,7 +123,9 @@ describe("Product Router", () => {
 
   it("product.getBySlug returns null for non-existent slug", async () => {
     const caller = appRouter.createCaller(createPublicContext());
-    const result = await caller.product.getBySlug({ slug: "non-existent-product-xyz" });
+    const result = await caller.product.getBySlug({
+      slug: "non-existent-product-xyz",
+    });
     expect(result).toBeUndefined();
   });
 });
@@ -246,7 +255,9 @@ describe("Blog Router", () => {
 
   it("blog.getBySlug returns undefined for non-existent slug", async () => {
     const caller = appRouter.createCaller(createPublicContext());
-    const result = await caller.blog.getBySlug({ slug: "non-existent-post-xyz" });
+    const result = await caller.blog.getBySlug({
+      slug: "non-existent-post-xyz",
+    });
     expect(result).toBeUndefined();
   });
 });

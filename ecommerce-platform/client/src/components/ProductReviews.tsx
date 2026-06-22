@@ -19,41 +19,87 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
-function StarRating({ rating, size = "sm" }: { rating: number; size?: "sm" | "md" | "lg" }) {
-  const sizeClass = size === "lg" ? "h-6 w-6" : size === "md" ? "h-5 w-5" : "h-4 w-4";
+function StarRating({
+  rating,
+  size = "sm",
+}: {
+  rating: number;
+  size?: "sm" | "md" | "lg";
+}) {
+  const sizeClass =
+    size === "lg" ? "h-6 w-6" : size === "md" ? "h-5 w-5" : "h-4 w-4";
   return (
     <div className="flex items-center gap-0.5">
-      {[1, 2, 3, 4, 5].map((star) => (
-        <Star key={star} className={`${sizeClass} ${star <= rating ? "fill-gold text-gold" : star - 0.5 <= rating ? "fill-gold/50 text-gold" : "fill-muted text-muted-foreground/30"}`} />
+      {[1, 2, 3, 4, 5].map(star => (
+        <Star
+          key={star}
+          className={`${sizeClass} ${star <= rating ? "fill-gold text-gold" : star - 0.5 <= rating ? "fill-gold/50 text-gold" : "fill-muted text-muted-foreground/30"}`}
+        />
       ))}
     </div>
   );
 }
 
-function StarInput({ value, onChange }: { value: number; onChange: (v: number) => void }) {
+function StarInput({
+  value,
+  onChange,
+}: {
+  value: number;
+  onChange: (v: number) => void;
+}) {
   const { t } = useTranslation();
   const [hover, setHover] = useState(0);
-  const labels = [t("reviews.poor"), t("reviews.fair"), t("reviews.good"), t("reviews.veryGood"), t("reviews.excellent")];
+  const labels = [
+    t("reviews.poor"),
+    t("reviews.fair"),
+    t("reviews.good"),
+    t("reviews.veryGood"),
+    t("reviews.excellent"),
+  ];
   return (
     <div className="flex items-center gap-1">
-      {[1, 2, 3, 4, 5].map((star) => (
-        <button key={star} type="button" onMouseEnter={() => setHover(star)} onMouseLeave={() => setHover(0)} onClick={() => onChange(star)} className="transition-transform hover:scale-110">
-          <Star className={`h-7 w-7 cursor-pointer transition-colors ${star <= (hover || value) ? "fill-gold text-gold" : "fill-muted text-muted-foreground/30"}`} />
+      {[1, 2, 3, 4, 5].map(star => (
+        <button
+          key={star}
+          type="button"
+          onMouseEnter={() => setHover(star)}
+          onMouseLeave={() => setHover(0)}
+          onClick={() => onChange(star)}
+          className="transition-transform hover:scale-110"
+        >
+          <Star
+            className={`h-7 w-7 cursor-pointer transition-colors ${star <= (hover || value) ? "fill-gold text-gold" : "fill-muted text-muted-foreground/30"}`}
+          />
         </button>
       ))}
-      {value > 0 && <span className="ml-2 text-sm text-muted-foreground">{labels[value - 1]}</span>}
+      {value > 0 && (
+        <span className="ml-2 text-sm text-muted-foreground">
+          {labels[value - 1]}
+        </span>
+      )}
     </div>
   );
 }
 
-function RatingBar({ stars, count, total }: { stars: number; count: number; total: number }) {
+function RatingBar({
+  stars,
+  count,
+  total,
+}: {
+  stars: number;
+  count: number;
+  total: number;
+}) {
   const percentage = total > 0 ? (count / total) * 100 : 0;
   return (
     <div className="flex items-center gap-2 text-sm">
       <span className="w-6 text-right text-muted-foreground">{stars}</span>
       <Star className="h-3.5 w-3.5 fill-gold text-gold" />
       <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
-        <div className="h-full bg-gold rounded-full transition-all duration-500" style={{ width: `${percentage}%` }} />
+        <div
+          className="h-full bg-gold rounded-full transition-all duration-500"
+          style={{ width: `${percentage}%` }}
+        />
       </div>
       <span className="w-8 text-right text-muted-foreground">{count}</span>
     </div>
@@ -81,8 +127,14 @@ export default function ProductReviews({ productId }: { productId: number }) {
 
   const utils = trpc.useUtils();
 
-  const reviewsQuery = trpc.review.listByProduct.useQuery({ productId, page, limit: 10 }, { enabled: !!productId });
-  const statsQuery = trpc.review.ratingStats.useQuery({ productId }, { enabled: !!productId });
+  const reviewsQuery = trpc.review.listByProduct.useQuery(
+    { productId, page, limit: 10 },
+    { enabled: !!productId }
+  );
+  const statsQuery = trpc.review.ratingStats.useQuery(
+    { productId },
+    { enabled: !!productId }
+  );
 
   const reviews = reviewsQuery.data?.reviews ?? [];
   const stats = statsQuery.data;
@@ -100,7 +152,7 @@ export default function ProductReviews({ productId }: { productId: number }) {
       utils.review.listByProduct.invalidate({ productId });
       utils.review.ratingStats.invalidate({ productId });
     },
-    onError: (err) => {
+    onError: err => {
       toast.error(err.message || t("reviews.failedSubmitReview"));
     },
   });
@@ -120,7 +172,10 @@ export default function ProductReviews({ productId }: { productId: number }) {
 
   return (
     <div className="mt-12 pt-8 border-t">
-      <h2 className="text-xl font-bold text-foreground mb-6" style={{ fontFamily: "var(--font-heading)" }}>
+      <h2
+        className="text-xl font-bold text-foreground mb-6"
+        style={{ fontFamily: "var(--font-heading)" }}
+      >
         {t("reviews.customerReviews")}
       </h2>
 
@@ -128,16 +183,24 @@ export default function ProductReviews({ productId }: { productId: number }) {
       <div className="grid md:grid-cols-2 gap-8 mb-8">
         <div className="flex items-center gap-4">
           <div className="text-center">
-            <p className="text-4xl font-bold text-foreground">{avgRating.toFixed(1)}</p>
+            <p className="text-4xl font-bold text-foreground">
+              {avgRating.toFixed(1)}
+            </p>
             <StarRating rating={Math.round(avgRating)} size="md" />
             <p className="text-sm text-muted-foreground mt-1">
-              {t("reviews.basedOn")} {totalReviews} {totalReviews === 1 ? t("reviews.review") : t("reviews.reviews")}
+              {t("reviews.basedOn")} {totalReviews}{" "}
+              {totalReviews === 1 ? t("reviews.review") : t("reviews.reviews")}
             </p>
           </div>
         </div>
         <div className="space-y-1">
-          {[5, 4, 3, 2, 1].map((stars) => (
-            <RatingBar key={stars} stars={stars} count={distribution[stars] ?? 0} total={totalReviews} />
+          {[5, 4, 3, 2, 1].map(stars => (
+            <RatingBar
+              key={stars}
+              stars={stars}
+              count={distribution[stars] ?? 0}
+              total={totalReviews}
+            />
           ))}
         </div>
       </div>
@@ -146,7 +209,9 @@ export default function ProductReviews({ productId }: { productId: number }) {
       {!showForm && (
         <div className="mb-8">
           {hasReviewed ? (
-            <p className="text-sm text-muted-foreground">{t("reviews.alreadyReviewed")}</p>
+            <p className="text-sm text-muted-foreground">
+              {t("reviews.alreadyReviewed")}
+            </p>
           ) : isAuthenticated ? (
             <Button onClick={() => setShowForm(true)} variant="outline">
               <MessageSquare className="mr-2 h-4 w-4" />
@@ -154,7 +219,9 @@ export default function ProductReviews({ productId }: { productId: number }) {
             </Button>
           ) : (
             <div className="flex items-center gap-3">
-              <p className="text-sm text-muted-foreground">{t("reviews.signInToReview")}</p>
+              <p className="text-sm text-muted-foreground">
+                {t("reviews.signInToReview")}
+              </p>
               <a href={getLoginUrl()}>
                 <Button size="sm">{t("reviews.signIn")}</Button>
               </a>
@@ -165,8 +232,13 @@ export default function ProductReviews({ productId }: { productId: number }) {
 
       {showForm && (
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="mb-8 p-6 border rounded-lg bg-card space-y-4">
-            <h3 className="text-lg font-semibold">{t("reviews.writeYourReview")}</h3>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="mb-8 p-6 border rounded-lg bg-card space-y-4"
+          >
+            <h3 className="text-lg font-semibold">
+              {t("reviews.writeYourReview")}
+            </h3>
             <FormField
               control={form.control}
               name="rating"
@@ -174,7 +246,10 @@ export default function ProductReviews({ productId }: { productId: number }) {
                 <FormItem>
                   <FormLabel>{t("reviews.yourRating")}</FormLabel>
                   <FormControl>
-                    <StarInput value={field.value} onChange={(v) => field.onChange(v)} />
+                    <StarInput
+                      value={field.value}
+                      onChange={v => field.onChange(v)}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -212,15 +287,26 @@ export default function ProductReviews({ productId }: { productId: number }) {
                       {...field}
                     />
                   </FormControl>
-                  <p className="text-xs text-muted-foreground mt-1 text-right">{(field.value || "").length}{t("reviews.characters")}</p>
+                  <p className="text-xs text-muted-foreground mt-1 text-right">
+                    {(field.value || "").length}
+                    {t("reviews.characters")}
+                  </p>
                   <FormMessage />
                 </FormItem>
               )}
             />
             <div className="flex gap-3">
-              <Button type="button" variant="outline" onClick={() => setShowForm(false)}>{t("common.cancel")}</Button>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setShowForm(false)}
+              >
+                {t("common.cancel")}
+              </Button>
               <Button type="submit" disabled={createMutation.isPending}>
-                {createMutation.isPending ? t("reviews.submitting") : t("reviews.submitReview")}
+                {createMutation.isPending
+                  ? t("reviews.submitting")
+                  : t("reviews.submitReview")}
               </Button>
             </div>
           </form>
@@ -232,7 +318,9 @@ export default function ProductReviews({ productId }: { productId: number }) {
       {/* Review List */}
       <div className="space-y-6">
         {reviews.length === 0 ? (
-          <p className="text-sm text-muted-foreground text-center py-8">{t("reviews.noReviewsYet")}</p>
+          <p className="text-sm text-muted-foreground text-center py-8">
+            {t("reviews.noReviewsYet")}
+          </p>
         ) : (
           reviews.map((review: any) => (
             <div key={review.id} className="space-y-2">
@@ -241,14 +329,22 @@ export default function ProductReviews({ productId }: { productId: number }) {
                   <User className="h-4 w-4 text-muted-foreground" />
                 </div>
                 <div>
-                  <p className="text-sm font-medium">{review.user?.name || t("reviews.anonymous")}</p>
+                  <p className="text-sm font-medium">
+                    {review.user?.name || t("reviews.anonymous")}
+                  </p>
                   <div className="flex items-center gap-2">
                     <StarRating rating={review.rating} />
-                    <span className="text-xs text-muted-foreground">{new Date(review.createdAt).toLocaleDateString()}</span>
+                    <span className="text-xs text-muted-foreground">
+                      {new Date(review.createdAt).toLocaleDateString()}
+                    </span>
                   </div>
                 </div>
               </div>
-              {review.title && <p className="text-sm font-semibold text-foreground">{review.title}</p>}
+              {review.title && (
+                <p className="text-sm font-semibold text-foreground">
+                  {review.title}
+                </p>
+              )}
               <p className="text-sm text-muted-foreground">{review.content}</p>
             </div>
           ))
