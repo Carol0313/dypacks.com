@@ -6,23 +6,16 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
 import { ChevronLeft, ChevronRight, BookOpen } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { usePageSEO } from "@/lib/seo";
 import { BreadcrumbSchema, BlogListSchema } from "@/components/SchemaMarkup";
+import PageBreadcrumb from "@/components/PageBreadcrumb";
 
 export default function Blog() {
   const { t } = useTranslation();
   const [page, setPage] = useState(1);
   const limit = 9;
-
-  usePageSEO({
-    title: t("blog.title"),
-    description: t("blog.metaDescription"),
-    keywords:
-      "packaging blog, custom packaging tips, packaging industry insights, cosmetic packaging guide, sustainable packaging, DY Packs",
-    canonicalPath: "/blog",
-  });
 
   const postsQuery = trpc.blog.list.useQuery({
     page,
@@ -31,6 +24,54 @@ export default function Blog() {
   });
   const posts = postsQuery.data?.items ?? [];
   const totalPages = Math.ceil((postsQuery.data?.total ?? 0) / limit);
+
+  usePageSEO({
+    title: t("seo.blog.title"),
+    description: t("seo.blog.description"),
+    keywords: t("seo.blog.keywords"),
+    ogImageAlt: t("seo.blog.title"),
+    canonicalPath: "/blog",
+  });
+
+  // Pagination rel next/prev
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    const base = `${window.location.origin}/blog`;
+    const removeRel = (rel: string) => {
+      document.querySelectorAll(`link[rel="${rel}"]`).forEach(el => el.remove());
+    };
+    const setRel = (rel: string, href: string) => {
+      removeRel(rel);
+      const link = document.createElement("link");
+      link.rel = rel;
+      link.href = href;
+      document.head.appendChild(link);
+    };
+
+    if (totalPages > 1) {
+      if (page > 1) {
+        setRel(
+          "prev",
+          page === 2 ? base : `${base}?page=${page - 1}`
+        );
+      } else {
+        removeRel("prev");
+      }
+      if (page < totalPages) {
+        setRel("next", `${base}?page=${page + 1}`);
+      } else {
+        removeRel("next");
+      }
+    } else {
+      removeRel("prev");
+      removeRel("next");
+    }
+
+    return () => {
+      removeRel("prev");
+      removeRel("next");
+    };
+  }, [page, totalPages]);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -49,6 +90,12 @@ export default function Blog() {
         }))}
       />
       <Navbar />
+
+      <div className="container pt-8">
+        <PageBreadcrumb
+          items={[{ label: t("blog.blog") }]}
+        />
+      </div>
 
       <section className="bg-charcoal-dark py-12">
         <div className="container">

@@ -6,8 +6,9 @@ import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { Card, CardContent } from "@/components/ui/card";
 import { PLACEHOLDER_IMAGE } from "@/lib/constants";
-import { useRoute } from "wouter";
+import { useRoute, Link } from "wouter";
 import { useState } from "react";
 import {
   Minus,
@@ -20,11 +21,17 @@ import {
   Mail,
   Ruler,
   Palette,
+  HelpCircle,
 } from "lucide-react";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import ProductReviews from "@/components/ProductReviews";
 import ImageLightbox from "@/components/ImageLightbox";
 import ContactForm from "@/components/ContactForm";
-import { Link } from "wouter";
 import { toast } from "sonner";
 import {
   ProductSchema,
@@ -39,17 +46,21 @@ import {
 } from "@/lib/seo";
 
 function useProductSEO(product: any) {
+  const { t } = useTranslation();
   const title = product
-    ? product.metaTitle || buildProductTitle(product.name)
-    : "Product | DY Packs";
+    ? product.metaTitle || buildProductTitle(product.name, t)
+    : t("seo.product.title", { productName: t("productDetail.productNotFound") });
   const description = product
     ? product.metaDescription ||
-      buildProductDescription(product.name, product.shortDescription)
-    : "Premium custom packaging solutions from DY Packs.";
+      buildProductDescription(product.name, product.shortDescription, t)
+    : t("seo.products.description");
   const keywords = product
     ? product.metaKeywords ||
-      `custom packaging, ${product.name}, packaging manufacturer, ${product.categoryName || ""}, DY Packs`
-    : "custom packaging, packaging manufacturer, DY Packs";
+      t("seo.product.keywords", {
+        productName: product.name,
+        categoryName: product.categoryName || "",
+      })
+    : t("seo.products.keywords");
   const images = product?.images ? JSON.parse(product.images) : [];
 
   usePageSEO({
@@ -57,6 +68,7 @@ function useProductSEO(product: any) {
     description,
     keywords,
     ogImage: images[0],
+    ogImageAlt: product?.name,
     ogType: "product",
     canonicalPath: product ? `/product/${product.slug}` : undefined,
   });
@@ -105,6 +117,17 @@ export default function ProductDetail() {
     { enabled: !!product }
   );
   const ratingStats = ratingQuery.data;
+
+  // Fetch related products
+  const relatedQuery = trpc.product.related.useQuery(
+    {
+      categoryId: product?.categoryId ?? 0,
+      excludeProductId: product?.id ?? 0,
+      limit: 4,
+    },
+    { enabled: !!product }
+  );
+  const relatedProducts = relatedQuery.data ?? [];
 
   if (productQuery.isLoading) {
     return (
@@ -181,6 +204,47 @@ export default function ProductDetail() {
     );
   };
 
+  const faqItems = [
+    {
+      question: t("productDetail.faqMoqQuestion", {
+        productName: product.name,
+        defaultValue: `What is the MOQ for ${product.name}?`,
+      }),
+      answer: t("productDetail.faqMoqAnswer", {
+        minOrderQty: product.minOrderQty || 100,
+        defaultValue: `Our standard MOQ starts from ${product.minOrderQty || 100} pieces. We also support lower quantities for sample orders. Contact us for details.`,
+      }),
+    },
+    {
+      question: t("productDetail.faqCustomizeQuestion", {
+        productName: product.name,
+        defaultValue: `Can I customize the ${product.name}?`,
+      }),
+      answer: t("productDetail.faqCustomizeAnswer", {
+        defaultValue:
+          "Yes. We support custom sizes, colors, materials, printing, foil stamping, embossing, spot UV, and inserts. Send us your requirements for a tailored quote.",
+      }),
+    },
+    {
+      question: t("productDetail.faqProductionQuestion", {
+        defaultValue: "How long is production and shipping?",
+      }),
+      answer: t("productDetail.faqProductionAnswer", {
+        defaultValue:
+          "Sample production takes 3-7 days. Bulk production typically takes 10-25 days depending on quantity and customization. We ship worldwide by sea, air or express.",
+      }),
+    },
+    {
+      question: t("productDetail.faqSamplesQuestion", {
+        defaultValue: "Do you provide samples before bulk order?",
+      }),
+      answer: t("productDetail.faqSamplesAnswer", {
+        defaultValue:
+          "Absolutely. We recommend samples to confirm material, color, structure and print quality before mass production.",
+      }),
+    },
+  ];
+
   const trustBadges = [
     { icon: Package, label: t("productDetail.customDesign") },
     { icon: Truck, label: t("productDetail.globalShipping") },
@@ -200,29 +264,7 @@ export default function ProductDetail() {
         ratingValue={ratingStats?.averageRating}
         reviewCount={ratingStats?.totalReviews}
       />
-      <FAQSchema
-        items={[
-          {
-            question: `What is the MOQ for ${product.name}?`,
-            answer: `Our standard MOQ starts from ${product.minOrderQty || 100} pieces. We also support lower quantities for sample orders. Contact us for details.`,
-          },
-          {
-            question: `Can I customize the ${product.name}?`,
-            answer:
-              "Yes. We support custom sizes, colors, materials, printing, foil stamping, embossing, spot UV, and inserts. Send us your requirements for a tailored quote.",
-          },
-          {
-            question: "How long is production and shipping?",
-            answer:
-              "Sample production takes 3-7 days. Bulk production typically takes 10-25 days depending on quantity and customization. We ship worldwide by sea, air or express.",
-          },
-          {
-            question: "Do you provide samples before bulk order?",
-            answer:
-              "Absolutely. We recommend samples to confirm material, color, structure and print quality before mass production.",
-          },
-        ]}
-      />
+      <FAQSchema items={faqItems} />
       <BreadcrumbSchema
         items={[
           { name: t("productDetail.home"), url: "/" },
@@ -457,6 +499,74 @@ export default function ProductDetail() {
             <ContactForm product={product.name} source="product_page" />
           </div>
         </div>
+
+        {/* FAQ Section */}
+        <div className="mt-12 pt-8 border-t">
+          <h2
+            className="text-xl font-bold text-foreground mb-6 flex items-center gap-2"
+            style={{ fontFamily: "var(--font-heading)" }}
+          >
+            <HelpCircle className="h-5 w-5 text-gold-dark" />
+            {t("productDetail.frequentlyAsked")}
+          </h2>
+          <Accordion type="single" collapsible className="w-full max-w-3xl">
+            {faqItems.map((item, index) => (
+              <AccordionItem key={index} value={`item-${index}`}>
+                <AccordionTrigger className="text-left text-base">
+                  {item.question}
+                </AccordionTrigger>
+                <AccordionContent className="text-muted-foreground">
+                  {item.answer}
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+        </div>
+
+        {/* Related Products */}
+        {relatedProducts.length > 0 && (
+          <div className="mt-12 pt-8 border-t">
+            <h2
+              className="text-xl font-bold text-foreground mb-6"
+              style={{ fontFamily: "var(--font-heading)" }}
+            >
+              {t("productDetail.relatedProducts")}
+            </h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {relatedProducts.map(related => {
+                const relatedImages = related.images
+                  ? JSON.parse(related.images)
+                  : [];
+                const mainImage = relatedImages[0] || PLACEHOLDER_IMAGE;
+                return (
+                  <Link key={related.id} href={`/product/${related.slug}`}>
+                    <Card className="group overflow-hidden hover:shadow-lg transition-all duration-300 cursor-pointer border-border/50 h-full">
+                      <div className="aspect-square overflow-hidden bg-muted">
+                        <img
+                          src={mainImage}
+                          alt={`${related.name} - Custom Packaging | DY Packs`}
+                          loading="lazy"
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        />
+                      </div>
+                      <CardContent className="p-4">
+                        <h3 className="text-sm font-semibold text-foreground line-clamp-2">
+                          {related.name}
+                        </h3>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          {t("products.from")}{" "}
+                          <span className="font-medium text-foreground">
+                            ${Number(related.price).toFixed(2)}
+                          </span>
+                        </p>
+                      </CardContent>
+                    </Card>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        )}
 
         {/* Pricing Note */}
         <div className="mt-8 p-4 bg-gold/5 border border-gold/20 rounded-lg">

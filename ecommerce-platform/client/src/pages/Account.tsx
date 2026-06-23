@@ -6,12 +6,19 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "wouter";
 import { User, ClipboardList, MapPin, ArrowRight } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { usePageSEO } from "@/lib/seo";
 
 export default function Account() {
   const { t } = useTranslation();
   const { user, isAuthenticated } = useAuth({
     redirectOnUnauthenticated: true,
   });
+  usePageSEO({
+    title: t("account.myAccount") + " | DY Packs",
+    canonicalPath: "/account",
+    noIndex: true,
+  });
+
   if (!isAuthenticated) return null;
 
   const menuItems = [

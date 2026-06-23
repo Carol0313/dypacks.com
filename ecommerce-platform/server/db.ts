@@ -205,11 +205,20 @@ export async function getProductBySlug(slug: string) {
   const db = await getDb();
   if (!db) return undefined;
   const result = await db
-    .select()
+    .select({
+      product: products,
+      categoryName: categories.name,
+    })
     .from(products)
+    .leftJoin(categories, eq(products.categoryId, categories.id))
     .where(eq(products.slug, slug))
     .limit(1);
-  return result[0];
+
+  if (result.length === 0) return undefined;
+  return {
+    ...result[0].product,
+    categoryName: result[0].categoryName,
+  };
 }
 
 export async function createProduct(data: InsertProduct) {
@@ -258,6 +267,27 @@ export async function getProductsByIds(ids: number[]) {
   const db = await getDb();
   if (!db || ids.length === 0) return [];
   return db.select().from(products).where(inArray(products.id, ids));
+}
+
+export async function getRelatedProducts(
+  categoryId: number,
+  excludeProductId: number,
+  limit: number = 4
+) {
+  const db = await getDb();
+  if (!db) return [];
+  return db
+    .select()
+    .from(products)
+    .where(
+      and(
+        eq(products.categoryId, categoryId),
+        eq(products.status, "active" as any),
+        sql`${products.id} != ${excludeProductId}`
+      )
+    )
+    .orderBy(desc(products.featured), desc(products.createdAt))
+    .limit(limit);
 }
 
 // ─── Cart ────────────────────────────────────────────────

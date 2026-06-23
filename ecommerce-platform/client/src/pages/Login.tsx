@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import { Lock, User } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { usePageSEO } from "@/lib/seo";
 import {
   Form,
   FormControl,
@@ -26,6 +27,12 @@ type FormValues = z.infer<typeof formSchema>;
 
 export default function LoginPage() {
   const { t } = useTranslation();
+
+  usePageSEO({
+    title: t("login.adminDashboard") + " | DY Packs",
+    canonicalPath: "/login",
+    noIndex: true,
+  });
   const [, setLocation] = useLocation();
 
   const form = useForm<FormValues>({

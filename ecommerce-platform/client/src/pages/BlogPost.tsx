@@ -8,6 +8,7 @@ import { ArrowLeft, BookOpen } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { usePageSEO, buildBlogPostTitle, buildBlogPostDescription } from "@/lib/seo";
 import { BlogPostSchema, BreadcrumbSchema } from "@/components/SchemaMarkup";
+import PageBreadcrumb from "@/components/PageBreadcrumb";
 
 type ContentBlock =
   | { type: "text"; content: string }
@@ -58,14 +59,13 @@ export default function BlogPost() {
   const post = postQuery.data;
 
   usePageSEO({
-    title: post ? buildBlogPostTitle(post.title) : t("blogPost.metaBlog"),
+    title: post ? buildBlogPostTitle(post.title, t) : t("blogPost.metaBlog"),
     description: post
-      ? buildBlogPostDescription(post.excerpt || post.metaDescription)
-      : "Expert packaging insights from DY Packs.",
-    keywords:
-      post?.metaKeywords ||
-      "packaging blog, custom packaging, packaging tips, DY Packs",
+      ? buildBlogPostDescription(post.excerpt || post.metaDescription, t)
+      : t("seo.blog.description"),
+    keywords: post?.metaKeywords || t("seo.blog.keywords"),
     ogImage: post?.coverImage,
+    ogImageAlt: post?.title,
     ogType: "article",
     canonicalPath: post ? `/blog/${post.slug}` : "/blog",
   });
@@ -127,6 +127,12 @@ export default function BlogPost() {
       />
       <Navbar />
       <div className="container py-8 flex-1">
+        <PageBreadcrumb
+          items={[
+            { label: t("blogPost.blog"), href: "/blog" },
+            { label: post?.title || t("blogPost.postNotFound") },
+          ]}
+        />
         <Link
           href="/blog"
           className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground mb-6"

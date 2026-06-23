@@ -2,8 +2,19 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { COMPANY_NAME, CONTACT_EMAIL } from "@/lib/constants";
 import { Card, CardContent } from "@/components/ui/card";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { Mail, MapPin, Clock, MessageSquare } from "lucide-react";
-import { FAQSchema, BreadcrumbSchema } from "@/components/SchemaMarkup";
+import {
+  FAQSchema,
+  BreadcrumbSchema,
+  LocalBusinessSchema,
+} from "@/components/SchemaMarkup";
+import PageBreadcrumb from "@/components/PageBreadcrumb";
 import { useTranslation } from "react-i18next";
 import ContactForm from "@/components/ContactForm";
 import { usePageSEO } from "@/lib/seo";
@@ -12,11 +23,9 @@ export default function Contact() {
   const { t } = useTranslation();
 
   usePageSEO({
-    title: "Request a Custom Packaging Quote | Contact DY Packs",
-    description:
-      "Request a quote for custom packaging boxes. Tell us your product, quantity, and requirements. DY Packs replies within 24 hours with factory pricing.",
-    keywords:
-      "custom packaging quote, request quote packaging, packaging supplier contact, custom boxes quote, DY Packs contact",
+    title: t("seo.contact.title"),
+    description: t("seo.contact.description"),
+    keywords: t("seo.contact.keywords"),
     canonicalPath: "/contact",
   });
 
@@ -31,6 +40,7 @@ export default function Contact() {
   return (
     <div className="min-h-screen flex flex-col">
       <FAQSchema items={faqItems} />
+      <LocalBusinessSchema />
       <BreadcrumbSchema
         items={[
           { name: t("navbar.home"), url: "/" },
@@ -38,6 +48,10 @@ export default function Contact() {
         ]}
       />
       <Navbar />
+
+      <div className="container pt-8">
+        <PageBreadcrumb items={[{ label: t("navbar.contact") }]} />
+      </div>
 
       {/* Hero */}
       <section className="bg-charcoal-dark py-12 md:py-16">
@@ -142,6 +156,33 @@ export default function Contact() {
           </div>
         </div>
       </div>
+
+      {/* FAQ Section */}
+      <section className="py-12 md:py-16 bg-secondary/30 border-t">
+        <div className="container max-w-3xl">
+          <h2
+            className="text-2xl font-bold text-foreground mb-2 text-center"
+            style={{ fontFamily: "var(--font-heading)" }}
+          >
+            {t("contact.frequentlyAsked")}
+          </h2>
+          <p className="text-muted-foreground text-center mb-8">
+            {t("contact.respond24Hours")}
+          </p>
+          <Accordion type="single" collapsible className="w-full">
+            {faqItems.map((item, index) => (
+              <AccordionItem key={index} value={`item-${index}`}>
+                <AccordionTrigger className="text-left text-base">
+                  {item.question}
+                </AccordionTrigger>
+                <AccordionContent className="text-muted-foreground">
+                  {item.answer}
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+        </div>
+      </section>
 
       <Footer />
     </div>

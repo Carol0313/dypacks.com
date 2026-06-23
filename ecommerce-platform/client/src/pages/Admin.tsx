@@ -49,6 +49,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import Navbar from "@/components/Navbar";
+import { usePageSEO } from "@/lib/seo";
 
 // ─── Product Form ────────────────────────────────────────
 function ProductForm({
@@ -730,6 +731,12 @@ function BlogForm({
 
 // ─── Main Admin Page ─────────────────────────────────────
 export default function Admin() {
+  usePageSEO({
+    title: "Admin Dashboard | DY Packs",
+    canonicalPath: "/admin",
+    noIndex: true,
+  });
+
   const { user, isAuthenticated } = useAuth({
     redirectOnUnauthenticated: true,
   });

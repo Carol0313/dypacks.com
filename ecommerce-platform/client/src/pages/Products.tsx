@@ -9,8 +9,9 @@ import { Link, useSearch } from "wouter";
 import { useState, useEffect, useMemo } from "react";
 import { Search, Package, ChevronLeft, ChevronRight, ChevronRight as ChevronRightIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { usePageSEO, CATEGORY_SEO } from "@/lib/seo";
-import { BreadcrumbSchema } from "@/components/SchemaMarkup";
+import { usePageSEO, CATEGORY_SEO, buildCategorySEO } from "@/lib/seo";
+import { BreadcrumbSchema, ProductListSchema } from "@/components/SchemaMarkup";
+import PageBreadcrumb from "@/components/PageBreadcrumb";
 
 export default function Products() {
   const { t } = useTranslation();
@@ -42,20 +43,20 @@ export default function Products() {
   );
 
   const categorySeo = selectedCategory
-    ? CATEGORY_SEO[selectedCategory]
+    ? CATEGORY_SEO[selectedCategory] ??
+      buildCategorySEO(selectedCat?.name || selectedCategory, t)
     : undefined;
 
+  const canonicalPath = selectedCategory
+    ? `/products?category=${selectedCategory}`
+    : "/products";
+
   usePageSEO({
-    title: categorySeo?.title ?? "Custom Packaging Boxes Wholesale | DY Packs",
-    description:
-      categorySeo?.description ??
-      "Browse DY Packs' wholesale custom packaging boxes. Gift boxes, cosmetic packaging, jewelry boxes & more. Low MOQ, fast quotes, global shipping.",
-    keywords:
-      categorySeo?.keywords ??
-      "custom packaging boxes, wholesale packaging boxes, premium packaging solutions, custom boxes manufacturer",
-    canonicalPath: selectedCategory
-      ? `/products?category=${selectedCategory}`
-      : "/products",
+    title: categorySeo?.title ?? t("seo.products.title"),
+    description: categorySeo?.description ?? t("seo.products.description"),
+    keywords: categorySeo?.keywords ?? t("seo.products.keywords"),
+    canonicalPath,
+    noIndex: !!debouncedSearch,
   });
 
   const productsQuery = trpc.product.list.useQuery({
@@ -69,6 +70,49 @@ export default function Products() {
   const products = productsQuery.data?.items ?? [];
   const total = productsQuery.data?.total ?? 0;
   const totalPages = Math.ceil(total / limit);
+
+  // Pagination rel next/prev
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    const base = `${window.location.origin}${canonicalPath}`;
+    const removeRel = (rel: string) => {
+      document.querySelectorAll(`link[rel="${rel}"]`).forEach(el => el.remove());
+    };
+    const setRel = (rel: string, href: string) => {
+      removeRel(rel);
+      const link = document.createElement("link");
+      link.rel = rel;
+      link.href = href;
+      document.head.appendChild(link);
+    };
+
+    if (totalPages > 1) {
+      if (page > 1) {
+        setRel(
+          "prev",
+          page === 2 ? base : `${base}${base.includes("?") ? "&" : "?"}page=${page - 1}`
+        );
+      } else {
+        removeRel("prev");
+      }
+      if (page < totalPages) {
+        setRel(
+          "next",
+          `${base}${base.includes("?") ? "&" : "?"}page=${page + 1}`
+        );
+      } else {
+        removeRel("next");
+      }
+    } else {
+      removeRel("prev");
+      removeRel("next");
+    }
+
+    return () => {
+      removeRel("prev");
+      removeRel("next");
+    };
+  }, [page, totalPages, canonicalPath]);
 
   const productIds = useMemo(() => products.map(p => p.id), [products]);
   const ratingsQuery = trpc.review.batchRatingStats.useQuery(
@@ -90,7 +134,33 @@ export default function Products() {
           },
         ]}
       />
+      <ProductListSchema
+        products={products.map(p => ({
+          name: p.name,
+          slug: p.slug,
+          image: p.images ? JSON.parse(p.images)[0] : undefined,
+          description: p.shortDescription,
+        }))}
+        listName={
+          selectedCat?.name
+            ? `${selectedCat.name} - ${t("products.allProducts")}`
+            : t("products.allProducts")
+        }
+      />
       <Navbar />
+
+      <div className="container pt-8">
+        <PageBreadcrumb
+          items={[
+            {
+              label:
+                selectedCat?.name ||
+                categorySeo?.h1 ||
+                t("products.allProducts"),
+            },
+          ]}
+        />
+      </div>
 
       {/* Header */}
       <section className="bg-charcoal-dark py-12">

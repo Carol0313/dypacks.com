@@ -112,7 +112,17 @@
     "note": "Not:",
     "pricesReference": "Gösterilen fiyatlar yalnızca referans içindir. Nihai fiyatlandırma malzeme, baskı teknikleri ve sipariş miktarı gibi özel gereksinimlere bağlıdır. Lütfen",
     "contactUs": "bize ulaşın",
-    "detailedQuote": "detaylı teklif için."
+    "detailedQuote": "detaylı teklif için.",
+    "relatedProducts": "İlgili Ürünler",
+    "frequentlyAsked": "Sıkça Sorulan Sorular",
+    "faqMoqQuestion": "{{productName}} için minimum sipariş miktarı nedir?",
+    "faqMoqAnswer": "Standart minimum sipariş miktarımız {{minOrderQty}} adetten başlar. Numune siparişleri için daha düşük miktarları da destekliyoruz. Detaylar için bize ulaşın.",
+    "faqCustomizeQuestion": "{{productName}} özelleştirebilir miyim?",
+    "faqCustomizeAnswer": "Evet. Özel boyutlar, renkler, malzemeler, baskı, folyo varak, kabartma, spot UV ve insertler desteklenir. Özel teklif için gereksinimlerinizi gönderin.",
+    "faqProductionQuestion": "Üretim ve nakliye ne kadar sürer?",
+    "faqProductionAnswer": "Numune üretimi 3-7 gün sürer. Toplu üretim miktar ve özelleştirmeye bağlı olarak genellikle 10-25 gün sürer. Deniz, hava veya ekspres ile dünya çapında nakliye yapıyoruz.",
+    "faqSamplesQuestion": "Toplu sipariş öncesinde numune sağlıyor musunuz?",
+    "faqSamplesAnswer": "Kesinlikle. Kütle üretiminden önce malzeme, renk, yapı ve baskı kalitesini doğrulamak için numuneler öneririz."
   },
   "cart": {
     "itemRemoved": "Ürün kaldırıldı",
@@ -643,5 +653,50 @@
     "previous": "Önceki",
     "copy": "Kopyala",
     "copied": "Kopyalandı!"
+  },
+  "seo": {
+    "siteName": "DY Packs",
+    "home": {
+      "title": "Özel Ambalaj Üreticisi | DY Packs Premium Kutular",
+      "description": "DY Packs, Çin'de premium özel ambalaj üreticisidir. Düşük MOQ lüks hediye kutuları, kozmetik ambalajı, rigid kutular ve gıda ambalajı ile küresel nakliye.",
+      "keywords": "özel ambalaj üreticisi, premium ambalaj kutuları, özel ambalaj Çin, lüks hediye kutuları, kozmetik ambalaj kutuları, rigid kutular, düşük MOQ özel kutular"
+    },
+    "about": {
+      "title": "DY Packs Hakkında | Çin'de Özel Ambalaj Üreticisi",
+      "description": "DY Packs (Shanghai Douyue Industrial Co., Ltd) hakkında bilgi edinin. Küresel markalar için 15+ yıllık özel ambalaj üretimi. Düşük MOQ, ISO sertifikalı.",
+      "keywords": "Çin özel ambalaj üreticisi, Şanghay ambalaj şirketi, DY Packs hakkında, lüks ambalaj üreticisi, rigid kutu fabrikası"
+    },
+    "contact": {
+      "title": "Özel Ambalaj Teklifi İste | DY Packs İletişim",
+      "description": "Özel ambalaj kutuları için teklif isteyin. Ürününüzü, miktarınızı ve gereksinimlerinizi bize bildirin. DY Packs 24 saat içinde fabrika fiyatlarıyla yanıt verir.",
+      "keywords": "özel ambalaj teklifi, ambalaj teklifi iste, ambalaj tedarikçi iletişim, özel kutu teklifi, DY Packs iletişim"
+    },
+    "products": {
+      "title": "Toptan Özel Ambalaj Kutuları | DY Packs",
+      "description": "DY Packs'in toptan özel ambalaj kutularını keşfedin. Hediye kutuları, kozmetik ambalajı, takı kutuları ve daha fazlası. Düşük MOQ, hızlı teklif, küresel nakliye.",
+      "keywords": "özel ambalaj kutuları, toptan ambalaj kutuları, premium ambalaj çözümleri, özel kutu üreticisi"
+    },
+    "blog": {
+      "title": "Blog ve İçgörüler | DY Packs - Ambalaj Sektörü Haberleri ve İpuçları",
+      "description": "DY Packs'ten en son ambalaj sektörü içgörüleri, ipuçları ve şirket güncellemelerini okuyun. Kozmetik ambalajı, sürdürülebilir çözümler ve premium marka ambalajı konusunda uzman rehberler.",
+      "keywords": "ambalaj blogu, özel ambalaj ipuçları, ambalaj sektörü içgörüleri, kozmetik ambalaj rehberi, sürdürülebilir ambalaj, DY Packs"
+    },
+    "product": {
+      "title": "{{productName}} | Özel Ambalaj | DY Packs",
+      "descriptionBase": "DY Packs tarafından üretilen özel {{productName}}.",
+      "description": "{{base}} Premium malzemeler, özel boyutlar ve baskı. Düşük MOQ, fabrika fiyatları, küresel nakliye. Hemen teklif isteyin!",
+      "keywords": "özel ambalaj, {{productName}}, ambalaj üreticisi, {{categoryName}}, DY Packs"
+    },
+    "blogPost": {
+      "title": "{{postTitle}} | DY Packs Ambalaj Blogu",
+      "descriptionBase": "DY Packs'ten uzman ambalaj içgörüleri ve ipuçları.",
+      "description": "{{excerpt}} Premium özel ambalajın markanızı nasıl yükseltebileceğini öğrenin."
+    },
+    "categoryFallback": {
+      "title": "{{categoryName}} | Özel Ambalaj | DY Packs",
+      "description": "{{categoryName}} özel ambalaj çözümlerini keşfedin. Düşük MOQ, fabrika fiyatları, küresel nakliye. Hemen teklif isteyin!",
+      "keywords": "{{categoryName}}, özel ambalaj, toptan ambalaj, ambalaj üreticisi, DY Packs",
+      "h1": "{{categoryName}}"
+    }
   }
 }

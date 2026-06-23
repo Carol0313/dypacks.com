@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
+import { usePageSEO } from "@/lib/seo";
 
 export default function InquiryList() {
   const { t } = useTranslation();
@@ -79,6 +80,12 @@ export default function InquiryList() {
     onError: err => {
       toast.error(err.message || t("inquiry.failedSubmit"));
     },
+  });
+
+  usePageSEO({
+    title: t("inquiry.inquiryList") + " | DY Packs",
+    canonicalPath: "/inquiry",
+    noIndex: true,
   });
 
   if (loading) {

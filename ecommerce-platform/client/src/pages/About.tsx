@@ -17,16 +17,15 @@ import { useTranslation } from "react-i18next";
 import { getOptimizedImageUrl } from "@/lib/image-utils";
 import { usePageSEO } from "@/lib/seo";
 import { BreadcrumbSchema } from "@/components/SchemaMarkup";
+import PageBreadcrumb from "@/components/PageBreadcrumb";
 
 export default function About() {
   const { t } = useTranslation();
 
   usePageSEO({
-    title: "About DY Packs | Custom Packaging Manufacturer in China",
-    description:
-      "Learn about DY Packs (Shanghai Douyue Industrial Co., Ltd). 15+ years of custom packaging manufacturing for global brands. Low MOQ, ISO certified.",
-    keywords:
-      "custom packaging manufacturer China, packaging company Shanghai, DY Packs about, luxury packaging manufacturer, rigid box factory",
+    title: t("seo.about.title"),
+    description: t("seo.about.description"),
+    keywords: t("seo.about.keywords"),
     canonicalPath: "/about",
   });
 
@@ -111,6 +110,9 @@ export default function About() {
         ]}
       />
       <Navbar />
+      <div className="container pt-8">
+        <PageBreadcrumb items={[{ label: t("navbar.about") }]} />
+      </div>
 
       {/* Hero */}
       <section className="bg-gradient-to-br from-charcoal-dark via-charcoal to-charcoal-dark py-24 md:py-32">

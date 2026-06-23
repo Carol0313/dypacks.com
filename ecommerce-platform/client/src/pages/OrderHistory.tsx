@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Link } from "wouter";
 import { ArrowLeft, Package, Eye } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { usePageSEO } from "@/lib/seo";
 
 const statusColors: Record<string, string> = {
   pending: "bg-yellow-100 text-yellow-800",
@@ -25,6 +26,12 @@ export default function OrderHistory() {
     enabled: isAuthenticated,
   });
   const orders = ordersQuery.data ?? [];
+
+  usePageSEO({
+    title: t("orderHistory.myOrders") + " | DY Packs",
+    canonicalPath: "/account/orders",
+    noIndex: true,
+  });
 
   if (!isAuthenticated) return null;
 

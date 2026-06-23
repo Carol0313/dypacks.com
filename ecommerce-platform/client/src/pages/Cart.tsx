@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
+import { usePageSEO } from "@/lib/seo";
 
 export default function Cart() {
   const { t } = useTranslation();
@@ -54,6 +55,12 @@ export default function Cart() {
     if (!item.product) return sum;
     return sum + Number(item.product.price) * item.quantity;
   }, 0);
+
+  usePageSEO({
+    title: t("cart.shoppingCart") + " | DY Packs",
+    canonicalPath: "/cart",
+    noIndex: true,
+  });
 
   if (!isAuthenticated) return null;
 

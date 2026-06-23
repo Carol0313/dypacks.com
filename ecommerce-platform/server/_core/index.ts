@@ -27,6 +27,37 @@ async function findAvailablePort(startPort: number = 3000): Promise<number> {
   throw new Error(`No available port found starting from ${startPort}`);
 }
 
+function escapeXml(str: string) {
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&apos;");
+}
+
+function buildSitemapUrl(
+  loc: string,
+  priority: string,
+  changefreq: string,
+  lastmod: string,
+  images: { loc: string; caption?: string }[] = []
+) {
+  const imageTags = images
+    .map(
+      img =>
+        `    <image:image>\n      <image:loc>${img.loc}</image:loc>${
+          img.caption
+            ? `\n      <image:caption>${escapeXml(img.caption)}</image:caption>`
+            : ""
+        }\n    </image:image>`
+    )
+    .join("\n");
+  return `  <url>\n    <loc>${loc}</loc>\n    <lastmod>${lastmod}</lastmod>\n    <changefreq>${changefreq}</changefreq>\n    <priority>${priority}</priority>${
+      imageTags ? "\n" + imageTags : ""
+    }\n  </url>`;
+}
+
 async function startServer() {
   const app = express();
   const server = createServer(app);
@@ -50,11 +81,12 @@ async function startServer() {
         { url: "/blog", priority: "0.8", changefreq: "weekly" },
         { url: "/about", priority: "0.7", changefreq: "monthly" },
         { url: "/contact", priority: "0.7", changefreq: "monthly" },
+        { url: "/privacy", priority: "0.3", changefreq: "yearly" },
+        { url: "/terms", priority: "0.3", changefreq: "yearly" },
       ];
 
-      let urls = staticPages.map(
-        p =>
-          `  <url>\n    <loc>${origin}${p.url}</loc>\n    <lastmod>${now}</lastmod>\n    <changefreq>${p.changefreq}</changefreq>\n    <priority>${p.priority}</priority>\n  </url>`
+      let urls = staticPages.map(p =>
+        buildSitemapUrl(`${origin}${p.url}`, p.priority, p.changefreq, now)
       );
 
       // Dynamic product pages
@@ -62,30 +94,68 @@ async function startServer() {
         const { products } = await import("../../drizzle/schema");
         const { eq } = await import("drizzle-orm");
         const allProducts = await db
-          .select({ slug: products.slug, updatedAt: products.updatedAt })
+          .select({
+            slug: products.slug,
+            updatedAt: products.updatedAt,
+            name: products.name,
+            images: products.images,
+          })
           .from(products)
           .where(eq(products.status, "active"));
         for (const p of allProducts) {
           const lastmod = p.updatedAt
             ? new Date(p.updatedAt).toISOString().split("T")[0]
             : now;
+          const productImages: { loc: string; caption?: string }[] = [];
+          try {
+            const parsed = JSON.parse(p.images || "[]") as string[];
+            if (Array.isArray(parsed) && parsed.length > 0) {
+              productImages.push({
+                loc: parsed[0],
+                caption: `${p.name} - Custom Packaging`,
+              });
+            }
+          } catch {
+            // ignore invalid JSON
+          }
           urls.push(
-            `  <url>\n    <loc>${origin}/product/${p.slug}</loc>\n    <lastmod>${lastmod}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>`
+            buildSitemapUrl(
+              `${origin}/product/${p.slug}`,
+              "0.8",
+              "weekly",
+              lastmod,
+              productImages
+            )
           );
         }
 
         // Dynamic blog pages
         const { blogPosts } = await import("../../drizzle/schema");
         const allPosts = await db
-          .select({ slug: blogPosts.slug, updatedAt: blogPosts.updatedAt })
+          .select({
+            slug: blogPosts.slug,
+            updatedAt: blogPosts.updatedAt,
+            title: blogPosts.title,
+            coverImage: blogPosts.coverImage,
+          })
           .from(blogPosts)
           .where(eq(blogPosts.status, "published"));
         for (const p of allPosts) {
           const lastmod = p.updatedAt
             ? new Date(p.updatedAt).toISOString().split("T")[0]
             : now;
+          const postImages: { loc: string; caption?: string }[] = [];
+          if (p.coverImage) {
+            postImages.push({ loc: p.coverImage, caption: p.title });
+          }
           urls.push(
-            `  <url>\n    <loc>${origin}/blog/${p.slug}</loc>\n    <lastmod>${lastmod}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.7</priority>\n  </url>`
+            buildSitemapUrl(
+              `${origin}/blog/${p.slug}`,
+              "0.7",
+              "weekly",
+              lastmod,
+              postImages
+            )
           );
         }
 
@@ -96,12 +166,17 @@ async function startServer() {
           .from(categories);
         for (const c of allCats) {
           urls.push(
-            `  <url>\n    <loc>${origin}/products?category=${c.slug}</loc>\n    <lastmod>${now}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.6</priority>\n  </url>`
+            buildSitemapUrl(
+              `${origin}/products?category=${c.slug}`,
+              "0.6",
+              "weekly",
+              now
+            )
           );
         }
       }
 
-      const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join("\n")}\n</urlset>`;
+      const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n${urls.join("\n")}\n</urlset>`;
       res.set("Content-Type", "application/xml");
       res.set("Cache-Control", "public, max-age=3600");
       res.send(xml);

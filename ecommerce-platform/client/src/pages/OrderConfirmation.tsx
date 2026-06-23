@@ -15,6 +15,7 @@ import { useRoute, Link } from "wouter";
 import { CheckCircle, Package, Copy } from "lucide-react";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
+import { usePageSEO } from "@/lib/seo";
 
 export default function OrderConfirmation() {
   const { t } = useTranslation();
@@ -27,6 +28,12 @@ export default function OrderConfirmation() {
     { enabled: isAuthenticated && !!orderId }
   );
   const order = orderQuery.data;
+
+  usePageSEO({
+    title: t("orderConfirmation.orderPlacedSuccess") + " | DY Packs",
+    canonicalPath: "/order-confirmation",
+    noIndex: true,
+  });
 
   if (!isAuthenticated) return null;
 

@@ -112,7 +112,17 @@
     "note": "Note:",
     "pricesReference": "Prices shown are for reference only. Final pricing depends on specific requirements such as materials, printing techniques, and order quantity. Please",
     "contactUs": "contact us",
-    "detailedQuote": "for a detailed quote."
+    "detailedQuote": "for a detailed quote.",
+    "relatedProducts": "Related Products",
+    "frequentlyAsked": "Frequently Asked Questions",
+    "faqMoqQuestion": "What is the MOQ for {{productName}}?",
+    "faqMoqAnswer": "Our standard MOQ starts from {{minOrderQty}} pieces. We also support lower quantities for sample orders. Contact us for details.",
+    "faqCustomizeQuestion": "Can I customize the {{productName}}?",
+    "faqCustomizeAnswer": "Yes. We support custom sizes, colors, materials, printing, foil stamping, embossing, spot UV, and inserts. Send us your requirements for a tailored quote.",
+    "faqProductionQuestion": "How long is production and shipping?",
+    "faqProductionAnswer": "Sample production takes 3-7 days. Bulk production typically takes 10-25 days depending on quantity and customization. We ship worldwide by sea, air or express.",
+    "faqSamplesQuestion": "Do you provide samples before bulk order?",
+    "faqSamplesAnswer": "Absolutely. We recommend samples to confirm material, color, structure and print quality before mass production."
   },
   "cart": {
     "itemRemoved": "Item removed",
@@ -643,5 +653,50 @@
     "previous": "Previous",
     "copy": "Copy",
     "copied": "Copied!"
+  },
+  "seo": {
+    "siteName": "DY Packs",
+    "home": {
+      "title": "Custom Packaging Manufacturer | Premium Boxes by DY Packs",
+      "description": "DY Packs is a premium custom packaging manufacturer in China. Low MOQ luxury gift boxes, cosmetic packaging, rigid boxes & food packaging with global shipping.",
+      "keywords": "custom packaging manufacturer, premium packaging boxes, custom packaging China, luxury gift boxes, cosmetic packaging boxes, rigid boxes, low MOQ custom boxes"
+    },
+    "about": {
+      "title": "About DY Packs | Custom Packaging Manufacturer in China",
+      "description": "Learn about DY Packs (Shanghai Douyue Industrial Co., Ltd). 15+ years of custom packaging manufacturing for global brands. Low MOQ, ISO certified.",
+      "keywords": "custom packaging manufacturer China, packaging company Shanghai, DY Packs about, luxury packaging manufacturer, rigid box factory"
+    },
+    "contact": {
+      "title": "Request a Custom Packaging Quote | Contact DY Packs",
+      "description": "Request a quote for custom packaging boxes. Tell us your product, quantity, and requirements. DY Packs replies within 24 hours with factory pricing.",
+      "keywords": "custom packaging quote, request quote packaging, packaging supplier contact, custom boxes quote, DY Packs contact"
+    },
+    "products": {
+      "title": "Custom Packaging Boxes Wholesale | DY Packs",
+      "description": "Browse DY Packs' wholesale custom packaging boxes. Gift boxes, cosmetic packaging, jewelry boxes & more. Low MOQ, fast quotes, global shipping.",
+      "keywords": "custom packaging boxes, wholesale packaging boxes, premium packaging solutions, custom boxes manufacturer"
+    },
+    "blog": {
+      "title": "Blog & Insights | DY Packs - Packaging Industry News & Tips",
+      "description": "Read the latest packaging industry insights, tips, and company updates from DY Packs. Expert guides on cosmetic packaging, sustainable solutions, and premium brand packaging.",
+      "keywords": "packaging blog, custom packaging tips, packaging industry insights, cosmetic packaging guide, sustainable packaging, DY Packs"
+    },
+    "product": {
+      "title": "{{productName}} | Custom Packaging | DY Packs",
+      "descriptionBase": "Custom {{productName}} manufactured by DY Packs.",
+      "description": "{{base}} Premium materials, custom sizes & printing. Low MOQ, factory-direct pricing, global shipping. Request a quote today!",
+      "keywords": "custom packaging, {{productName}}, packaging manufacturer, {{categoryName}}, DY Packs"
+    },
+    "blogPost": {
+      "title": "{{postTitle}} | DY Packs Packaging Blog",
+      "descriptionBase": "Expert packaging insights and tips from DY Packs.",
+      "description": "{{excerpt}} Learn how premium custom packaging can elevate your brand."
+    },
+    "categoryFallback": {
+      "title": "{{categoryName}} | Custom Packaging | DY Packs",
+      "description": "Browse {{categoryName}} custom packaging solutions. Low MOQ, factory-direct pricing, global shipping. Request a quote today!",
+      "keywords": "{{categoryName}}, custom packaging, wholesale packaging, packaging manufacturer, DY Packs",
+      "h1": "{{categoryName}}"
+    }
   }
 }

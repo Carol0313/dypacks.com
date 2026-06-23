@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { BRAND_NAME } from "./constants";
 
 export const SITE_URL =
@@ -21,6 +22,9 @@ export interface PageSEOOptions {
   description?: string;
   keywords?: string;
   ogImage?: string | null;
+  ogImageWidth?: number;
+  ogImageHeight?: number;
+  ogImageAlt?: string;
   ogType?: "website" | "product" | "article";
   canonicalPath?: string;
   noIndex?: boolean;
@@ -70,14 +74,22 @@ export function usePageSEO(options: PageSEOOptions) {
     description,
     keywords,
     ogImage,
+    ogImageWidth,
+    ogImageHeight,
+    ogImageAlt,
     ogType = "website",
     canonicalPath,
     noIndex = false,
     hreflangPath,
   } = options;
+  const { i18n } = useTranslation();
+  const locale = i18n.language || "en";
 
   useEffect(() => {
     if (typeof document === "undefined") return;
+
+    // Update html lang attribute to current locale
+    document.documentElement.lang = locale;
 
     const previousTitle = document.title;
     document.title = title;
@@ -94,6 +106,7 @@ export function usePageSEO(options: PageSEOOptions) {
     setOrCreateMeta("og:title", title, "property");
     setOrCreateMeta("og:type", ogType, "property");
     setOrCreateMeta("og:site_name", BRAND_NAME, "property");
+    setOrCreateMeta("og:locale", locale.replace("-", "_"), "property");
     setOrCreateMeta("twitter:card", "summary_large_image");
     setOrCreateMeta("twitter:title", title);
     if (description) setOrCreateMeta("twitter:description", description);
@@ -106,6 +119,15 @@ export function usePageSEO(options: PageSEOOptions) {
     if (ogImage) {
       setOrCreateMeta("og:image", ogImage, "property");
       setOrCreateMeta("twitter:image", ogImage);
+      if (ogImageAlt) {
+        setOrCreateMeta("og:image:alt", ogImageAlt, "property");
+      }
+      if (ogImageWidth) {
+        setOrCreateMeta("og:image:width", String(ogImageWidth), "property");
+      }
+      if (ogImageHeight) {
+        setOrCreateMeta("og:image:height", String(ogImageHeight), "property");
+      }
     }
 
     if (noIndex) {
@@ -125,42 +147,78 @@ export function usePageSEO(options: PageSEOOptions) {
       document.title = previousTitle;
       removeLinks("alternate");
       removeMeta("robots");
+      removeMeta("og:locale");
     };
   }, [
     title,
     description,
     keywords,
     ogImage,
+    ogImageWidth,
+    ogImageHeight,
+    ogImageAlt,
     ogType,
     canonicalPath,
     noIndex,
     hreflangPath,
+    locale,
   ]);
 }
 
-// Helpers to build keyword-rich strings
-export function buildProductTitle(productName: string) {
-  return `${productName} | Custom Packaging | ${BRAND_NAME}`;
+// Helpers to build keyword-rich strings using the current i18n language.
+// Pass the t function from react-i18next so titles/descriptions are localized.
+export function buildProductTitle(
+  productName: string,
+  t: (key: string, options?: Record<string, unknown>) => string
+) {
+  return t("seo.product.title", {
+    productName,
+    defaultValue: `${productName} | Custom Packaging | ${BRAND_NAME}`,
+  });
 }
 
-export function buildProductDescription(productName: string, shortDesc?: string | null) {
+export function buildProductDescription(
+  productName: string,
+  shortDesc: string | null | undefined,
+  t: (key: string, options?: Record<string, unknown>) => string
+) {
   const base =
     shortDesc && shortDesc.length > 20
       ? shortDesc
-      : `Custom ${productName} manufactured by ${BRAND_NAME}.`;
-  return `${base} Premium materials, custom sizes & printing. Low MOQ, factory-direct pricing, global shipping. Request a quote today!`.slice(
-    0,
-    160
-  );
+      : t("seo.product.descriptionBase", {
+          productName,
+          defaultValue: `Custom ${productName} manufactured by ${BRAND_NAME}.`,
+        });
+  return t("seo.product.description", {
+    productName,
+    base,
+    defaultValue: `${base} Premium materials, custom sizes & printing. Low MOQ, factory-direct pricing, global shipping. Request a quote today!`,
+  }).slice(0, 160);
 }
 
-export function buildBlogPostTitle(postTitle: string) {
-  return `${postTitle} | ${BRAND_NAME} Packaging Blog`;
+export function buildBlogPostTitle(
+  postTitle: string,
+  t: (key: string, options?: Record<string, unknown>) => string
+) {
+  return t("seo.blogPost.title", {
+    postTitle,
+    defaultValue: `${postTitle} | ${BRAND_NAME} Packaging Blog`,
+  });
 }
 
-export function buildBlogPostDescription(excerpt?: string | null) {
-  const base = excerpt?.trim() || "Expert packaging insights and tips from DY Packs.";
-  return `${base} Learn how premium custom packaging can elevate your brand.`.slice(0, 160);
+export function buildBlogPostDescription(
+  excerpt: string | null | undefined,
+  t: (key: string, options?: Record<string, unknown>) => string
+) {
+  const base =
+    excerpt?.trim() ||
+    t("seo.blogPost.descriptionBase", {
+      defaultValue: "Expert packaging insights and tips from DY Packs.",
+    });
+  return t("seo.blogPost.description", {
+    excerpt: base,
+    defaultValue: `${base} Learn how premium custom packaging can elevate your brand.`,
+  }).slice(0, 160);
 }
 
 // Category SEO presets
@@ -217,3 +275,28 @@ export const CATEGORY_SEO: Record<
     h1: "Luxury Packaging Boxes",
   },
 };
+
+// Build localized fallback SEO for a category not present in CATEGORY_SEO.
+export function buildCategorySEO(
+  categoryName: string,
+  t: (key: string, options?: Record<string, unknown>) => string
+) {
+  return {
+    title: t("seo.categoryFallback.title", {
+      categoryName,
+      defaultValue: `${categoryName} | Custom Packaging | ${BRAND_NAME}`,
+    }),
+    description: t("seo.categoryFallback.description", {
+      categoryName,
+      defaultValue: `Browse ${categoryName} custom packaging solutions. Low MOQ, factory-direct pricing, global shipping.`,
+    }),
+    keywords: t("seo.categoryFallback.keywords", {
+      categoryName,
+      defaultValue: `${categoryName}, custom packaging, wholesale packaging, packaging manufacturer, ${BRAND_NAME}`,
+    }),
+    h1: t("seo.categoryFallback.h1", {
+      categoryName,
+      defaultValue: categoryName,
+    }),
+  };
+}

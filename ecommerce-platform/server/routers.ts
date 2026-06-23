@@ -118,6 +118,21 @@ const productRouter = router({
     .query(async ({ input }) => {
       return db.getProductBySlug(input.slug);
     }),
+  related: publicProcedure
+    .input(
+      z.object({
+        categoryId: z.number(),
+        excludeProductId: z.number(),
+        limit: z.number().optional(),
+      })
+    )
+    .query(async ({ input }) => {
+      return db.getRelatedProducts(
+        input.categoryId,
+        input.excludeProductId,
+        input.limit
+      );
+    }),
   create: adminProcedure
     .input(
       z.object({

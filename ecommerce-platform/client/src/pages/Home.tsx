@@ -27,12 +27,11 @@ export default function Home() {
   const { t } = useTranslation();
 
   usePageSEO({
-    title: "Custom Packaging Manufacturer | Premium Boxes by DY Packs",
-    description:
-      "DY Packs is a premium custom packaging manufacturer in China. Low MOQ luxury gift boxes, cosmetic packaging, rigid boxes & food packaging with global shipping.",
-    keywords:
-      "custom packaging manufacturer, premium packaging boxes, custom packaging China, luxury gift boxes, cosmetic packaging boxes, rigid boxes, low MOQ custom boxes",
+    title: t("seo.home.title"),
+    description: t("seo.home.description"),
+    keywords: t("seo.home.keywords"),
     ogImage: HERO_IMAGE,
+    ogImageAlt: t("seo.home.title"),
     ogType: "website",
     canonicalPath: "/",
   });
@@ -89,7 +88,7 @@ export default function Home() {
     <div className="min-h-screen flex flex-col">
       <OrganizationSchema />
       <WebSiteSchema />
-      <BreadcrumbSchema items={[{ name: "Home", url: "/" }]} />
+      <BreadcrumbSchema items={[{ name: t("navbar.home"), url: "/" }]} />
       <Navbar />
 
       {/* Hero Carousel */}

@@ -158,6 +158,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useTheme } from "@/contexts/ThemeContext";
+import { usePageSEO } from "@/lib/seo";
 import { format } from "date-fns";
 import { zhCN } from "date-fns/locale";
 import {
@@ -174,6 +175,12 @@ import { toast as sonnerToast } from "sonner";
 import { AIChatBox, type Message } from "@/components/AIChatBox";
 
 export default function ComponentsShowcase() {
+  usePageSEO({
+    title: "Component Showcase | DY Packs",
+    canonicalPath: "/component-showcase",
+    noIndex: true,
+  });
+
   const { theme, toggleTheme } = useTheme();
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [datePickerDate, setDatePickerDate] = useState<Date>();

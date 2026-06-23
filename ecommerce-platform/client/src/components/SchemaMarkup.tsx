@@ -69,7 +69,7 @@ export function WebSiteSchema() {
       "@type": "SearchAction",
       target: {
         "@type": "EntryPoint",
-        urlTemplate: `${origin}/products?search={search_term_string}`,
+        urlTemplate: `${origin}/products?q={search_term_string}`,
       },
       "query-input": "required name=search_term_string",
     },
@@ -260,10 +260,79 @@ export function ProductSchema({
   return null;
 }
 
+// LocalBusiness Schema — used on contact page
+export function LocalBusinessSchema() {
+  const origin = typeof window !== "undefined" ? window.location.origin : "";
+  const data = {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    name: COMPANY_NAME,
+    alternateName: BRAND_NAME,
+    url: origin,
+    email: CONTACT_EMAIL,
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: "Shanghai",
+      addressLocality: "Shanghai",
+      addressCountry: "CN",
+    },
+    geo: {
+      "@type": "GeoCoordinates",
+      latitude: "31.2304",
+      longitude: "121.4737",
+    },
+    priceRange: "$$",
+    openingHoursSpecification: {
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+      opens: "09:00",
+      closes: "18:00",
+    },
+  };
+
+  useJsonLd("schema-localbusiness", data);
+  return null;
+}
+
 // FAQ Schema — used on contact/about pages
 interface FAQItem {
   question: string;
   answer: string;
+}
+
+// ItemList Schema — used on product grid / category pages
+interface ProductListItem {
+  name: string;
+  slug: string;
+  image?: string;
+  description?: string | null;
+}
+
+export function ProductListSchema({
+  products,
+  listName = "Product List",
+}: {
+  products: ProductListItem[];
+  listName?: string;
+}) {
+  const origin = typeof window !== "undefined" ? window.location.origin : "";
+  const data = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: listName,
+    itemListElement: products.map((product, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      url: `${origin}/product/${product.slug}`,
+      name: product.name,
+      image: product.image || LOGO_URL,
+      description:
+        product.description || `Custom ${product.name} by ${BRAND_NAME}`,
+    })),
+  };
+
+  useJsonLd("schema-productlist", data);
+  return null;
 }
 
 export function FAQSchema({ items }: { items: FAQItem[] }) {

@@ -112,7 +112,17 @@
     "note": "Nota:",
     "pricesReference": "Los precios mostrados son solo de referencia. La precificación final depende de requisitos específicos como materiales, técnicas de impresión y cantidad del pedido. Por favor,",
     "contactUs": "contáctenos",
-    "detailedQuote": "para una cotización detallada."
+    "detailedQuote": "para una cotización detallada.",
+    "relatedProducts": "Productos Relacionados",
+    "frequentlyAsked": "Preguntas Frecuentes",
+    "faqMoqQuestion": "¿Cuál es el MOQ para {{productName}}?",
+    "faqMoqAnswer": "Nuestro MOQ estándar comienza desde {{minOrderQty}} piezas. También apoyamos cantidades más bajas para pedidos de muestras. Contáctenos para más detalles.",
+    "faqCustomizeQuestion": "¿Puedo personalizar el {{productName}}?",
+    "faqCustomizeAnswer": "Sí. Apoyamos tamaños, colores, materiales, impresión, estampado en foil, gofrado, barniz UV selectivo e insertos personalizados. Envíenos sus requisitos para una cotización a medida.",
+    "faqProductionQuestion": "¿Cuánto tardan la producción y el envío?",
+    "faqProductionAnswer": "La producción de muestras toma 3-7 días. La producción masiva típicamente toma 10-25 días dependiendo de la cantidad y personalización. Enviamos a todo el mundo por mar, aire o expreso.",
+    "faqSamplesQuestion": "¿Proporcionan muestras antes del pedido masivo?",
+    "faqSamplesAnswer": "Por supuesto. Recomendamos muestras para confirmar el material, color, estructura y calidad de impresión antes de la producción masiva."
   },
   "cart": {
     "itemRemoved": "Artículo eliminado",
@@ -643,5 +653,50 @@
     "previous": "Anterior",
     "copy": "Copiar",
     "copied": "¡Copiado!"
+  },
+  "seo": {
+    "siteName": "DY Packs",
+    "home": {
+      "title": "Fabricante de Empaque Personalizado | Cajas Premium de DY Packs",
+      "description": "DY Packs es un fabricante premium de empaques personalizados en China. Cajas de regalo de lujo, empaque cosmético, cajas rígidas y empaque de alimentos con bajo MOQ y envío global.",
+      "keywords": "fabricante de empaque personalizado, cajas de empaque premium, empaque personalizado China, cajas de regalo de lujo, cajas de empaque cosmético, cajas rígidas, cajas personalizadas bajo MOQ"
+    },
+    "about": {
+      "title": "Acerca de DY Packs | Fabricante de Empaque Personalizado en China",
+      "description": "Conozca DY Packs (Shanghai Douyue Industrial Co., Ltd). Más de 15 años fabricando empaques personalizados para marcas globales. Bajo MOQ, certificado ISO.",
+      "keywords": "fabricante de empaque personalizado China, empresa de empaque Shanghái, acerca de DY Packs, fabricante de empaque de lujo, fábrica de cajas rígidas"
+    },
+    "contact": {
+      "title": "Solicitar Cotización de Empaque Personalizado | Contactar DY Packs",
+      "description": "Solicite una cotización para cajas de empaque personalizadas. Cuéntenos su producto, cantidad y requisitos. DY Packs responde dentro de 24 horas con precios de fábrica.",
+      "keywords": "cotización empaque personalizado, solicitar cotización empaque, contacto proveedor de empaque, cotización cajas personalizadas, contacto DY Packs"
+    },
+    "products": {
+      "title": "Cajas de Empaque Personalizado al por Mayor | DY Packs",
+      "description": "Explore las cajas de empaque personalizado al por mayor de DY Packs. Cajas de regalo, empaque cosmético, cajas de joyería y más. Bajo MOQ, cotizaciones rápidas, envío global.",
+      "keywords": "cajas de empaque personalizado, cajas de empaque al por mayor, soluciones de empaque premium, fabricante de cajas personalizadas"
+    },
+    "blog": {
+      "title": "Blog y Consejos | DY Packs - Noticias y Tips de la Industria del Empaque",
+      "description": "Lea las últimas ideas, consejos y actualizaciones de la empresa de la industria del empaque de DY Packs. Guías expertas sobre empaque cosmético, soluciones sostenibles y empaque premium para marcas.",
+      "keywords": "blog de empaque, consejos de empaque personalizado, ideas de la industria del empaque, guía de empaque cosmético, empaque sostenible, DY Packs"
+    },
+    "product": {
+      "title": "{{productName}} | Empaque Personalizado | DY Packs",
+      "descriptionBase": "{{productName}} personalizado fabricado por DY Packs.",
+      "description": "{{base}} Materiales premium, tamaños e impresión personalizados. Bajo MOQ, precios de fábrica, envío global. ¡Solicite una cotización hoy!",
+      "keywords": "empaque personalizado, {{productName}}, fabricante de empaque, {{categoryName}}, DY Packs"
+    },
+    "blogPost": {
+      "title": "{{postTitle}} | Blog de Empaque DY Packs",
+      "descriptionBase": "Ideas y consejos expertos sobre empaque de DY Packs.",
+      "description": "{{excerpt}} Aprenda cómo el empaque personalizado premium puede elevar su marca."
+    },
+    "categoryFallback": {
+      "title": "{{categoryName}} | Empaque Personalizado | DY Packs",
+      "description": "Explore soluciones de empaque personalizado {{categoryName}}. Bajo MOQ, precios de fábrica, envío global. ¡Solicite una cotización hoy!",
+      "keywords": "{{categoryName}}, empaque personalizado, empaque al por mayor, fabricante de empaque, DY Packs",
+      "h1": "{{categoryName}}"
+    }
   }
 }

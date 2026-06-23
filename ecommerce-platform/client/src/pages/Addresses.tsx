@@ -20,6 +20,7 @@ import { useState } from "react";
 import { ArrowLeft, Plus, Pencil, Trash2, MapPin } from "lucide-react";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
+import { usePageSEO } from "@/lib/seo";
 
 export default function Addresses() {
   const { t } = useTranslation();
@@ -100,6 +101,12 @@ export default function Addresses() {
     if (editId) updateMutation.mutate({ id: editId, ...form });
     else createMutation.mutate(form);
   };
+
+  usePageSEO({
+    title: t("addresses.myAddresses") + " | DY Packs",
+    canonicalPath: "/addresses",
+    noIndex: true,
+  });
 
   if (!isAuthenticated) return null;
 

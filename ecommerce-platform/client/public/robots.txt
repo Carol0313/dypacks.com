@@ -19,12 +19,13 @@ Disallow: /addresses
 Disallow: /cart
 Disallow: /checkout
 Disallow: /order-confirmation
+Disallow: /inquiry
 Disallow: /api/
 Disallow: /404
 
 # Disallow query parameters that create duplicate content
 Disallow: /*?page=
-Disallow: /*?search=
+Disallow: /*?q=
 Disallow: /*?sort=
 
 # Crawl-delay for polite crawling
@@ -40,7 +41,9 @@ Disallow: /addresses
 Disallow: /cart
 Disallow: /checkout
 Disallow: /order-confirmation
+Disallow: /inquiry
 Disallow: /api/
+Disallow: /*?q=
 
 # Bing-specific rules
 User-agent: Bingbot
@@ -52,7 +55,9 @@ Disallow: /addresses
 Disallow: /cart
 Disallow: /checkout
 Disallow: /order-confirmation
+Disallow: /inquiry
 Disallow: /api/
+Disallow: /*?q=
 Crawl-delay: 2
 
 # Sitemap location

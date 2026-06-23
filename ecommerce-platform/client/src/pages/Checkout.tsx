@@ -20,6 +20,7 @@ import { ArrowLeft, CreditCard, Loader2 } from "lucide-react";
 import { Link } from "wouter";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
+import { usePageSEO } from "@/lib/seo";
 
 export default function Checkout() {
   const { t } = useTranslation();
@@ -107,6 +108,12 @@ export default function Checkout() {
       note: form.note || undefined,
     });
   };
+
+  usePageSEO({
+    title: t("checkout.checkout") + " | DY Packs",
+    canonicalPath: "/checkout",
+    noIndex: true,
+  });
 
   if (!isAuthenticated) return null;
 

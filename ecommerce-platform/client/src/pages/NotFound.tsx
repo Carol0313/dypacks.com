@@ -1,9 +1,17 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
 import { useTranslation } from "react-i18next";
+import { usePageSEO } from "@/lib/seo";
 
 export default function NotFound() {
   const { t } = useTranslation();
+
+  usePageSEO({
+    title: t("notFound.pageNotFound") + " | DY Packs",
+    canonicalPath: "/404",
+    noIndex: true,
+  });
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-background">
       <h1
