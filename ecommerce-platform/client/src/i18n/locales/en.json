@@ -282,6 +282,7 @@
     "businessHoursValue": "Monday - Friday: 9:00 AM - 6:00 PM (CST)\nSaturday: 9:00 AM - 12:00 PM",
     "quickResponse": "Quick Response",
     "respond24Hours": "We typically respond within 24 hours on business days",
+    "sendMessage": "Send Messages",
     "frequentlyAsked": "Frequently Asked"
   },
   "about": {

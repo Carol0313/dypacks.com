@@ -282,6 +282,7 @@
     "businessHoursValue": "Lunes - Viernes: 9:00 AM - 6:00 PM (CST)\\nSábado: 9:00 AM - 12:00 PM",
     "quickResponse": "Respuesta Rápida",
     "respond24Hours": "Normalmente respondemos dentro de las 24 horas en días hábiles",
+    "sendMessage": "Enviar mensajes",
     "frequentlyAsked": "Preguntas Frecuentes"
   },
   "about": {

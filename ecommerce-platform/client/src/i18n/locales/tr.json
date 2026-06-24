@@ -282,6 +282,7 @@
     "businessHoursValue": "Pazartesi - Cuma: 9:00 - 18:00 (CST)\\nCumartesi: 9:00 - 12:00",
     "quickResponse": "Hızlı Yanıt",
     "respond24Hours": "İş günlerinde genellikle 24 saat içinde yanıt veriyoruz",
+    "sendMessage": "Mesaj Gönderin",
     "frequentlyAsked": "Sıkça Sorulan Sorular"
   },
   "about": {
