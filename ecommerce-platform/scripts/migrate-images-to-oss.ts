@@ -21,10 +21,11 @@ import { sql } from "drizzle-orm";
 const OLD_CDN_DOMAINS = ["files.manuscdn.com"];
 
 interface ImageRecord {
-  type: "product" | "blog";
+  type: "product" | "blog-cover" | "blog-content";
   id: number;
   field: string;
   urls: string[];
+  content?: string;
 }
 
 function isOldCdnUrl(url: string): boolean {
@@ -120,22 +121,37 @@ async function main() {
     }
   }
 
-  // 扫描博客封面图
+  // 扫描博客封面图与正文图片
   const allBlogs = await db
     .select({
       id: blogPosts.id,
       title: blogPosts.title,
       coverImage: blogPosts.coverImage,
+      content: blogPosts.content,
     })
     .from(blogPosts);
   for (const b of allBlogs) {
     if (b.coverImage && isOldCdnUrl(b.coverImage)) {
       records.push({
-        type: "blog",
+        type: "blog-cover",
         id: b.id,
         field: "coverImage",
         urls: [b.coverImage],
       });
+    }
+    if (b.content) {
+      // 匹配 [IMAGE: url] 或普通 URL
+      const urlMatches = b.content.match(/https?:\/\/[^\s\]\)]+/g) || [];
+      const oldUrls = urlMatches.filter(isOldCdnUrl);
+      if (oldUrls.length > 0) {
+        records.push({
+          type: "blog-content",
+          id: b.id,
+          field: "content",
+          urls: oldUrls,
+          content: b.content,
+        });
+      }
     }
   }
 
@@ -151,8 +167,14 @@ async function main() {
   const urlMapping = new Map<string, string>(); // oldUrl -> newUrl
 
   for (const record of records) {
+    const recordLabel =
+      record.type === "product"
+        ? "Product"
+        : record.type === "blog-cover"
+          ? "Blog Cover"
+          : "Blog Content";
     console.log(
-      `🔄 ${record.type === "product" ? "Product" : "Blog"} #${record.id}: ${record.urls.length} image(s)`
+      `🔄 ${recordLabel} #${record.id}: ${record.urls.length} image(s)`
     );
 
     const newUrls: string[] = [];
@@ -202,11 +224,26 @@ async function main() {
           .update(products)
           .set({ images: JSON.stringify(finalUrls) })
           .where(sql`${products.id} = ${record.id}`);
-      } else if (record.type === "blog" && record.field === "coverImage") {
+      } else if (
+        record.type === "blog-cover" &&
+        record.field === "coverImage"
+      ) {
         await db
           .update(blogPosts)
           .set({ coverImage: newUrls[0] })
           .where(sql`${blogPosts.id} = ${record.id}`);
+      } else if (record.type === "blog-content" && record.field === "content") {
+        let newContent = record.content || "";
+        for (const oldUrl of record.urls) {
+          const replacement = urlMapping.get(oldUrl) || oldUrl;
+          newContent = newContent.replaceAll(oldUrl, replacement);
+        }
+        if (newContent !== record.content) {
+          await db
+            .update(blogPosts)
+            .set({ content: newContent })
+            .where(sql`${blogPosts.id} = ${record.id}`);
+        }
       }
     } catch (err) {
       console.error(

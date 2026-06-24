@@ -36,7 +36,7 @@ export function OrganizationSchema() {
     name: COMPANY_NAME,
     alternateName: BRAND_NAME,
     url: typeof window !== "undefined" ? window.location.origin : "",
-    logo: LOGO_URL,
+    logo: logoUrl(typeof window !== "undefined" ? window.location.origin : ""),
     contactPoint: {
       "@type": "ContactPoint",
       email: CONTACT_EMAIL,
@@ -128,7 +128,7 @@ export function BlogPostSchema({
     "@type": "BlogPosting",
     headline: title,
     description: description,
-    image: coverImage || LOGO_URL,
+    image: coverImage ? absoluteImageUrl(coverImage, origin) : logoUrl(origin),
     datePublished: new Date(publishedAt).toISOString(),
     dateModified: updatedAt
       ? new Date(updatedAt).toISOString()
@@ -138,14 +138,14 @@ export function BlogPostSchema({
       "@type": "Organization",
       name: authorName,
       url: origin,
-      logo: LOGO_URL,
+      logo: logoUrl(origin),
     },
     publisher: {
       "@type": "Organization",
       name: COMPANY_NAME,
       logo: {
         "@type": "ImageObject",
-        url: LOGO_URL,
+        url: logoUrl(origin),
       },
     },
     mainEntityOfPage: {
@@ -183,7 +183,9 @@ export function BlogListSchema({ posts }: { posts: BlogListItem[] }) {
         position: index + 1,
         url: `${origin}/blog/${post.slug}`,
         name: post.title,
-        image: post.coverImage || LOGO_URL,
+        image: post.coverImage
+          ? absoluteImageUrl(post.coverImage, origin)
+          : logoUrl(origin),
       })),
     },
   };
@@ -222,7 +224,7 @@ export function ProductSchema({
     "@type": "Product",
     name: name,
     description: description,
-    image: image,
+    image: absoluteImageUrl(image, origin),
     url: `${origin}/product/${slug}`,
     brand: {
       "@type": "Organization",
@@ -325,7 +327,9 @@ export function ProductListSchema({
       position: index + 1,
       url: `${origin}/product/${product.slug}`,
       name: product.name,
-      image: product.image || LOGO_URL,
+      image: product.image
+        ? absoluteImageUrl(product.image, origin)
+        : logoUrl(origin),
       description:
         product.description || `Custom ${product.name} by ${BRAND_NAME}`,
     })),

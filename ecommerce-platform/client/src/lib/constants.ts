@@ -3,17 +3,35 @@ import { getOptimizedImageUrl } from "./image-utils";
 // Brand
 export const BRAND_NAME = "DY Packs";
 export const COMPANY_NAME = "Shanghai Douyue Industrial Co., Ltd";
-export const LOGO_URL =
-  "https://files.manuscdn.com/user_upload_by_module/session_file/310519663282521287/groqYEnjTkzGpYtA.png";
+export const LOGO_URL = "/logo.png";
 
 // Banner Images (hosted on Alibaba Cloud OSS)
-export const OSS_PUBLIC_URL = "https://dypacks-images.oss-cn-shanghai.aliyuncs.com";
-export const HERO_IMAGE = getOptimizedImageUrl(`${OSS_PUBLIC_URL}/static/images/banner/banner-1.jpg`, 1920);
-export const SHOWCASE_IMAGE_1 = getOptimizedImageUrl(`${OSS_PUBLIC_URL}/static/images/banner/banner-2.jpg`, 1200);
-export const SHOWCASE_IMAGE_2 = getOptimizedImageUrl(`${OSS_PUBLIC_URL}/static/products/product-luxury-perfume-gift-box.jpg`, 800);
-export const SHOWCASE_IMAGE_3 = getOptimizedImageUrl(`${OSS_PUBLIC_URL}/static/products/product-burgundy-royal-magnetic-gift-box.jpg`, 800);
-export const SHOWCASE_IMAGE_4 = getOptimizedImageUrl(`${OSS_PUBLIC_URL}/static/products/product-eco-friendly-botanical-cosmetic.jpg`, 800);
-export const SHOWCASE_IMAGE_5 = getOptimizedImageUrl(`${OSS_PUBLIC_URL}/static/products/product-rose-gold-necklace-box.jpg`, 800);
+export const OSS_PUBLIC_URL =
+  "https://dypacks-images.oss-cn-shanghai.aliyuncs.com";
+export const HERO_IMAGE = getOptimizedImageUrl(
+  `${OSS_PUBLIC_URL}/static/images/banner/banner-1.jpg`,
+  1920
+);
+export const SHOWCASE_IMAGE_1 = getOptimizedImageUrl(
+  `${OSS_PUBLIC_URL}/static/images/banner/banner-2.jpg`,
+  1200
+);
+export const SHOWCASE_IMAGE_2 = getOptimizedImageUrl(
+  `${OSS_PUBLIC_URL}/static/products/product-luxury-perfume-gift-box.jpg`,
+  800
+);
+export const SHOWCASE_IMAGE_3 = getOptimizedImageUrl(
+  `${OSS_PUBLIC_URL}/static/products/product-burgundy-royal-magnetic-gift-box.jpg`,
+  800
+);
+export const SHOWCASE_IMAGE_4 = getOptimizedImageUrl(
+  `${OSS_PUBLIC_URL}/static/products/product-eco-friendly-botanical-cosmetic.jpg`,
+  800
+);
+export const SHOWCASE_IMAGE_5 = getOptimizedImageUrl(
+  `${OSS_PUBLIC_URL}/static/products/product-rose-gold-necklace-box.jpg`,
+  800
+);
 
 // Contact
 export const CONTACT_EMAIL = "carolni@dypacks.com";
