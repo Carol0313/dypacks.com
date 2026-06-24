@@ -1,0 +1,5 @@
+packages:
+  - 'ecommerce-platform'
+ignoredBuiltDependencies:
+  - '@tailwindcss/oxide'
+  - esbuild
