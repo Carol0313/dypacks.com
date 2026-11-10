@@ -136,7 +136,7 @@ export default function ProductReviews({ productId }: { productId: number }) {
     { enabled: !!productId }
   );
 
-  const reviews = reviewsQuery.data?.reviews ?? [];
+  const reviews = reviewsQuery.data?.items ?? [];
   const stats = statsQuery.data;
 
   const hasReviewed = useMemo(() => {

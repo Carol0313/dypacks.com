@@ -6,6 +6,16 @@ import {
   CONTACT_EMAIL,
 } from "@/lib/constants";
 
+function absoluteImageUrl(image: string, origin: string): string {
+  if (/^https?:\/\//i.test(image)) return image;
+  const path = image.startsWith("/") ? image : `/${image}`;
+  return `${origin}${path}`;
+}
+
+function logoUrl(origin: string): string {
+  return absoluteImageUrl(LOGO_URL, origin);
+}
+
 // Helper to inject JSON-LD script tags into the document head
 function useJsonLd(id: string, data: Record<string, unknown> | null) {
   useEffect(() => {
