@@ -1,3 +1,4 @@
+import CustomOrder from "@/components/CustomOrder";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useAuth } from "@/_core/hooks/useAuth";
@@ -370,6 +371,15 @@ export default function ProductDetail() {
                 {t("productDetail.finalQuoteDepends")}
               </p>
             </div>
+
+            <CustomOrder
+              product={{
+                id: product.id,
+                name: product.name,
+                price: product.price,
+                minOrderQty: product.minOrderQty,
+              }}
+            />
 
             <Separator className="my-6" />
 

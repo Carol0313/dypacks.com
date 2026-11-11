@@ -174,6 +174,7 @@ export const orderItems = mysqlTable("order_items", {
   price: decimal("price", { precision: 10, scale: 2 }).notNull(),
   quantity: int("quantity").notNull(),
   subtotal: decimal("subtotal", { precision: 10, scale: 2 }).notNull(),
+  specification: text("specification"),
   createdAt: timestamp("createdAt")
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),

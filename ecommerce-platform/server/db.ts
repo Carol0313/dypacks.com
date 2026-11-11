@@ -1,3 +1,4 @@
+import { createHash } from "crypto";
 import { eq, and, like, desc, asc, sql, inArray } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import {
@@ -85,6 +86,23 @@ export async function upsertUser(user: InsertUser): Promise<void> {
     console.error("[Database] Failed to upsert user:", error);
     throw error;
   }
+}
+
+export async function findOrCreateGuestUser(email: string, name: string) {
+  const openId = createHash("sha256")
+    .update(`guest:${email.trim().toLowerCase()}`)
+    .digest("hex");
+  const existing = await getUserByOpenId(openId);
+  if (existing) return existing;
+  await upsertUser({
+    openId,
+    name,
+    email: email.trim().toLowerCase(),
+    loginMethod: "guest",
+  });
+  const created = await getUserByOpenId(openId);
+  if (!created) throw new Error("Could not create customer");
+  return created;
 }
 
 export async function getUserByOpenId(openId: string) {

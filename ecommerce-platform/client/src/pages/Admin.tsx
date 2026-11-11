@@ -1089,6 +1089,14 @@ export default function Admin() {
                     <TableRow key={o.id}>
                       <TableCell className="font-medium text-sm">
                         {o.orderNumber}
+                        {o.note && (
+                          <p
+                            className="text-xs font-normal text-muted-foreground mt-1 max-w-[240px] truncate"
+                            title={o.note}
+                          >
+                            {o.note}
+                          </p>
+                        )}
                       </TableCell>
                       <TableCell>${Number(o.total).toFixed(2)}</TableCell>
                       <TableCell>{o.paymentMethod}</TableCell>

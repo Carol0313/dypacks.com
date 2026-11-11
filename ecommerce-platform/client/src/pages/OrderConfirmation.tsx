@@ -71,6 +71,14 @@ export default function OrderConfirmation() {
 
   const paymentAccount =
     order.paymentMethod === "paypal" ? PAYPAL_ACCOUNT : ALIPAY_ACCOUNT;
+  const setupFee = (order.items ?? []).reduce((sum: number, item: any) => {
+    if (!item.specification) return sum;
+    try {
+      return sum + Number(JSON.parse(item.specification).setupFee || 0);
+    } catch {
+      return sum;
+    }
+  }, 0);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -135,8 +143,25 @@ export default function OrderConfirmation() {
             <div className="space-y-3">
               {order.items?.map((item: any) => {
                 const product = item.product;
-                if (!product) return null;
-                const images = product.images ? JSON.parse(product.images) : [];
+                const images = item.productImage
+                  ? [item.productImage]
+                  : product?.images
+                    ? JSON.parse(product.images)
+                    : [];
+                const name = item.productName || product?.name;
+                if (!name) return null;
+                let specText = "";
+                let setupFee = 0;
+                if (item.specification) {
+                  try {
+                    const spec = JSON.parse(item.specification);
+                    setupFee = Number(spec.setupFee || 0);
+                    specText = `${spec.lengthMm}×${spec.widthMm}×${spec.heightMm} mm`;
+                  } catch {
+                    specText = "";
+                  }
+                }
+                const lineTotal = Number(item.subtotal ?? item.price * item.quantity);
                 return (
                   <div key={item.id} className="flex gap-3">
                     <div className="w-14 h-14 rounded bg-muted overflow-hidden shrink-0">
@@ -147,13 +172,19 @@ export default function OrderConfirmation() {
                       />
                     </div>
                     <div className="flex-1">
-                      <p className="text-sm font-medium">{product.name}</p>
+                      <p className="text-sm font-medium">{name}</p>
                       <p className="text-xs text-muted-foreground">
                         {t("orderConfirmation.qty")} {item.quantity}
+                        {specText ? ` · ${specText}` : ""}
                       </p>
+                      {setupFee > 0 && (
+                        <p className="text-xs text-muted-foreground">
+                          {t("quote.setupFee")} ${setupFee.toFixed(2)}
+                        </p>
+                      )}
                     </div>
                     <span className="text-sm font-medium">
-                      ${(Number(product.price) * item.quantity).toFixed(2)}
+                      ${lineTotal.toFixed(2)}
                     </span>
                   </div>
                 );
@@ -167,6 +198,14 @@ export default function OrderConfirmation() {
                 </span>
                 <span>${Number(order.subtotal).toFixed(2)}</span>
               </div>
+              {setupFee > 0 && (
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">
+                    {t("quote.setupFee")}
+                  </span>
+                  <span>${setupFee.toFixed(2)}</span>
+                </div>
+              )}
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">
                   {t("orderConfirmation.shipping")}

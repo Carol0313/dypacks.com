@@ -7,8 +7,10 @@ import {
   adminProcedure,
   router,
 } from "./_core/trpc";
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { nanoid } from "nanoid";
+import { QuoteError, calculateQuote } from "@shared/quote";
 import * as db from "./db";
 import { storagePut } from "./storage";
 import { ossEnabled, ossPut } from "./_core/oss";
@@ -377,6 +379,123 @@ const orderRouter = router({
       await db.clearCart(ctx.user.id);
 
       return { orderId, orderNumber };
+    }),
+  placeCustom: publicProcedure
+    .input(
+      z.object({
+        productId: z.number().int().positive(),
+        lengthMm: z.number().int(),
+        widthMm: z.number().int(),
+        heightMm: z.number().int(),
+        quantity: z.number().int(),
+        material: z.enum(["standard", "thick", "kraft", "specialty"]),
+        finishes: z
+          .array(z.enum(["foil", "emboss", "spotUv", "magnet"]))
+          .max(4),
+        print: z.enum(["none", "oneColor", "cmyk", "cmykPms"]),
+        requirements: z.string().max(2000).optional(),
+        contactName: z.string().min(1).max(128),
+        email: z.string().email().max(320),
+        phone: z.string().min(1).max(32),
+        country: z.string().min(1).max(64),
+        state: z.string().min(1).max(64),
+        city: z.string().min(1).max(64),
+        address: z.string().min(1).max(500),
+        zipCode: z.string().min(1).max(16),
+        paymentMethod: z.enum(["alipay", "paypal"]),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const product = await db.getProductById(input.productId);
+      if (!product || product.status !== "active") {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Product not found",
+        });
+      }
+      let quote;
+      try {
+        quote = calculateQuote({
+          referenceUnitPrice: Number(product.price),
+          minOrderQty: product.minOrderQty,
+          lengthMm: input.lengthMm,
+          widthMm: input.widthMm,
+          heightMm: input.heightMm,
+          quantity: input.quantity,
+          material: input.material,
+          finishes: input.finishes,
+          print: input.print,
+        });
+      } catch (error) {
+        if (error instanceof QuoteError) {
+          throw new TRPCError({ code: "BAD_REQUEST", message: error.message });
+        }
+        throw error;
+      }
+
+      const customer = ctx.user
+        ? ctx.user
+        : await db.findOrCreateGuestUser(input.email, input.contactName);
+      const specification = {
+        lengthMm: input.lengthMm,
+        widthMm: input.widthMm,
+        heightMm: input.heightMm,
+        material: input.material,
+        print: input.print,
+        finishes: input.finishes,
+        requirements: input.requirements?.trim() || "",
+        sample: quote.sample,
+        unitPrice: quote.unitPrice,
+        setupFee: quote.setupFee,
+        areaRatio: quote.areaRatio,
+        leadTimeDays: quote.leadTimeDays,
+        email: input.email.trim().toLowerCase(),
+      };
+      const note = [
+        `${input.lengthMm}×${input.widthMm}×${input.heightMm} mm`,
+        input.material,
+        input.print,
+        input.finishes.length ? input.finishes.join(", ") : "no extra finish",
+        quote.sample ? "sample" : "production",
+        input.requirements?.trim() || "",
+        input.email.trim().toLowerCase(),
+      ]
+        .filter(Boolean)
+        .join(" | ");
+      const orderNumber = `DY${Date.now().toString(36).toUpperCase()}${nanoid(4).toUpperCase()}`;
+      const image = product.images ? JSON.parse(product.images)[0] : null;
+      const orderId = await db.createOrder(
+        {
+          orderNumber,
+          userId: customer.id,
+          paymentMethod: input.paymentMethod,
+          subtotal: quote.goodsTotal.toFixed(2),
+          shippingFee: "0.00",
+          total: quote.total.toFixed(2),
+          shippingName: input.contactName,
+          shippingPhone: input.phone,
+          shippingCountry: input.country,
+          shippingState: input.state,
+          shippingCity: input.city,
+          shippingAddress: input.address,
+          shippingZipCode: input.zipCode,
+          note,
+        },
+        [
+          {
+            orderId: 0,
+            productId: product.id,
+            productName: product.name,
+            productImage: image,
+            price: quote.unitPrice.toFixed(2),
+            quantity: quote.quantity,
+            subtotal: quote.goodsTotal.toFixed(2),
+            specification: JSON.stringify(specification),
+          },
+        ]
+      );
+
+      return { orderId, orderNumber, quote };
     }),
   myOrders: protectedProcedure.query(async ({ ctx }) => {
     return db.getUserOrders(ctx.user.id);
