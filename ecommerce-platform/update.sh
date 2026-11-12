@@ -28,12 +28,25 @@ if ! command -v node >/dev/null 2>&1 || ! command -v git >/dev/null 2>&1; then
 fi
 
 cd "${ROOT}"
-log_info "拉取 origin/main..."
-git fetch origin main
-# 服务器上原来的分支可能叫 master，且没有设置上游。
-# 部署以 GitHub 的 main 为准。
-git checkout -B main origin/main
-git branch --set-upstream-to=origin/main main
+log_info "拉取 GitHub main..."
+if ! git remote get-url github >/dev/null 2>&1; then
+  git remote add github https://github.com/Carol0313/dypacks.com.git
+fi
+GIT_TERMINAL_PROMPT=0 git fetch github main
+
+# 服务器上另有未跟踪文件时，Git 会拒绝切换。先移走和目标版本重名的文件。
+git ls-tree -r --name-only github/main | sort > /tmp/dypacks-target.txt
+git ls-files --others --exclude-standard | sort > /tmp/dypacks-untracked.txt
+mkdir -p /root/dypacks-blocked
+while IFS= read -r f; do
+  [ -z "${f}" ] && continue
+  mkdir -p "/root/dypacks-blocked/$(dirname "${f}")"
+  mv "${f}" "/root/dypacks-blocked/${f}"
+  log_warn "已移走未跟踪文件: ${f}"
+done < <(comm -12 /tmp/dypacks-target.txt /tmp/dypacks-untracked.txt)
+
+git checkout -B deploy github/main
+log_info "当前版本: $(git rev-parse --short HEAD) $(git log -1 --format=%s)"
 
 cd "${APP}"
 if [ ! -f .env ] && [ -f "${ROOT}/.env" ]; then
