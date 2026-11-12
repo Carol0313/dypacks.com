@@ -8,14 +8,21 @@ import { ALIPAY_ACCOUNT, PAYPAL_ACCOUNT } from "@/lib/constants";
 import { trpc } from "@/lib/trpc";
 import {
   FINISHES,
-  MATERIALS,
   PRINTS,
   QuoteError,
+  REGIONS,
+  SHIPPING_METHODS,
+  THICKNESSES,
   calculateQuote,
+  calculateShipping,
   type FinishId,
   type MaterialId,
   type PrintId,
   type Quote,
+  type RegionId,
+  type ShippingMethod,
+  type ShippingQuote,
+  type ThicknessId,
 } from "@shared/quote";
 import { CheckCircle, Copy } from "lucide-react";
 import { useTranslation } from "react-i18next";
@@ -29,11 +36,37 @@ type ProductQuoteSource = {
   minOrderQty: number;
 };
 
-const MATERIAL_KEY: Record<MaterialId, string> = {
-  standard: "quote.materialStandard",
-  thick: "quote.materialThick",
+const PLATFORM_MATERIALS = [
+  "greyboard",
+  "art",
+  "gold",
+  "silver",
+  "kraft",
+  "food",
+] as const satisfies readonly MaterialId[];
+
+const MATERIAL_KEY: Record<(typeof PLATFORM_MATERIALS)[number], string> = {
+  greyboard: "quote.materialGreyboard",
+  art: "quote.materialArt",
+  gold: "quote.materialGold",
+  silver: "quote.materialSilver",
   kraft: "quote.materialKraft",
-  specialty: "quote.materialSpecialty",
+  food: "quote.materialFood",
+};
+
+const THICKNESS_KEY: Record<ThicknessId, string> = {
+  g1200: "quote.thickness1200",
+  g1500: "quote.thickness1500",
+  g2000: "quote.thickness2000",
+};
+
+const REGION_KEY: Record<RegionId, string> = {
+  china: "quote.regionChina",
+  eastAsia: "quote.regionEastAsia",
+  southeastAsia: "quote.regionSoutheastAsia",
+  europe: "quote.regionEurope",
+  northAmerica: "quote.regionNorthAmerica",
+  other: "quote.regionOther",
 };
 
 const PRINT_KEY: Record<PrintId, string> = {
@@ -61,8 +94,11 @@ export default function CustomOrder({ product }: { product: ProductQuoteSource }
   const [widthMm, setWidthMm] = useState(150);
   const [heightMm, setHeightMm] = useState(60);
   const [quantity, setQuantity] = useState(Math.max(1, product.minOrderQty || 1));
-  const [material, setMaterial] = useState<MaterialId>("standard");
+  const [material, setMaterial] = useState<MaterialId>("greyboard");
+  const [thickness, setThickness] = useState<ThicknessId>("g1200");
   const [print, setPrint] = useState<PrintId>("cmyk");
+  const [shippingMethod, setShippingMethod] = useState<ShippingMethod>("express");
+  const [region, setRegion] = useState<RegionId>("northAmerica");
   const [finishes, setFinishes] = useState<FinishId[]>([]);
   const [requirements, setRequirements] = useState("");
   const [checkingOut, setCheckingOut] = useState(false);
@@ -81,6 +117,7 @@ export default function CustomOrder({ product }: { product: ProductQuoteSource }
     orderId: number;
     orderNumber: string;
     quote: Quote;
+    shipping: ShippingQuote;
   } | null>(null);
 
   const quoteResult = useMemo(() => {
@@ -94,6 +131,7 @@ export default function CustomOrder({ product }: { product: ProductQuoteSource }
           heightMm,
           quantity,
           material,
+          thickness,
           finishes,
           print,
         }),
@@ -111,6 +149,7 @@ export default function CustomOrder({ product }: { product: ProductQuoteSource }
     heightMm,
     quantity,
     material,
+    thickness,
     finishes,
     print,
     t,
@@ -162,8 +201,11 @@ export default function CustomOrder({ product }: { product: ProductQuoteSource }
       heightMm,
       quantity,
       material,
+      thickness,
       finishes,
       print,
+      shippingMethod,
+      region,
       requirements: requirements.trim() || undefined,
       contactName: name,
       email,
@@ -201,15 +243,19 @@ export default function CustomOrder({ product }: { product: ProductQuoteSource }
               <span>{t("quote.setupFee")}</span>
               <span>{money(placed.quote.setupFee)}</span>
             </div>
+            <div className="flex justify-between">
+              <span>{t("quote.shipping")}</span>
+              <span>{money(placed.shipping.fee)}</span>
+            </div>
             <div className="flex justify-between font-semibold">
               <span>{t("quote.orderTotal")}</span>
-              <span>{money(placed.quote.total)}</span>
+              <span>{money(placed.quote.total + placed.shipping.fee)}</span>
             </div>
           </div>
           <div>
             <p className="text-sm mb-2">
               {t("quote.payAmount", {
-                amount: placed.quote.total.toFixed(2),
+                amount: (placed.quote.total + placed.shipping.fee).toFixed(2),
                 method: paymentMethod === "paypal" ? "PayPal" : "Alipay",
               })}
             </p>
@@ -243,6 +289,16 @@ export default function CustomOrder({ product }: { product: ProductQuoteSource }
   }
 
   const quote = "quote" in quoteResult ? quoteResult.quote : null;
+  const shipping = quote
+    ? calculateShipping({
+        lengthMm,
+        widthMm,
+        heightMm,
+        quantity: quote.quantity,
+        method: shippingMethod,
+        region,
+      })
+    : null;
 
   return (
     <Card className="mb-6 border-gold/30">
@@ -293,7 +349,7 @@ export default function CustomOrder({ product }: { product: ProductQuoteSource }
               value={material}
               onChange={event => setMaterial(event.target.value as MaterialId)}
             >
-              {MATERIALS.map(item => (
+              {PLATFORM_MATERIALS.map(item => (
                 <option key={item} value={item}>
                   {t(MATERIAL_KEY[item])}
                 </option>
@@ -315,6 +371,21 @@ export default function CustomOrder({ product }: { product: ProductQuoteSource }
             </select>
           </label>
         </div>
+
+        <label className="block text-sm mb-3">
+          <span className="text-muted-foreground">{t("quote.thickness")}</span>
+          <select
+            className="mt-1 flex h-9 w-full rounded-md border border-input bg-transparent px-3 text-sm"
+            value={thickness}
+            onChange={event => setThickness(event.target.value as ThicknessId)}
+          >
+            {THICKNESSES.map(item => (
+              <option key={item} value={item}>
+                {t(THICKNESS_KEY[item])}
+              </option>
+            ))}
+          </select>
+        </label>
 
         <fieldset className="mb-3">
           <legend className="text-sm text-muted-foreground mb-2">
@@ -362,9 +433,24 @@ export default function CustomOrder({ product }: { product: ProductQuoteSource }
               label={t("quote.leadTime")}
               value={t("quote.days", { range: quote.leadTimeDays })}
             />
+            <p className="text-xs text-muted-foreground pt-1">
+              {t("quote.excludesShipping")}
+            </p>
+            {shipping && (
+              <>
+                <Row
+                  label={`${t("quote.shipping")} · ${shipping.chargeableKg} kg`}
+                  value={money(shipping.fee)}
+                />
+                <Row
+                  label={t("quote.shippingTime")}
+                  value={t("quote.days", { range: shipping.days })}
+                />
+              </>
+            )}
             <div className="flex justify-between font-semibold text-base pt-1">
               <span>{t("quote.orderTotal")}</span>
-              <span>{money(quote.total)}</span>
+              <span>{money(quote.total + (shipping?.fee ?? 0))}</span>
             </div>
           </div>
         ) : (
@@ -392,6 +478,52 @@ export default function CustomOrder({ product }: { product: ProductQuoteSource }
         ) : (
           <form onSubmit={submit} className="space-y-3">
             <h3 className="text-sm font-semibold">{t("quote.contact")}</h3>
+            <label className="block text-sm">
+              <span className="text-muted-foreground">{t("quote.region")}</span>
+              <select
+                className="mt-1 flex h-9 w-full rounded-md border border-input bg-transparent px-3 text-sm"
+                value={region}
+                onChange={event => setRegion(event.target.value as RegionId)}
+              >
+                {REGIONS.map(item => (
+                  <option key={item} value={item}>
+                    {t(REGION_KEY[item])}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <fieldset>
+              <legend className="text-sm text-muted-foreground mb-2">
+                {t("quote.shipping")}
+              </legend>
+              <div className="space-y-2 text-sm">
+                {SHIPPING_METHODS.map(method => (
+                  <label key={method} className="flex items-start gap-2">
+                    <input
+                      type="radio"
+                      name="shipping"
+                      className="mt-1"
+                      checked={shippingMethod === method}
+                      onChange={() => setShippingMethod(method)}
+                    />
+                    <span>
+                      {t(
+                        method === "freight"
+                          ? "quote.shippingFreight"
+                          : "quote.shippingExpress"
+                      )}
+                      <span className="block text-xs text-muted-foreground">
+                        {t(
+                          method === "freight"
+                            ? "quote.shippingFreightHint"
+                            : "quote.shippingExpressHint"
+                        )}
+                      </span>
+                    </span>
+                  </label>
+                ))}
+              </div>
+            </fieldset>
             <div className="grid sm:grid-cols-2 gap-3">
               <Field
                 label={t("quote.name")}

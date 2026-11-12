@@ -115,6 +115,27 @@ export default function Home() {
         </div>
       </section>
 
+      <section className="bg-foreground text-background">
+        <div className="container py-10 md:py-12 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div>
+            <h2
+              className="text-2xl font-bold"
+              style={{ fontFamily: "var(--font-heading)" }}
+            >
+              {t("quote.platformTitle")}
+            </h2>
+            <p className="text-sm text-background/70 mt-1 max-w-xl">
+              {t("quote.platformSubtitle")}
+            </p>
+          </div>
+          <Link href="/order">
+            <Button className="bg-gold hover:bg-gold-dark text-foreground">
+              {t("quote.placeOrder")}
+            </Button>
+          </Link>
+        </div>
+      </section>
+
       {/* Categories Section */}
       <section className="py-16 md:py-20 bg-background">
         <div className="container">

@@ -8,6 +8,7 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
 import Products from "./pages/Products";
 import ProductDetail from "./pages/ProductDetail";
+import Order from "./pages/Order";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 import OrderConfirmation from "./pages/OrderConfirmation";
@@ -30,6 +31,7 @@ function Router() {
     <Switch>
       <Route path={"/"} component={Home} />
       <Route path={"/products"} component={Products} />
+      <Route path={"/order"} component={Order} />
       <Route path={"/product/:slug"} component={ProductDetail} />
       <Route path={"/cart"} component={Cart} />
       <Route path={"/inquiry"} component={InquiryList} />

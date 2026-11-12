@@ -2,7 +2,7 @@ import { afterAll, describe, expect, it, vi } from "vitest";
 import { eq } from "drizzle-orm";
 import { createHash } from "crypto";
 import { orderItems, orders, users } from "../drizzle/schema";
-import { calculateQuote } from "../shared/quote";
+import { calculateQuote, calculateShipping } from "../shared/quote";
 import { appRouter } from "./routers";
 import * as db from "./db";
 import type { TrpcContext } from "./_core/context";
@@ -48,6 +48,14 @@ describe("order.placeCustom", () => {
       finishes: ["foil"],
       print: "cmyk",
     });
+    const shipping = calculateShipping({
+      lengthMm: 260,
+      widthMm: 180,
+      heightMm: 70,
+      quantity: expected.quantity,
+      method: "express",
+      region: "northAmerica",
+    });
 
     const caller = appRouter.createCaller(publicContext());
     const result = await caller.order.placeCustom({
@@ -59,6 +67,8 @@ describe("order.placeCustom", () => {
       material: "thick",
       finishes: ["foil"],
       print: "cmyk",
+      shippingMethod: "express",
+      region: "northAmerica",
       requirements: "Navy ribbon and a velvet insert",
       contactName: "Quote Buyer",
       email,
@@ -78,7 +88,8 @@ describe("order.placeCustom", () => {
 
     const saved = await db.getOrderById(orderId);
     const items = await db.getOrderItems(orderId);
-    expect(saved?.total).toBe(expected.total.toFixed(2));
+    expect(saved?.shippingFee).toBe(shipping.fee.toFixed(2));
+    expect(saved?.total).toBe((expected.total + shipping.fee).toFixed(2));
     expect(saved?.note).toContain("260×180×70 mm");
     expect(items[0]?.price).toBe(expected.unitPrice.toFixed(2));
     const spec = JSON.parse(items[0].specification || "{}");

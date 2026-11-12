@@ -3,6 +3,7 @@ import {
   REFERENCE_SIZE_MM,
   QuoteError,
   calculateQuote,
+  calculateShipping,
   type QuoteInput,
 } from "../shared/quote";
 
@@ -56,6 +57,26 @@ describe("calculateQuote", () => {
     expect(sample.setupFee).toBe(60);
     expect(sample.unitPrice).toBeGreaterThan(8.75);
     expect(sample.leadTimeDays).toBe("5–7");
+  });
+
+  it("prices thicker board above the 1200gsm reference", () => {
+    const thicker = calculateQuote(base({ material: "greyboard", thickness: "g1500" }));
+    expect(thicker.unitPrice).toBeGreaterThan(8.75);
+  });
+
+  it("charges express door delivery above freight to a logistics point", () => {
+    const shared = {
+      lengthMm: 200,
+      widthMm: 150,
+      heightMm: 60,
+      quantity: 200,
+      region: "europe" as const,
+    };
+    const freight = calculateShipping({ ...shared, method: "freight" });
+    const express = calculateShipping({ ...shared, method: "express" });
+    expect(express.fee).toBeGreaterThan(freight.fee);
+    expect(express.days).toBe("3–7");
+    expect(freight.days).toBe("18–35");
   });
 
   it("rejects a size outside the manufacturable range", () => {

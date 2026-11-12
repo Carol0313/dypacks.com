@@ -10,7 +10,11 @@ import {
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { nanoid } from "nanoid";
-import { QuoteError, calculateQuote } from "@shared/quote";
+import {
+  QuoteError,
+  calculateQuote,
+  calculateShipping,
+} from "@shared/quote";
 import * as db from "./db";
 import { storagePut } from "./storage";
 import { ossEnabled, ossPut } from "./_core/oss";
@@ -388,11 +392,31 @@ const orderRouter = router({
         widthMm: z.number().int(),
         heightMm: z.number().int(),
         quantity: z.number().int(),
-        material: z.enum(["standard", "thick", "kraft", "specialty"]),
+        material: z.enum([
+          "greyboard",
+          "art",
+          "gold",
+          "silver",
+          "kraft",
+          "food",
+          "standard",
+          "thick",
+          "specialty",
+        ]),
+        thickness: z.enum(["g1200", "g1500", "g2000"]).optional(),
         finishes: z
           .array(z.enum(["foil", "emboss", "spotUv", "magnet"]))
           .max(4),
         print: z.enum(["none", "oneColor", "cmyk", "cmykPms"]),
+        shippingMethod: z.enum(["freight", "express"]),
+        region: z.enum([
+          "china",
+          "eastAsia",
+          "southeastAsia",
+          "europe",
+          "northAmerica",
+          "other",
+        ]),
         requirements: z.string().max(2000).optional(),
         contactName: z.string().min(1).max(128),
         email: z.string().email().max(320),
@@ -414,6 +438,7 @@ const orderRouter = router({
         });
       }
       let quote;
+      let shipping;
       try {
         quote = calculateQuote({
           referenceUnitPrice: Number(product.price),
@@ -423,8 +448,17 @@ const orderRouter = router({
           heightMm: input.heightMm,
           quantity: input.quantity,
           material: input.material,
+          thickness: input.thickness,
           finishes: input.finishes,
           print: input.print,
+        });
+        shipping = calculateShipping({
+          lengthMm: input.lengthMm,
+          widthMm: input.widthMm,
+          heightMm: input.heightMm,
+          quantity: input.quantity,
+          method: input.shippingMethod,
+          region: input.region,
         });
       } catch (error) {
         if (error instanceof QuoteError) {
@@ -441,8 +475,14 @@ const orderRouter = router({
         widthMm: input.widthMm,
         heightMm: input.heightMm,
         material: input.material,
+        thickness: input.thickness ?? "g1200",
         print: input.print,
         finishes: input.finishes,
+        shippingMethod: shipping.method,
+        region: shipping.region,
+        shippingFee: shipping.fee,
+        chargeableKg: shipping.chargeableKg,
+        shippingDays: shipping.days,
         requirements: input.requirements?.trim() || "",
         sample: quote.sample,
         unitPrice: quote.unitPrice,
@@ -459,6 +499,7 @@ const orderRouter = router({
         quote.sample ? "sample" : "production",
         input.requirements?.trim() || "",
         input.email.trim().toLowerCase(),
+        `${shipping.method}/${shipping.region}`,
       ]
         .filter(Boolean)
         .join(" | ");
@@ -470,8 +511,8 @@ const orderRouter = router({
           userId: customer.id,
           paymentMethod: input.paymentMethod,
           subtotal: quote.goodsTotal.toFixed(2),
-          shippingFee: "0.00",
-          total: quote.total.toFixed(2),
+          shippingFee: shipping.fee.toFixed(2),
+          total: (quote.total + shipping.fee).toFixed(2),
           shippingName: input.contactName,
           shippingPhone: input.phone,
           shippingCountry: input.country,
@@ -495,7 +536,7 @@ const orderRouter = router({
         ]
       );
 
-      return { orderId, orderNumber, quote };
+      return { orderId, orderNumber, quote, shipping };
     }),
   myOrders: protectedProcedure.query(async ({ ctx }) => {
     return db.getUserOrders(ctx.user.id);

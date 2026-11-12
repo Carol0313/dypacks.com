@@ -11,19 +11,53 @@
 
 export const REFERENCE_SIZE_MM = { length: 200, width: 150, height: 60 } as const;
 
-export const MATERIALS = ["standard", "thick", "kraft", "specialty"] as const;
+export const MATERIALS = [
+  "greyboard",
+  "art",
+  "gold",
+  "silver",
+  "kraft",
+  "food",
+  "standard",
+  "thick",
+  "specialty",
+] as const;
+export const THICKNESSES = ["g1200", "g1500", "g2000"] as const;
 export const FINISHES = ["foil", "emboss", "spotUv", "magnet"] as const;
 export const PRINTS = ["none", "oneColor", "cmyk", "cmykPms"] as const;
+export const SHIPPING_METHODS = ["freight", "express"] as const;
+export const REGIONS = [
+  "china",
+  "eastAsia",
+  "southeastAsia",
+  "europe",
+  "northAmerica",
+  "other",
+] as const;
 
 export type MaterialId = (typeof MATERIALS)[number];
+export type ThicknessId = (typeof THICKNESSES)[number];
 export type FinishId = (typeof FINISHES)[number];
 export type PrintId = (typeof PRINTS)[number];
+export type ShippingMethod = (typeof SHIPPING_METHODS)[number];
+export type RegionId = (typeof REGIONS)[number];
 
 const MATERIAL_FACTOR: Record<MaterialId, number> = {
+  greyboard: 1,
+  art: 1.08,
+  gold: 1.35,
+  silver: 1.32,
+  kraft: 0.86,
+  food: 1.22,
   standard: 1,
   thick: 1.18,
-  kraft: 0.86,
   specialty: 1.28,
+};
+
+const THICKNESS_FACTOR: Record<ThicknessId, number> = {
+  g1200: 1,
+  g1500: 1.15,
+  g2000: 1.32,
 };
 
 const PRINT_FACTOR: Record<PrintId, number> = {
@@ -54,8 +88,17 @@ export type QuoteInput = {
   heightMm: number;
   quantity: number;
   material: MaterialId;
+  thickness?: ThicknessId;
   finishes: FinishId[];
   print: PrintId;
+};
+
+export type ShippingQuote = {
+  method: ShippingMethod;
+  region: RegionId;
+  chargeableKg: number;
+  fee: number;
+  days: string;
 };
 
 export type Quote = {
@@ -131,6 +174,7 @@ export function calculateQuote(input: QuoteInput): Quote {
     input.referenceUnitPrice *
     areaRatio *
     MATERIAL_FACTOR[input.material] *
+    THICKNESS_FACTOR[input.thickness ?? "g1200"] *
     PRINT_FACTOR[input.print] *
     (sample ? 1 : volumeFactor(input.quantity));
   const unitPrice = roundMoney(
@@ -154,5 +198,78 @@ export function calculateQuote(input: QuoteInput): Quote {
     sample,
     leadTimeDays,
     currency: "USD",
+  };
+}
+
+const SHIPPING_RATE: Record<ShippingMethod, Record<RegionId, number>> = {
+  freight: {
+    china: 1.8,
+    eastAsia: 3.2,
+    southeastAsia: 3.6,
+    europe: 4.8,
+    northAmerica: 5.2,
+    other: 6,
+  },
+  express: {
+    china: 6.5,
+    eastAsia: 9,
+    southeastAsia: 10,
+    europe: 13,
+    northAmerica: 14,
+    other: 16,
+  },
+};
+
+const SHIPPING_MINIMUM: Record<ShippingMethod, number> = {
+  freight: 45,
+  express: 32,
+};
+
+const SHIPPING_DAYS: Record<ShippingMethod, string> = {
+  freight: "18–35",
+  express: "3–7",
+};
+
+export function calculateShipping(input: {
+  lengthMm: number;
+  widthMm: number;
+  heightMm: number;
+  quantity: number;
+  method: ShippingMethod;
+  region: RegionId;
+}): ShippingQuote {
+  assertSize("Length", input.lengthMm, 20, 600);
+  assertSize("Width", input.widthMm, 20, 600);
+  assertSize("Height", input.heightMm, 10, 400);
+  if (!Number.isInteger(input.quantity) || input.quantity < 1) {
+    throw new QuoteError("Quantity must be between 1 and 100000");
+  }
+  const volumeCm3 =
+    (input.lengthMm / 10) *
+    (input.widthMm / 10) *
+    (input.heightMm / 10) *
+    input.quantity *
+    1.15;
+  const divisor = input.method === "express" ? 5000 : 6000;
+  const volumetricKg = volumeCm3 / divisor;
+  const actualKg =
+    (wrapAreaMm2(input.lengthMm, input.widthMm, input.heightMm) *
+      0.0011 *
+      input.quantity) /
+    1000;
+  const chargeableKg =
+    Math.round(Math.max(0.5, volumetricKg, actualKg) * 100) / 100;
+  const fee = roundMoney(
+    Math.max(
+      SHIPPING_MINIMUM[input.method],
+      chargeableKg * SHIPPING_RATE[input.method][input.region]
+    )
+  );
+  return {
+    method: input.method,
+    region: input.region,
+    chargeableKg,
+    fee,
+    days: SHIPPING_DAYS[input.method],
   };
 }
