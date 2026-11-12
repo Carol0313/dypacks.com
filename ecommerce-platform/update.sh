@@ -28,10 +28,12 @@ if ! command -v node >/dev/null 2>&1 || ! command -v git >/dev/null 2>&1; then
 fi
 
 cd "${ROOT}"
-log_info "拉取 main..."
+log_info "拉取 origin/main..."
 git fetch origin main
-git checkout main
-git pull --ff-only origin main
+# 服务器上原来的分支可能叫 master，且没有设置上游。
+# 部署以 GitHub 的 main 为准。
+git checkout -B main origin/main
+git branch --set-upstream-to=origin/main main
 
 cd "${APP}"
 if [ ! -f .env ] && [ -f "${ROOT}/.env" ]; then
