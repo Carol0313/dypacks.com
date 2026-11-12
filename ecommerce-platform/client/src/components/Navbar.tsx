@@ -1,5 +1,4 @@
 import { useAuth } from "@/_core/hooks/useAuth";
-import { getLoginUrl } from "@/const";
 import { BRAND_NAME, LOGO_URL } from "@/lib/constants";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
@@ -214,14 +213,14 @@ export default function Navbar() {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <a href={getLoginUrl()}>
+            <Link href="/sign-in">
               <Button
                 size="sm"
                 className="bg-charcoal text-white hover:bg-charcoal-dark"
               >
-                {t("navbar.signIn")}
+                {t("navbar.getQuote")}
               </Button>
-            </a>
+            </Link>
           )}
 
           {/* Mobile Menu */}

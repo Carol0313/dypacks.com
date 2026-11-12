@@ -13,7 +13,8 @@
     "inquiryList": "Lista de Consultas",
     "adminPanel": "Panel de Administración",
     "signOut": "Cerrar Sesión",
-    "signIn": "Iniciar Sesión"
+    "signIn": "Iniciar Sesión",
+    "getQuote": "Solicitar Cotización"
   },
   "footer": {
     "description": "Su socio de confianza para soluciones de embalaje personalizado premium. Nos especializamos en cajas laminadas de cartón gris de alta calidad, embalaje de regalo y más.",
@@ -106,6 +107,9 @@
     "addToInquiryList": "Agregar a Lista de Consultas",
     "adding": "Agregando...",
     "requestQuote": "Solicitar Cotización",
+    "quoteWithoutAccount": "No se necesita cuenta",
+    "useRequestQuote": "Use el formulario de cotización abajo — nuestro equipo responderá en 24 horas.",
+    "noAccountNeeded": "Deje sus datos abajo para obtener una cotización. No necesita crear una cuenta.",
     "customDesign": "Diseño Personalizado",
     "globalShipping": "Envío Global",
     "qualityAssured": "Calidad Asegurada",
@@ -371,6 +375,11 @@
     "signInRequired": "Inicio de Sesión Requerido",
     "signInToView": "Por favor inicie sesión para ver su lista de consultas.",
     "signIn": "Iniciar Sesión",
+    "noAccountTitle": "Solicite una cotización sin iniciar sesión",
+    "noAccountBody": "Las listas de consultas guardadas requieren una cuenta. Para la mayoría de compradores, lo más rápido es una cotización instantánea o contactar a ventas.",
+    "getInstantQuote": "Cotización instantánea",
+    "contactSales": "Contactar ventas",
+    "returningSignIn": "¿Cliente recurrente? Iniciar sesión",
     "submittedSuccess": "¡Consulta Enviada con Éxito!",
     "inquiryNumber": "Su número de consulta es:",
     "teamWillReview": "Nuestro equipo revisará su consulta y se comunicará con usted dentro de las 24 horas. Puede rastrear el estado en su panel de cuenta.",
@@ -407,7 +416,18 @@
     "sendInquiry": "Enviar Consulta"
   },
   "login": {
-    "adminDashboard": "Panel de Administración de DY Packs"
+    "adminDashboard": "Panel de Administración de DY Packs",
+    "staffOnly": "Solo personal"
+  },
+  "signIn": {
+    "pageTitle": "Solicitar Cotización",
+    "headline": "No necesita cuenta para cotizar",
+    "subtitle": "DY Packs es un fabricante B2B de embalaje. Cuéntenos qué necesita y nuestro equipo responderá en 24 horas — no es necesario iniciar sesión como cliente.",
+    "getInstantQuote": "Cotización instantánea",
+    "contactSales": "Contactar ventas",
+    "browseProducts": "Ver productos",
+    "returningCustomer": "¿Ya tiene una cuenta?",
+    "continueWithAccount": "Continuar e iniciar sesión"
   },
   "notFound": {
     "404": "404",

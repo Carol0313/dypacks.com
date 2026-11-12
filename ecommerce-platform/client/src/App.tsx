@@ -21,6 +21,7 @@ import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Admin from "./pages/Admin";
 import Login from "./pages/Login";
+import SignIn from "./pages/SignIn";
 import BaiduPromotionLogin from "./pages/BaiduPromotionLogin";
 import InquiryList from "./pages/InquiryList";
 import Privacy from "./pages/Privacy";
@@ -46,6 +47,7 @@ function Router() {
       <Route path={"/contact"} component={Contact} />
       <Route path={"/privacy"} component={Privacy} />
       <Route path={"/terms"} component={Terms} />
+      <Route path={"/sign-in"} component={SignIn} />
       <Route path={"/login"} component={Login} />
       <Route path={"/baidu-login"} component={BaiduPromotionLogin} />
       <Route path={"/admin"} component={Admin} />

@@ -68,7 +68,9 @@ export default function LoginPage() {
           <CardTitle className="text-2xl font-bold">
             {t("login.adminDashboard")}
           </CardTitle>
-          <p className="text-sm text-muted-foreground mt-1">管理员登录</p>
+          <p className="text-sm text-muted-foreground mt-1">
+            {t("login.staffOnly")}
+          </p>
         </CardHeader>
         <CardContent>
           <Form {...form}>

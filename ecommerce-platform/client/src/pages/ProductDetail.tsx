@@ -2,7 +2,6 @@ import CustomOrder from "@/components/CustomOrder";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useAuth } from "@/_core/hooks/useAuth";
-import { getLoginUrl } from "@/const";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -175,7 +174,12 @@ export default function ProductDetail() {
 
   const handleAddToCart = () => {
     if (!isAuthenticated) {
-      window.location.href = getLoginUrl();
+      toast.message(t("productDetail.quoteWithoutAccount"), {
+        description: t("productDetail.useRequestQuote"),
+      });
+      document
+        .getElementById("request-quote")
+        ?.scrollIntoView({ behavior: "smooth", block: "start" });
       return;
     }
     addToCartMutation.mutate(
@@ -191,7 +195,12 @@ export default function ProductDetail() {
 
   const handleAddToInquiry = () => {
     if (!isAuthenticated) {
-      window.location.href = getLoginUrl();
+      toast.message(t("productDetail.quoteWithoutAccount"), {
+        description: t("productDetail.useRequestQuote"),
+      });
+      document
+        .getElementById("request-quote")
+        ?.scrollIntoView({ behavior: "smooth", block: "start" });
       return;
     }
     addToInquiryMutation.mutate(
@@ -498,13 +507,16 @@ export default function ProductDetail() {
         <ProductReviews productId={product.id} />
 
         {/* Contact Form Section */}
-        <div className="mt-12 pt-8 border-t">
+        <div id="request-quote" className="mt-12 pt-8 border-t scroll-mt-24">
           <h2
             className="text-xl font-bold text-foreground mb-4"
             style={{ fontFamily: "var(--font-heading)" }}
           >
             {t("productDetail.requestQuote")}
           </h2>
+          <p className="text-sm text-muted-foreground mb-4 max-w-2xl">
+            {t("productDetail.noAccountNeeded")}
+          </p>
           <div className="max-w-2xl">
             <ContactForm product={product.name} source="product_page" />
           </div>

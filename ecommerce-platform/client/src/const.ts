@@ -1,13 +1,12 @@
 export { COOKIE_NAME, ONE_YEAR_MS } from "@shared/const";
 
-// Generate login URL at runtime so redirect URI reflects the current origin.
-export const getLoginUrl = () => {
-  const oauthPortalUrl = import.meta.env.VITE_OAUTH_PORTAL_URL;
+/** Admin staff login page — never send storefront customers here. */
+export const getAdminLoginUrl = () => "/login";
 
-  // If no OAuth portal configured, use local login
-  if (!oauthPortalUrl) {
-    return "/login";
-  }
+/** OAuth portal URL for returning customers, or null when not configured. */
+export const getOAuthLoginUrl = (): string | null => {
+  const oauthPortalUrl = import.meta.env.VITE_OAUTH_PORTAL_URL;
+  if (!oauthPortalUrl) return null;
 
   const appId = import.meta.env.VITE_APP_ID;
   const redirectUri = `${window.location.origin}/api/oauth/callback`;
@@ -20,4 +19,12 @@ export const getLoginUrl = () => {
   url.searchParams.set("type", "signIn");
 
   return url.toString();
+};
+
+/**
+ * Customer-facing auth entry.
+ * Prefer OAuth when configured; otherwise the B2B sign-in guide (not admin login).
+ */
+export const getLoginUrl = () => {
+  return getOAuthLoginUrl() ?? "/sign-in";
 };

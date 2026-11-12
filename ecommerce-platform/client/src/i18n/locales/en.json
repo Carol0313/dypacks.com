@@ -13,7 +13,8 @@
     "inquiryList": "Inquiry List",
     "adminPanel": "Admin Panel",
     "signOut": "Sign Out",
-    "signIn": "Sign In"
+    "signIn": "Sign In",
+    "getQuote": "Get a Quote"
   },
   "footer": {
     "description": "Your trusted partner for premium custom packaging solutions. We specialize in high-quality grey board laminated boxes, gift packaging, and more.",
@@ -106,6 +107,9 @@
     "addToInquiryList": "Add to Inquiry List",
     "adding": "Adding...",
     "requestQuote": "Request a Quote",
+    "quoteWithoutAccount": "No account needed",
+    "useRequestQuote": "Use the quote form below — our team will reply within 24 hours.",
+    "noAccountNeeded": "Leave your details below to get a quote. You do not need to create an account.",
     "customDesign": "Custom Design",
     "globalShipping": "Global Shipping",
     "qualityAssured": "Quality Assured",
@@ -371,6 +375,11 @@
     "signInRequired": "Sign In Required",
     "signInToView": "Please sign in to view your inquiry list.",
     "signIn": "Sign In",
+    "noAccountTitle": "Request a quote without signing in",
+    "noAccountBody": "Saved inquiry lists need an account. For most buyers, the fastest path is an instant quote or contacting our sales team.",
+    "getInstantQuote": "Get an instant quote",
+    "contactSales": "Contact sales",
+    "returningSignIn": "Returning customer? Sign in",
     "submittedSuccess": "Inquiry Submitted Successfully!",
     "inquiryNumber": "Your inquiry number is:",
     "teamWillReview": "Our team will review your inquiry and get back to you within 24 hours. You can track the status in your account dashboard.",
@@ -407,7 +416,18 @@
     "sendInquiry": "Send Inquiry"
   },
   "login": {
-    "adminDashboard": "DY Packs Admin Dashboard"
+    "adminDashboard": "DY Packs Admin Dashboard",
+    "staffOnly": "Staff login only"
+  },
+  "signIn": {
+    "pageTitle": "Get a Quote",
+    "headline": "No account needed to get a quote",
+    "subtitle": "DY Packs is a B2B packaging manufacturer. Tell us what you need and our team will reply within 24 hours — you do not need to sign in as a customer.",
+    "getInstantQuote": "Get an instant quote",
+    "contactSales": "Contact sales",
+    "browseProducts": "Browse products",
+    "returningCustomer": "Already have an account?",
+    "continueWithAccount": "Continue to sign in"
   },
   "notFound": {
     "404": "404",

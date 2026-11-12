@@ -13,7 +13,8 @@
     "inquiryList": "Talep Listesi",
     "adminPanel": "Yönetici Paneli",
     "signOut": "Çıkış Yap",
-    "signIn": "Giriş Yap"
+    "signIn": "Giriş Yap",
+    "getQuote": "Teklif Al"
   },
   "footer": {
     "description": "Premium özel ambalaj çözümleri için güvenilir ortağınız. Yüksek kaliteli gri karton kaplamalı kutular, hediye ambalajı ve daha fazlasında uzmanız.",
@@ -106,6 +107,9 @@
     "addToInquiryList": "Talep Listesine Ekle",
     "adding": "Ekleniyor...",
     "requestQuote": "Teklif İste",
+    "quoteWithoutAccount": "Hesap gerekmez",
+    "useRequestQuote": "Aşağıdaki teklif formunu kullanın — ekibimiz 24 saat içinde yanıtlar.",
+    "noAccountNeeded": "Teklif için bilgilerinizi bırakın. Hesap oluşturmanıza gerek yok.",
     "customDesign": "Özel Tasarım",
     "globalShipping": "Küresel Kargo",
     "qualityAssured": "Kalite Garantisi",
@@ -371,6 +375,11 @@
     "signInRequired": "Giriş Gerekli",
     "signInToView": "Talep listenizi görüntülemek için lütfen giriş yapın.",
     "signIn": "Giriş Yap",
+    "noAccountTitle": "Giriş yapmadan teklif alın",
+    "noAccountBody": "Kayıtlı talep listeleri hesap gerektirir. Çoğu alıcı için en hızlı yol anında teklif veya satış ekibiyle iletişimdir.",
+    "getInstantQuote": "Anında teklif al",
+    "contactSales": "Satışa ulaşın",
+    "returningSignIn": "Dönen müşteri misiniz? Giriş yapın",
     "submittedSuccess": "Talep Başarıyla Gönderildi!",
     "inquiryNumber": "Talep numaranız:",
     "teamWillReview": "Ekibimiz talebinizi inceleyecek ve 24 saat içinde size geri dönecektir. Durumu hesap panelinizden takip edebilirsiniz.",
@@ -407,7 +416,18 @@
     "sendInquiry": "Talep Gönder"
   },
   "login": {
-    "adminDashboard": "DY Packs Yönetici Paneli"
+    "adminDashboard": "DY Packs Yönetici Paneli",
+    "staffOnly": "Yalnızca personel girişi"
+  },
+  "signIn": {
+    "pageTitle": "Teklif Al",
+    "headline": "Teklif için hesap gerekmez",
+    "subtitle": "DY Packs bir B2B ambalaj üreticisidir. İhtiyacınızı yazın, ekibimiz 24 saat içinde dönüş yapsın — müşteri olarak giriş yapmanız gerekmez.",
+    "getInstantQuote": "Anında teklif al",
+    "contactSales": "Satışa ulaşın",
+    "browseProducts": "Ürünlere göz atın",
+    "returningCustomer": "Zaten hesabınız var mı?",
+    "continueWithAccount": "Girişe devam et"
   },
   "notFound": {
     "404": "404",

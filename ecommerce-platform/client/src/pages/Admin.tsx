@@ -803,9 +803,14 @@ export default function Admin() {
           <p className="text-sm text-muted-foreground mb-6">
             You need admin privileges to access this page.
           </p>
-          <Link href="/">
-            <Button>Go Home</Button>
-          </Link>
+          <div className="flex gap-3 justify-center">
+            <Link href="/login">
+              <Button>Staff Login</Button>
+            </Link>
+            <Link href="/">
+              <Button variant="outline">Go Home</Button>
+            </Link>
+          </div>
         </div>
       </div>
     );

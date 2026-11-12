@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { useLocation } from "wouter";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -28,11 +27,6 @@ import {
   CheckCircle2,
 } from "lucide-react";
 
-const loginSchema = z.object({
-  username: z.string().min(1, "请输入用户名"),
-  password: z.string().min(1, "请输入密码"),
-});
-
 const inquirySchema = z.object({
   companyName: z.string().min(1, "请输入公司名称"),
   contactName: z.string().min(1, "请输入联系人"),
@@ -41,7 +35,6 @@ const inquirySchema = z.object({
   product: z.string().optional(),
 });
 
-type LoginValues = z.infer<typeof loginSchema>;
 type InquiryValues = z.infer<typeof inquirySchema>;
 
 const highlights = [
@@ -68,8 +61,6 @@ const highlights = [
 ];
 
 export default function BaiduPromotionLoginPage() {
-  const [, setLocation] = useLocation();
-  const [activeTab, setActiveTab] = useState<"inquiry" | "login">("inquiry");
   const [submitted, setSubmitted] = useState(false);
 
   useEffect(() => {
@@ -100,11 +91,6 @@ export default function BaiduPromotionLoginPage() {
     };
   }, []);
 
-  const loginForm = useForm<LoginValues>({
-    resolver: zodResolver(loginSchema),
-    defaultValues: { username: "", password: "" },
-  });
-
   const inquiryForm = useForm<InquiryValues>({
     resolver: zodResolver(inquirySchema),
     defaultValues: {
@@ -127,25 +113,6 @@ export default function BaiduPromotionLoginPage() {
     },
   });
 
-  const onLoginSubmit = async (values: LoginValues) => {
-    try {
-      const res = await fetch("/api/auth/local-login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(values),
-      });
-      const data = await res.json();
-      if (res.ok && data.success) {
-        toast.success("登录成功");
-        setLocation(data.redirect || "/admin");
-      } else {
-        toast.error(data.error || "登录失败");
-      }
-    } catch {
-      toast.error("网络错误，请重试");
-    }
-  };
-
   const onInquirySubmit = (values: InquiryValues) => {
     submitInquiry.mutate({
       contactName: values.contactName,
@@ -160,7 +127,6 @@ export default function BaiduPromotionLoginPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-stone-50 to-stone-100">
-      {/* Header */}
       <header className="w-full border-b bg-white/80 backdrop-blur-sm">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
           <div className="flex items-center gap-2">
@@ -189,10 +155,8 @@ export default function BaiduPromotionLoginPage() {
         </div>
       </header>
 
-      {/* Hero + Form */}
       <main className="container mx-auto px-4 py-10 lg:py-16">
         <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
-          {/* Left: Value Prop */}
           <div className="space-y-8">
             <div className="space-y-4">
               <span className="inline-block rounded-full bg-[oklch(0.95_0.03_85)] px-3 py-1 text-xs font-medium text-[oklch(0.32_0.02_75)]">
@@ -206,7 +170,7 @@ export default function BaiduPromotionLoginPage() {
               <p className="max-w-lg text-base text-muted-foreground sm:text-lg">
                 DY Packs 专注于 B2B
                 包装定制，为全球客户提供高品质、可持续的包装解决方案。
-                留下您的需求，我们将在 24 小时内联系您。
+                留下您的需求，我们将在 24 小时内联系您。无需注册或登录。
               </p>
             </div>
 
@@ -228,184 +192,109 @@ export default function BaiduPromotionLoginPage() {
             </div>
           </div>
 
-          {/* Right: Form Card */}
           <div className="mx-auto w-full max-w-md lg:mx-0 lg:ml-auto">
             <Card className="shadow-lg">
               <CardHeader className="pb-4">
-                <div className="flex rounded-lg bg-muted p-1">
-                  <button
-                    type="button"
-                    onClick={() => setActiveTab("inquiry")}
-                    className={`flex-1 rounded-md py-2 text-sm font-medium transition-colors ${
-                      activeTab === "inquiry"
-                        ? "bg-white text-[oklch(0.22_0.02_75)] shadow-sm"
-                        : "text-muted-foreground hover:text-foreground"
-                    }`}
-                  >
-                    立即询价
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setActiveTab("login")}
-                    className={`flex-1 rounded-md py-2 text-sm font-medium transition-colors ${
-                      activeTab === "login"
-                        ? "bg-white text-[oklch(0.22_0.02_75)] shadow-sm"
-                        : "text-muted-foreground hover:text-foreground"
-                    }`}
-                  >
-                    管理员登录
-                  </button>
-                </div>
-                <CardTitle className="mt-4 text-center text-xl">
-                  {activeTab === "inquiry" ? "免费获取包装报价" : "管理员登录"}
+                <CardTitle className="text-center text-xl">
+                  免费获取包装报价
                 </CardTitle>
+                <p className="text-center text-sm text-muted-foreground">
+                  填写需求即可，无需账号
+                </p>
               </CardHeader>
               <CardContent>
-                {activeTab === "inquiry" ? (
-                  submitted ? (
-                    <div className="py-8 text-center">
-                      <CheckCircle2 className="mx-auto mb-4 h-12 w-12 text-[oklch(0.72_0.16_85)]" />
-                      <h3 className="text-xl font-semibold text-[oklch(0.22_0.02_75)]">
-                        提交成功
-                      </h3>
-                      <p className="mt-2 text-sm text-muted-foreground">
-                        我们的团队将在 24 小时内与您联系，请保持电话畅通。
-                      </p>
-                      <Button
-                        variant="outline"
-                        className="mt-6"
-                        onClick={() => setSubmitted(false)}
-                      >
-                        再次提交
-                      </Button>
-                    </div>
-                  ) : (
-                    <Form {...inquiryForm}>
-                      <form
-                        onSubmit={inquiryForm.handleSubmit(onInquirySubmit)}
-                        className="space-y-4"
-                      >
-                        <FormField
-                          control={inquiryForm.control}
-                          name="companyName"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>公司名称</FormLabel>
-                              <FormControl>
-                                <Input
-                                  placeholder="请输入公司名称"
-                                  {...field}
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <div className="grid grid-cols-2 gap-4">
-                          <FormField
-                            control={inquiryForm.control}
-                            name="contactName"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>联系人</FormLabel>
-                                <FormControl>
-                                  <Input placeholder="姓名" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          <FormField
-                            control={inquiryForm.control}
-                            name="phone"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>联系电话</FormLabel>
-                                <FormControl>
-                                  <Input placeholder="手机号" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                        </div>
-                        <FormField
-                          control={inquiryForm.control}
-                          name="email"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>邮箱（选填）</FormLabel>
-                              <FormControl>
-                                <Input
-                                  placeholder="example@company.com"
-                                  {...field}
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <FormField
-                          control={inquiryForm.control}
-                          name="product"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>感兴趣的产品（选填）</FormLabel>
-                              <FormControl>
-                                <Input
-                                  placeholder="纸袋 / 纸盒 / 礼盒 / 其他"
-                                  {...field}
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <Button
-                          type="submit"
-                          className="w-full btn-gold"
-                          disabled={submitInquiry.isPending}
-                        >
-                          {submitInquiry.isPending ? (
-                            "提交中..."
-                          ) : (
-                            <span className="flex items-center justify-center gap-1">
-                              立即获取报价 <ArrowRight className="h-4 w-4" />
-                            </span>
-                          )}
-                        </Button>
-                      </form>
-                    </Form>
-                  )
+                {submitted ? (
+                  <div className="py-8 text-center">
+                    <CheckCircle2 className="mx-auto mb-4 h-12 w-12 text-[oklch(0.72_0.16_85)]" />
+                    <h3 className="text-xl font-semibold text-[oklch(0.22_0.02_75)]">
+                      提交成功
+                    </h3>
+                    <p className="mt-2 text-sm text-muted-foreground">
+                      我们的团队将在 24 小时内与您联系，请保持电话畅通。
+                    </p>
+                    <Button
+                      variant="outline"
+                      className="mt-6"
+                      onClick={() => setSubmitted(false)}
+                    >
+                      再次提交
+                    </Button>
+                  </div>
                 ) : (
-                  <Form {...loginForm}>
+                  <Form {...inquiryForm}>
                     <form
-                      onSubmit={loginForm.handleSubmit(onLoginSubmit)}
+                      onSubmit={inquiryForm.handleSubmit(onInquirySubmit)}
                       className="space-y-4"
                     >
                       <FormField
-                        control={loginForm.control}
-                        name="username"
+                        control={inquiryForm.control}
+                        name="companyName"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>用户名</FormLabel>
+                            <FormLabel>公司名称</FormLabel>
                             <FormControl>
-                              <Input placeholder="请输入用户名" {...field} />
+                              <Input
+                                placeholder="请输入公司名称"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <div className="grid grid-cols-2 gap-4">
+                        <FormField
+                          control={inquiryForm.control}
+                          name="contactName"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>联系人</FormLabel>
+                              <FormControl>
+                                <Input placeholder="姓名" {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={inquiryForm.control}
+                          name="phone"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>联系电话</FormLabel>
+                              <FormControl>
+                                <Input placeholder="手机号" {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                      <FormField
+                        control={inquiryForm.control}
+                        name="email"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>邮箱（选填）</FormLabel>
+                            <FormControl>
+                              <Input
+                                placeholder="example@company.com"
+                                {...field}
+                              />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
                         )}
                       />
                       <FormField
-                        control={loginForm.control}
-                        name="password"
+                        control={inquiryForm.control}
+                        name="product"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>密码</FormLabel>
+                            <FormLabel>感兴趣的产品（选填）</FormLabel>
                             <FormControl>
                               <Input
-                                type="password"
-                                placeholder="请输入密码"
+                                placeholder="纸袋 / 纸盒 / 礼盒 / 其他"
                                 {...field}
                               />
                             </FormControl>
@@ -415,12 +304,16 @@ export default function BaiduPromotionLoginPage() {
                       />
                       <Button
                         type="submit"
-                        className="w-full"
-                        disabled={loginForm.formState.isSubmitting}
+                        className="w-full btn-gold"
+                        disabled={submitInquiry.isPending}
                       >
-                        {loginForm.formState.isSubmitting
-                          ? "登录中..."
-                          : "登录"}
+                        {submitInquiry.isPending ? (
+                          "提交中..."
+                        ) : (
+                          <span className="flex items-center justify-center gap-1">
+                            立即获取报价 <ArrowRight className="h-4 w-4" />
+                          </span>
+                        )}
                       </Button>
                     </form>
                   </Form>
@@ -431,7 +324,6 @@ export default function BaiduPromotionLoginPage() {
         </div>
       </main>
 
-      {/* Trust bar */}
       <section className="border-t bg-white py-8">
         <div className="container mx-auto px-4">
           <div className="flex flex-wrap items-center justify-center gap-6 text-sm text-muted-foreground sm:gap-10">
@@ -451,7 +343,6 @@ export default function BaiduPromotionLoginPage() {
         </div>
       </section>
 
-      {/* Footer */}
       <footer className="bg-[oklch(0.22_0.02_75)] py-6 text-center text-sm text-white/70">
         <p>
           © {new Date().getFullYear()} DY Packs. 上海逗悦实业有限公司 版权所有

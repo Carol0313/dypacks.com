@@ -107,19 +107,29 @@ export default function InquiryList() {
     return (
       <div className="min-h-screen flex flex-col">
         <Navbar />
-        <div className="container py-20 text-center">
+        <div className="container py-20 text-center max-w-lg mx-auto">
           <FileText className="h-12 w-12 mx-auto text-muted-foreground/40 mb-4" />
           <h2 className="text-xl font-semibold mb-2">
-            {t("inquiry.signInRequired")}
+            {t("inquiry.noAccountTitle")}
           </h2>
           <p className="text-muted-foreground mb-6">
-            {t("inquiry.signInToView")}
+            {t("inquiry.noAccountBody")}
           </p>
-          <a href={getLoginUrl()}>
-            <Button className="bg-gold text-charcoal-dark hover:bg-gold-dark">
-              {t("inquiry.signIn")}
-            </Button>
-          </a>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <Link href="/order">
+              <Button className="bg-gold text-charcoal-dark hover:bg-gold-dark">
+                {t("inquiry.getInstantQuote")}
+              </Button>
+            </Link>
+            <Link href="/contact">
+              <Button variant="outline">{t("inquiry.contactSales")}</Button>
+            </Link>
+          </div>
+          <p className="text-xs text-muted-foreground mt-8">
+            <a href={getLoginUrl()} className="underline hover:text-foreground">
+              {t("inquiry.returningSignIn")}
+            </a>
+          </p>
         </div>
         <Footer />
       </div>
