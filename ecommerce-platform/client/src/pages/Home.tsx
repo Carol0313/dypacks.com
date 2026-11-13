@@ -13,6 +13,7 @@ import { Link } from "wouter";
 import { Package, Shield, Truck, Star, ChevronRight } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import OrderDesk from "@/components/OrderDesk";
 import {
   OrganizationSchema,
   WebSiteSchema,
@@ -91,6 +92,21 @@ export default function Home() {
       <BreadcrumbSchema items={[{ name: t("navbar.home"), url: "/" }]} />
       <Navbar />
 
+      <section className="border-b bg-secondary/40">
+        <div className="container py-8 md:py-10">
+          <h1
+            className="text-3xl md:text-4xl font-bold mb-2"
+            style={{ fontFamily: "var(--font-heading)" }}
+          >
+            {t("quote.platformTitle")}
+          </h1>
+          <p className="text-muted-foreground mb-8 max-w-2xl">
+            {t("quote.platformSubtitle")}
+          </p>
+          <OrderDesk />
+        </div>
+      </section>
+
       {/* Hero Carousel */}
       <HeroCarousel />
 
@@ -112,27 +128,6 @@ export default function Home() {
               </div>
             ))}
           </div>
-        </div>
-      </section>
-
-      <section className="bg-foreground text-background">
-        <div className="container py-10 md:py-12 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <div>
-            <h2
-              className="text-2xl font-bold"
-              style={{ fontFamily: "var(--font-heading)" }}
-            >
-              {t("quote.platformTitle")}
-            </h2>
-            <p className="text-sm text-background/70 mt-1 max-w-xl">
-              {t("quote.platformSubtitle")}
-            </p>
-          </div>
-          <Link href="/order">
-            <Button className="bg-gold hover:bg-gold-dark text-foreground">
-              {t("quote.placeOrder")}
-            </Button>
-          </Link>
         </div>
       </section>
 
