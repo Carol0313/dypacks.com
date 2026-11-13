@@ -11,7 +11,10 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { nanoid } from "nanoid";
 import {
+  BAG_MOQ,
+  BAG_REFERENCE_UNIT_USD,
   QuoteError,
+  calculateBagQuote,
   calculateQuote,
   calculateShipping,
 } from "@shared/quote";
@@ -316,6 +319,52 @@ const addressRouter = router({
 
 // ─── Order Router ────────────────────────────────────────
 
+const PAPER_BAG_SLUG = "paper-shopping-bag";
+
+async function ensurePaperBagProduct() {
+  const existing = await db.getProductBySlug(PAPER_BAG_SLUG);
+  if (existing) return existing;
+  let category = await db.getCategoryBySlug("paper-bags");
+  if (!category) {
+    await db.createCategory({
+      name: "Paper Bags",
+      slug: "paper-bags",
+      description:
+        "Custom paper shopping bags. The price follows width, height, and gusset.",
+      sortOrder: 6,
+    });
+    category = await db.getCategoryBySlug("paper-bags");
+  }
+  if (!category) {
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: "Could not prepare the paper bag catalog",
+    });
+  }
+  const id = await db.createProduct({
+    name: "Custom Paper Shopping Bag",
+    slug: PAPER_BAG_SLUG,
+    shortDescription: "Design a paper bag and order it at the price on screen.",
+    description:
+      "Choose kraft, white kraft, or coated paper, then enter the bag width, height, and gusset. Handles and print are priced on the same screen.",
+    price: BAG_REFERENCE_UNIT_USD.toFixed(2),
+    categoryId: category.id,
+    images: "[]",
+    featured: true,
+    status: "active",
+    stock: 100000,
+    minOrderQty: BAG_MOQ,
+  });
+  const created = await db.getProductById(Number(id));
+  if (!created) {
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: "Could not prepare the paper bag catalog",
+    });
+  }
+  return created;
+}
+
 const orderRouter = router({
   create: protectedProcedure
     .input(
@@ -387,7 +436,8 @@ const orderRouter = router({
   placeCustom: publicProcedure
     .input(
       z.object({
-        productId: z.number().int().positive(),
+        structure: z.enum(["box", "bag"]).default("box"),
+        productId: z.number().int().positive().optional(),
         lengthMm: z.number().int(),
         widthMm: z.number().int(),
         heightMm: z.number().int(),
@@ -404,6 +454,9 @@ const orderRouter = router({
           "specialty",
         ]),
         thickness: z.enum(["g1200", "g1500", "g2000"]).optional(),
+        bagPaper: z.enum(["kraft", "whiteKraft", "art"]).optional(),
+        bagGsm: z.enum(["g120", "g157", "g200"]).optional(),
+        handle: z.enum(["none", "twisted", "ribbon", "cotton", "dieCut"]).optional(),
         finishes: z
           .array(z.enum(["foil", "emboss", "spotUv", "magnet"]))
           .max(4),
@@ -430,7 +483,10 @@ const orderRouter = router({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const product = await db.getProductById(input.productId);
+      const product =
+        input.structure === "bag"
+          ? await ensurePaperBagProduct()
+          : await db.getProductById(input.productId ?? 0);
       if (!product || product.status !== "active") {
         throw new TRPCError({
           code: "NOT_FOUND",
@@ -440,26 +496,48 @@ const orderRouter = router({
       let quote;
       let shipping;
       try {
-        quote = calculateQuote({
-          referenceUnitPrice: Number(product.price),
-          minOrderQty: product.minOrderQty,
-          lengthMm: input.lengthMm,
-          widthMm: input.widthMm,
-          heightMm: input.heightMm,
-          quantity: input.quantity,
-          material: input.material,
-          thickness: input.thickness,
-          finishes: input.finishes,
-          print: input.print,
-        });
-        shipping = calculateShipping({
-          lengthMm: input.lengthMm,
-          widthMm: input.widthMm,
-          heightMm: input.heightMm,
-          quantity: input.quantity,
-          method: input.shippingMethod,
-          region: input.region,
-        });
+        if (input.structure === "bag") {
+          quote = calculateBagQuote({
+            widthMm: input.lengthMm,
+            heightMm: input.widthMm,
+            gussetMm: input.heightMm,
+            quantity: input.quantity,
+            paper: input.bagPaper ?? "kraft",
+            gsm: input.bagGsm ?? "g157",
+            handle: input.handle ?? "twisted",
+            finishes: input.finishes,
+            print: input.print,
+          });
+          shipping = calculateShipping({
+            lengthMm: input.lengthMm,
+            widthMm: input.heightMm,
+            heightMm: input.widthMm,
+            quantity: input.quantity,
+            method: input.shippingMethod,
+            region: input.region,
+          });
+        } else {
+          quote = calculateQuote({
+            referenceUnitPrice: Number(product.price),
+            minOrderQty: product.minOrderQty,
+            lengthMm: input.lengthMm,
+            widthMm: input.widthMm,
+            heightMm: input.heightMm,
+            quantity: input.quantity,
+            material: input.material,
+            thickness: input.thickness,
+            finishes: input.finishes,
+            print: input.print,
+          });
+          shipping = calculateShipping({
+            lengthMm: input.lengthMm,
+            widthMm: input.widthMm,
+            heightMm: input.heightMm,
+            quantity: input.quantity,
+            method: input.shippingMethod,
+            region: input.region,
+          });
+        }
       } catch (error) {
         if (error instanceof QuoteError) {
           throw new TRPCError({ code: "BAD_REQUEST", message: error.message });
@@ -471,11 +549,13 @@ const orderRouter = router({
         ? ctx.user
         : await db.findOrCreateGuestUser(input.email, input.contactName);
       const specification = {
+        structure: input.structure,
         lengthMm: input.lengthMm,
         widthMm: input.widthMm,
         heightMm: input.heightMm,
-        material: input.material,
-        thickness: input.thickness ?? "g1200",
+        material: input.structure === "bag" ? input.bagPaper ?? "kraft" : input.material,
+        thickness: input.structure === "bag" ? input.bagGsm ?? "g157" : input.thickness ?? "g1200",
+        handle: input.handle ?? null,
         print: input.print,
         finishes: input.finishes,
         shippingMethod: shipping.method,
@@ -493,7 +573,9 @@ const orderRouter = router({
       };
       const note = [
         `${input.lengthMm}×${input.widthMm}×${input.heightMm} mm`,
-        input.material,
+        input.structure,
+        input.structure === "bag" ? input.bagPaper ?? "kraft" : input.material,
+        input.structure === "bag" ? input.handle ?? "twisted" : "",
         input.print,
         input.finishes.length ? input.finishes.join(", ") : "no extra finish",
         quote.sample ? "sample" : "production",

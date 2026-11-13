@@ -240,7 +240,7 @@ export function calculateShipping(input: {
 }): ShippingQuote {
   assertSize("Length", input.lengthMm, 20, 600);
   assertSize("Width", input.widthMm, 20, 600);
-  assertSize("Height", input.heightMm, 10, 400);
+  assertSize("Height", input.heightMm, 10, 700);
   if (!Number.isInteger(input.quantity) || input.quantity < 1) {
     throw new QuoteError("Quantity must be between 1 and 100000");
   }
@@ -271,5 +271,132 @@ export function calculateShipping(input: {
     chargeableKg,
     fee,
     days: SHIPPING_DAYS[input.method],
+  };
+}
+
+export const BAG_PAPERS = ["kraft", "whiteKraft", "art"] as const;
+export const BAG_GSMS = ["g120", "g157", "g200"] as const;
+export const BAG_HANDLES = ["none", "twisted", "ribbon", "cotton", "dieCut"] as const;
+export const BAG_STYLES = ["shopping", "boutique", "grocery"] as const;
+
+export type BagPaperId = (typeof BAG_PAPERS)[number];
+export type BagGsmId = (typeof BAG_GSMS)[number];
+export type BagHandleId = (typeof BAG_HANDLES)[number];
+export type BagStyleId = (typeof BAG_STYLES)[number];
+
+/** Starting rate for a 320×400×120 mm kraft 157gsm bag, twisted handle, CMYK, at 500 pcs. */
+export const BAG_REFERENCE_UNIT_USD = 0.72;
+export const BAG_MOQ = 500;
+export const BAG_REFERENCE_MM = { width: 320, height: 400, gusset: 120 } as const;
+
+export const BAG_STYLE_MM: Record<
+  BagStyleId,
+  { width: number; height: number; gusset: number }
+> = {
+  shopping: BAG_REFERENCE_MM,
+  boutique: { width: 180, height: 240, gusset: 80 },
+  grocery: { width: 260, height: 360, gusset: 160 },
+};
+
+const BAG_PAPER_FACTOR: Record<BagPaperId, number> = {
+  kraft: 1,
+  whiteKraft: 1.08,
+  art: 1.22,
+};
+
+const BAG_GSM_FACTOR: Record<BagGsmId, number> = {
+  g120: 0.86,
+  g157: 1,
+  g200: 1.18,
+};
+
+const BAG_HANDLE_USD: Record<BagHandleId, number> = {
+  none: -0.05,
+  twisted: 0,
+  ribbon: 0.1,
+  cotton: 0.16,
+  dieCut: -0.03,
+};
+
+const BAG_FINISH_USD: Partial<Record<FinishId, number>> = {
+  foil: 0.08,
+  spotUv: 0.05,
+};
+
+export function bagVolumeFactor(quantity: number) {
+  if (quantity >= 5000) return 0.72;
+  if (quantity >= 3000) return 0.78;
+  if (quantity >= 2000) return 0.84;
+  if (quantity >= 1000) return 0.92;
+  return 1;
+}
+
+function bagPaperAreaMm2(width: number, height: number, gusset: number) {
+  return 2 * width * height + 2 * gusset * height + width * gusset;
+}
+
+export function calculateBagQuote(input: {
+  widthMm: number;
+  heightMm: number;
+  gussetMm: number;
+  quantity: number;
+  paper: BagPaperId;
+  gsm: BagGsmId;
+  handle: BagHandleId;
+  finishes: FinishId[];
+  print: PrintId;
+}): Quote {
+  assertSize("Width", input.widthMm, 80, 600);
+  assertSize("Height", input.heightMm, 100, 700);
+  assertSize("Gusset", input.gussetMm, 20, 250);
+  if (
+    !Number.isInteger(input.quantity) ||
+    input.quantity < 1 ||
+    input.quantity > 100000
+  ) {
+    throw new QuoteError("Quantity must be between 1 and 100000");
+  }
+
+  const referenceArea = bagPaperAreaMm2(
+    BAG_REFERENCE_MM.width,
+    BAG_REFERENCE_MM.height,
+    BAG_REFERENCE_MM.gusset
+  );
+  const areaRatio = Math.max(
+    MIN_AREA_RATIO,
+    bagPaperAreaMm2(input.widthMm, input.heightMm, input.gussetMm) / referenceArea
+  );
+  const sample = input.quantity < BAG_MOQ;
+  const finishAdd =
+    input.finishes.reduce((sum, finish) => sum + (BAG_FINISH_USD[finish] ?? 0), 0) *
+    areaRatio;
+  const handleAdd = BAG_HANDLE_USD[input.handle] * areaRatio;
+  const scaled =
+    BAG_REFERENCE_UNIT_USD *
+    areaRatio *
+    BAG_PAPER_FACTOR[input.paper] *
+    BAG_GSM_FACTOR[input.gsm] *
+    PRINT_FACTOR[input.print] *
+    (sample ? 1 : bagVolumeFactor(input.quantity));
+  const unitPrice = roundMoney(
+    Math.max(0.05, (scaled + finishAdd + handleAdd) * (sample ? 1.55 : 1))
+  );
+  const setupFee = sample ? 25 : 80;
+  const goodsTotal = roundMoney(unitPrice * input.quantity);
+  const total = roundMoney(goodsTotal + setupFee);
+  let leadTimeDays = "12–18";
+  if (sample) leadTimeDays = "5–7";
+  else if (input.quantity >= 2000) leadTimeDays = "18–25";
+
+  return {
+    unitPrice,
+    quantity: input.quantity,
+    setupFee,
+    goodsTotal,
+    total,
+    areaRatio: Math.round(areaRatio * 100) / 100,
+    sample,
+    leadTimeDays,
+    currency: "USD",
   };
 }

@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest";
 import {
+  BAG_MOQ,
   REFERENCE_SIZE_MM,
   QuoteError,
+  calculateBagQuote,
   calculateQuote,
   calculateShipping,
   type QuoteInput,
@@ -77,6 +79,49 @@ describe("calculateQuote", () => {
     expect(express.fee).toBeGreaterThan(freight.fee);
     expect(express.days).toBe("3–7");
     expect(freight.days).toBe("18–35");
+  });
+
+  it("prices the reference paper bag at the starting unit rate", () => {
+    const quote = calculateBagQuote({
+      widthMm: 320,
+      heightMm: 400,
+      gussetMm: 120,
+      quantity: BAG_MOQ,
+      paper: "kraft",
+      gsm: "g157",
+      handle: "twisted",
+      finishes: [],
+      print: "cmyk",
+    });
+    expect(quote.unitPrice).toBe(0.72);
+    expect(quote.setupFee).toBe(80);
+    expect(quote.sample).toBe(false);
+  });
+
+  it("charges cotton handles more than no handle on the same bag", () => {
+    const plain = calculateBagQuote({
+      widthMm: 320,
+      heightMm: 400,
+      gussetMm: 120,
+      quantity: BAG_MOQ,
+      paper: "kraft",
+      gsm: "g157",
+      handle: "none",
+      finishes: [],
+      print: "cmyk",
+    });
+    const cotton = calculateBagQuote({
+      widthMm: 320,
+      heightMm: 400,
+      gussetMm: 120,
+      quantity: BAG_MOQ,
+      paper: "kraft",
+      gsm: "g157",
+      handle: "cotton",
+      finishes: [],
+      print: "cmyk",
+    });
+    expect(cotton.unitPrice).toBeGreaterThan(plain.unitPrice);
   });
 
   it("rejects a size outside the manufacturable range", () => {

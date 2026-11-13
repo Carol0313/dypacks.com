@@ -7,14 +7,21 @@ import { Textarea } from "@/components/ui/textarea";
 import { ALIPAY_ACCOUNT, PAYPAL_ACCOUNT } from "@/lib/constants";
 import { trpc } from "@/lib/trpc";
 import {
+  BAG_GSMS,
+  BAG_HANDLES,
+  BAG_PAPERS,
   FINISHES,
   PRINTS,
   QuoteError,
   REGIONS,
   SHIPPING_METHODS,
   THICKNESSES,
+  calculateBagQuote,
   calculateQuote,
   calculateShipping,
+  type BagGsmId,
+  type BagHandleId,
+  type BagPaperId,
   type FinishId,
   type MaterialId,
   type PrintId,
@@ -87,15 +94,46 @@ function money(value: number) {
   return `$${value.toFixed(2)}`;
 }
 
-export default function CustomOrder({ product }: { product: ProductQuoteSource }) {
+const BAG_PAPER_KEY: Record<BagPaperId, string> = {
+  kraft: "quote.bagPaperKraft",
+  whiteKraft: "quote.bagPaperWhite",
+  art: "quote.bagPaperArt",
+};
+
+const BAG_GSM_KEY: Record<BagGsmId, string> = {
+  g120: "quote.bagGsm120",
+  g157: "quote.bagGsm157",
+  g200: "quote.bagGsm200",
+};
+
+const BAG_HANDLE_KEY: Record<BagHandleId, string> = {
+  none: "quote.handleNone",
+  twisted: "quote.handleTwisted",
+  ribbon: "quote.handleRibbon",
+  cotton: "quote.handleCotton",
+  dieCut: "quote.handleDieCut",
+};
+
+export default function CustomOrder({
+  product,
+  mode = "box",
+  initialSize,
+}: {
+  product: ProductQuoteSource;
+  mode?: "box" | "bag";
+  initialSize?: { length: number; width: number; height: number };
+}) {
   const { t } = useTranslation();
   const { user, isAuthenticated } = useAuth();
-  const [lengthMm, setLengthMm] = useState(200);
-  const [widthMm, setWidthMm] = useState(150);
-  const [heightMm, setHeightMm] = useState(60);
+  const [lengthMm, setLengthMm] = useState(initialSize?.length ?? 200);
+  const [widthMm, setWidthMm] = useState(initialSize?.width ?? 150);
+  const [heightMm, setHeightMm] = useState(initialSize?.height ?? 60);
   const [quantity, setQuantity] = useState(Math.max(1, product.minOrderQty || 1));
   const [material, setMaterial] = useState<MaterialId>("greyboard");
   const [thickness, setThickness] = useState<ThicknessId>("g1200");
+  const [bagPaper, setBagPaper] = useState<BagPaperId>("kraft");
+  const [bagGsm, setBagGsm] = useState<BagGsmId>("g157");
+  const [handle, setHandle] = useState<BagHandleId>("twisted");
   const [print, setPrint] = useState<PrintId>("cmyk");
   const [shippingMethod, setShippingMethod] = useState<ShippingMethod>("express");
   const [region, setRegion] = useState<RegionId>("northAmerica");
@@ -123,18 +161,31 @@ export default function CustomOrder({ product }: { product: ProductQuoteSource }
   const quoteResult = useMemo(() => {
     try {
       return {
-        quote: calculateQuote({
-          referenceUnitPrice: Number(product.price),
-          minOrderQty: product.minOrderQty || 1,
-          lengthMm,
-          widthMm,
-          heightMm,
-          quantity,
-          material,
-          thickness,
-          finishes,
-          print,
-        }),
+        quote:
+          mode === "bag"
+            ? calculateBagQuote({
+                widthMm: lengthMm,
+                heightMm: widthMm,
+                gussetMm: heightMm,
+                quantity,
+                paper: bagPaper,
+                gsm: bagGsm,
+                handle,
+                finishes,
+                print,
+              })
+            : calculateQuote({
+                referenceUnitPrice: Number(product.price),
+                minOrderQty: product.minOrderQty || 1,
+                lengthMm,
+                widthMm,
+                heightMm,
+                quantity,
+                material,
+                thickness,
+                finishes,
+                print,
+              }),
       };
     } catch (error) {
       return {
@@ -142,8 +193,12 @@ export default function CustomOrder({ product }: { product: ProductQuoteSource }
       };
     }
   }, [
+    mode,
     product.price,
     product.minOrderQty,
+    bagPaper,
+    bagGsm,
+    handle,
     lengthMm,
     widthMm,
     heightMm,
@@ -195,14 +250,18 @@ export default function CustomOrder({ product }: { product: ProductQuoteSource }
       return;
     }
     placeOrder.mutate({
-      productId: product.id,
+      structure: mode,
+      productId: product.id > 0 ? product.id : undefined,
       lengthMm,
       widthMm,
       heightMm,
       quantity,
       material,
       thickness,
-      finishes,
+      bagPaper: mode === "bag" ? bagPaper : undefined,
+      bagGsm: mode === "bag" ? bagGsm : undefined,
+      handle: mode === "bag" ? handle : undefined,
+      finishes: mode === "bag" ? finishes.filter(item => item === "foil" || item === "spotUv") : finishes,
       print,
       shippingMethod,
       region,
@@ -292,8 +351,8 @@ export default function CustomOrder({ product }: { product: ProductQuoteSource }
   const shipping = quote
     ? calculateShipping({
         lengthMm,
-        widthMm,
-        heightMm,
+        widthMm: mode === "bag" ? heightMm : widthMm,
+        heightMm: mode === "bag" ? widthMm : heightMm,
         quantity: quote.quantity,
         method: shippingMethod,
         region,
@@ -310,21 +369,23 @@ export default function CustomOrder({ product }: { product: ProductQuoteSource }
           {t("quote.title")}
         </h2>
         <p className="text-sm text-muted-foreground mb-4">{t("quote.subtitle")}</p>
-        <p className="text-xs text-muted-foreground mb-4">{t("quote.sizeHint")}</p>
+        <p className="text-xs text-muted-foreground mb-4">
+          {t(mode === "bag" ? "quote.bagSizeHint" : "quote.sizeHint")}
+        </p>
 
         <div className="grid grid-cols-3 gap-3 mb-3">
           <SizeField
-            label={t("quote.length")}
+            label={t(mode === "bag" ? "quote.bagWidth" : "quote.length")}
             value={lengthMm}
             onChange={setLengthMm}
           />
           <SizeField
-            label={t("quote.width")}
+            label={t(mode === "bag" ? "quote.bagHeight" : "quote.width")}
             value={widthMm}
             onChange={setWidthMm}
           />
           <SizeField
-            label={t("quote.height")}
+            label={t(mode === "bag" ? "quote.bagGusset" : "quote.height")}
             value={heightMm}
             onChange={setHeightMm}
           />
@@ -344,17 +405,31 @@ export default function CustomOrder({ product }: { product: ProductQuoteSource }
         <div className="grid sm:grid-cols-2 gap-3 mb-3">
           <label className="block text-sm">
             <span className="text-muted-foreground">{t("quote.material")}</span>
-            <select
-              className="mt-1 flex h-9 w-full rounded-md border border-input bg-transparent px-3 text-sm"
-              value={material}
-              onChange={event => setMaterial(event.target.value as MaterialId)}
-            >
-              {PLATFORM_MATERIALS.map(item => (
-                <option key={item} value={item}>
-                  {t(MATERIAL_KEY[item])}
-                </option>
-              ))}
-            </select>
+            {mode === "bag" ? (
+              <select
+                className="mt-1 flex h-9 w-full rounded-md border border-input bg-transparent px-3 text-sm"
+                value={bagPaper}
+                onChange={event => setBagPaper(event.target.value as BagPaperId)}
+              >
+                {BAG_PAPERS.map(item => (
+                  <option key={item} value={item}>
+                    {t(BAG_PAPER_KEY[item])}
+                  </option>
+                ))}
+              </select>
+            ) : (
+              <select
+                className="mt-1 flex h-9 w-full rounded-md border border-input bg-transparent px-3 text-sm"
+                value={material}
+                onChange={event => setMaterial(event.target.value as MaterialId)}
+              >
+                {PLATFORM_MATERIALS.map(item => (
+                  <option key={item} value={item}>
+                    {t(MATERIAL_KEY[item])}
+                  </option>
+                ))}
+              </select>
+            )}
           </label>
           <label className="block text-sm">
             <span className="text-muted-foreground">{t("quote.print")}</span>
@@ -373,26 +448,59 @@ export default function CustomOrder({ product }: { product: ProductQuoteSource }
         </div>
 
         <label className="block text-sm mb-3">
-          <span className="text-muted-foreground">{t("quote.thickness")}</span>
-          <select
-            className="mt-1 flex h-9 w-full rounded-md border border-input bg-transparent px-3 text-sm"
-            value={thickness}
-            onChange={event => setThickness(event.target.value as ThicknessId)}
-          >
-            {THICKNESSES.map(item => (
-              <option key={item} value={item}>
-                {t(THICKNESS_KEY[item])}
-              </option>
-            ))}
-          </select>
+          <span className="text-muted-foreground">
+            {t(mode === "bag" ? "quote.bagGsm" : "quote.thickness")}
+          </span>
+          {mode === "bag" ? (
+            <select
+              className="mt-1 flex h-9 w-full rounded-md border border-input bg-transparent px-3 text-sm"
+              value={bagGsm}
+              onChange={event => setBagGsm(event.target.value as BagGsmId)}
+            >
+              {BAG_GSMS.map(item => (
+                <option key={item} value={item}>
+                  {t(BAG_GSM_KEY[item])}
+                </option>
+              ))}
+            </select>
+          ) : (
+            <select
+              className="mt-1 flex h-9 w-full rounded-md border border-input bg-transparent px-3 text-sm"
+              value={thickness}
+              onChange={event => setThickness(event.target.value as ThicknessId)}
+            >
+              {THICKNESSES.map(item => (
+                <option key={item} value={item}>
+                  {t(THICKNESS_KEY[item])}
+                </option>
+              ))}
+            </select>
+          )}
         </label>
+
+        {mode === "bag" && (
+          <label className="block text-sm mb-3">
+            <span className="text-muted-foreground">{t("quote.handle")}</span>
+            <select
+              className="mt-1 flex h-9 w-full rounded-md border border-input bg-transparent px-3 text-sm"
+              value={handle}
+              onChange={event => setHandle(event.target.value as BagHandleId)}
+            >
+              {BAG_HANDLES.map(item => (
+                <option key={item} value={item}>
+                  {t(BAG_HANDLE_KEY[item])}
+                </option>
+              ))}
+            </select>
+          </label>
+        )}
 
         <fieldset className="mb-3">
           <legend className="text-sm text-muted-foreground mb-2">
             {t("quote.finishes")}
           </legend>
           <div className="grid grid-cols-2 gap-2">
-            {FINISHES.map(finish => (
+            {(mode === "bag" ? (["foil", "spotUv"] as const) : FINISHES).map(finish => (
               <label key={finish} className="flex items-center gap-2 text-sm">
                 <input
                   type="checkbox"
